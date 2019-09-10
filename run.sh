@@ -12,5 +12,4 @@ export CLASSPATH=$CLASSPATH:target/classes
 export ACTIVE_ENV="development"
 
 echo "*******************  EXECUTING PROGRAM******************************************"
-java -cp $CLASSPATH -DACTIVE_ENV=$ACTIVE_ENV unrc.dose.App
-
+java -cp $CLASSPATH -Dactivejdbc.log -DACTIVE_ENV=$ACTIVE_ENV -Dactivejdbc-instrumentation.log -Denv.connections.file=src/main/resources/database.properties unrc.dose.App
