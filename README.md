@@ -22,8 +22,13 @@ git clone git@github.com:<YOUR-USER>/triviavet.git
 
 #### DB Setup
 
+To create table
 ```
-cp {basedir}/src/resources/database.properties.example {basedir}/src/resources/database.properties
+mvn db-migrator:create
+```
+
+```
+cp {basedir}/src/main/resources/database.properties.example {basedir}/src/main/resources/database.properties
 ```
 and use your own secret credentials
 
