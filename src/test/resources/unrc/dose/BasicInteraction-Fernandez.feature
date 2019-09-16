@@ -1,6 +1,6 @@
-#Brusati, Cuesta, Fernandez, Manzetti
+# Brusati, Cuesta, Fernandez, Manzetti
 
-
+Feature: Compilation Based Challenges
 	Scenario Outline: A logged user takes a random test based challenge
 		Given that user “Pponzio”is already logged on
 		And he wants to take a test based challenge
