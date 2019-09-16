@@ -2,6 +2,7 @@ package unrc.dose;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import cucumber.api.PendingException;
 import static org.junit.Assert.*;
 
@@ -54,4 +55,61 @@ public class Steps extends StepUtils {
     // Check that the same user save in DB is the same that we got from http req
     assertEquals(response.body, users.toJson(true, "username", "password"));
   }
+
+
+  @Given("^user wants to look his score$")
+  public void user_wants_to_look_his_score() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+  }
+
+  @When("^user press show score$")
+  public void user_press_show_score() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+  }
+
+  @Then("^the system show the score on a message$")
+  public void the_system_show_the_score_on_a_messag() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+  }
+
+  @Given("^he wants to select the type of level education for play$")
+  public void he_wants_to_select_the_type_of_level_education_for_play() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+  }
+
+  @When("^the user select the type of level$")
+  public void the_user_select_the_type_of_level() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+}
+
+  @Then("^the system should be show a challenge depending on level selected for the user$")
+  public void the_system_should_be_show_a_challenge_depending_on_level_selected_for_the_user() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+  }
+
+@Given("^wants select a type of challenge for play$")
+public void wants_select_a_type_of_challenge_for_play() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+}
+
+@When("^the user select a type of challenge$")
+public void the_user_select_a_type_of_challenge() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+}
+
+@Then("^the system should be show one challenge based in the selection$")
+public void the_system_should_be_show_one_challenge_based_in_the_selection() throws Exception {
+    // Write code here that turns the phrase above into concrete actions
+    throw new PendingException();
+}
+
+
 }
