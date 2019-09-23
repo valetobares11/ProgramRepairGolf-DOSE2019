@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS propositions(
     challenge_id integer not null,
     source text,
     foreign key (user_id) references users(id)
-    /*foreign key (challenge_id) references challenges(id)*/    
+    foreign key (challenge_id) references challenges(id)    
 );
 
