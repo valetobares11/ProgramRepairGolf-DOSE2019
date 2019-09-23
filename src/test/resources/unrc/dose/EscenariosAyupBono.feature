@@ -33,7 +33,7 @@ Scenario: User unsolves a simple unsolved test based challenge
  ```   		
      And the proposed solution is 
 ```
-                  “Public static int isSum (int a, int b){
+                  Public static int isSum (int a, int b){
                    a – b;
 }
  
