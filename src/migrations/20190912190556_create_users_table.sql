@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS users(
     email_address varchar(50) not null,
     admin BOOLEAN not null default 0,
     created_at DATETIME,
-	updated_at DATETIME
+    updated_at DATETIME
 );
