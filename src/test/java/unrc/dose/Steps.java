@@ -35,6 +35,7 @@ public class Steps extends StepUtils {
     User u = new User();
     u.set("password", "VeryHardPass");
     u.set("username", "JohnConnor");
+    u.set("email_address", "JohnConnor@gmail.com");
     u.save();
   }
 
