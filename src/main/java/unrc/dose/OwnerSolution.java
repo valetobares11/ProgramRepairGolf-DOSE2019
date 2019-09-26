@@ -12,6 +12,6 @@ import org.javalite.activejdbc.Model;
 	updated_at DATETIME
 	
  */
-public class Owner_Solution extends Model {
+public class OwnerSolution extends Model {
 }
 
