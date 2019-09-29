@@ -10,6 +10,15 @@
 package unrc.dose;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
 
 public class UserStat extends Model {
+
+  public static LazyList showAllUsers (){
+    LazyList<User> users = User.findAll();
+
+    return users;
+  }
+
+
 }
