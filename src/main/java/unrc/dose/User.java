@@ -14,6 +14,18 @@
 package unrc.dose;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
 
 public class User extends Model {
+
+	public static Boolean searchUser(String name, String pass, String email){
+		LazyList<User> users = User.where("username = ? and password = ? and email_address = ?", name, pass, email);
+
+		if(users.size() > 0){
+			return true;
+		}
+		return false;
+	}
+
+
 }
