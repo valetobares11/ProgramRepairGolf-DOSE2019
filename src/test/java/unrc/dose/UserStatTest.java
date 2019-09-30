@@ -27,6 +27,10 @@ public class UserStatTest {
 		log.info("UserStatTest AfterClass");
 		Base.close();
 	}
+	/**
+	 * Test the method createUserStat from 
+	 * UserStat class.
+	 */
 	@Test
 	public void createUserStat() {
 		User u = new User();
@@ -43,7 +47,10 @@ public class UserStatTest {
 		assertEquals((int)stat.get("current_points"),0);
 			
 	}
-	
+	/**
+	 * Test the method getUserStat from 
+	 * UserStat class.
+	 */
 	@Test
 	public void getUserStat() {
 	    User u = new User();
