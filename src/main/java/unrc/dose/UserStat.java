@@ -9,7 +9,39 @@
 */
 package unrc.dose;
 
+import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.DBException;
 
 public class UserStat extends Model {
+	
+	/**
+	 * Create the statistics for a given user.
+	 * @param u The user who statistics we will create. 
+	 */
+	public static void createUserStat(User u){
+		UserStat stat = new UserStat();
+		stat.set("user_id",u.get("id"));
+		stat.set("created_challenges", 0);
+		stat.set("solved_challenges",0);
+		stat.set("current_points", 0);
+		Base.openTransaction();
+		try {
+			stat.saveIt();
+			Base.commitTransaction();
+		}
+		catch(DBException e) {
+			Base.rollbackTransaction();    	
+		}
+	}
+	
+	/**
+	* This method return the statics of the user
+	* @param user
+	* @return UserStat of the user
+	*/
+	public static UserStat getUserStat(User user) {
+		return UserStat.findFirst("user_id = ?", user.getId());
+	}
+
 }
