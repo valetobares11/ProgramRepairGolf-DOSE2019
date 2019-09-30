@@ -18,7 +18,7 @@ import org.javalite.activejdbc.LazyList;
 
 public class User extends Model {
 
-	public static Boolean searchUser(String name, String pass, String email){
+	public static Boolean searchUser(String name, String pass, String email) {
 		LazyList<User> users = User.where("username = ? and password = ? and email_address = ?", name, pass, email);
 
 		if(users.size() > 0){
@@ -27,5 +27,22 @@ public class User extends Model {
 		return false;
 	}
 
+	public static String signUp (String name, String pass, String email, Boolean admin) {
+		if (User.searchUser(name, pass, email)) {
+			return "Username already used. Choose other. ";
+
+		}else{
+			User user = new User();
+			user.set("username", name);
+			user.set("password", pass);
+			user.set("email_address", email);
+			user.set("admin", admin);
+			user.saveIt();
+
+			return "User created successfully. ";
+
+		}
+
+	}
 
 }

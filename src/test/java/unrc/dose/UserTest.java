@@ -24,14 +24,16 @@ public class UserTest {
       	Base.open();
   	}
 
+
   	@AfterClass
   	public static void tearDown() {
     	Spark.stop();
     	Base.close();
   	}
 
+
 	@Test
-	public void userFound(){
+	public void userFound() {
 		String name = "JohnConnor";
 		String pass = "VeryHardPass";
 		String email = "JohnConnor@gmail.com";
@@ -41,11 +43,34 @@ public class UserTest {
 
 
 	@Test
-	public void userNotFound(){
+	public void userNotFound() {
 		String name = "Pity";
 		String pass = "Martinez";
 		String email = "YvaelTercero@gmail.com";
 
 		assertEquals(false ,User.searchUser(name, pass, email));
 	}
+
+
+	@Test
+	public void userSignUpSuccess() {
+		String name = "Json";
+		String pass = "Mcperson";
+		String email = "Jerson@gmail.com";
+		Boolean admin = false;
+
+		assertEquals("User created successfully. " ,User.signUp(name, pass, email, admin));
+	}
+
+
+	@Test
+	public void userSignUpFailed() {
+		String name = "JohnConnor";
+		String pass = "VeryHardPass";
+		String email = "JohnConnor@gmail.com";
+		Boolean admin = false;
+
+		assertEquals("Username already used. Choose other. " ,User.signUp(name, pass, email, admin));
+	}
+
 }
