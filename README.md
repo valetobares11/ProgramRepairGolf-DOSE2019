@@ -63,4 +63,4 @@ curl -X PUT http://localhost:4567/users/1 \
 
 # Licence
 
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the LICENSE.md file for details.
