@@ -1,6 +1,8 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
@@ -25,6 +27,22 @@ public class UserStatTest {
 		log.info("UserStatTest AfterClass");
 		Base.close();
 	}
+	@Test
+	public void createUserStat() {
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		Base.openTransaction();
+		u.saveIt();
+		UserStat.createUserStat(u);
+		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		assertNotNull(stat);
+		assertEquals((int)stat.get("created_challenges"),0);
+		assertEquals((int)stat.get("solved_challenges"),0);
+		assertEquals((int)stat.get("current_points"),0);
+			
+	}
 	
 	@Test
 	public void getUserStat() {
@@ -33,9 +51,8 @@ public class UserStatTest {
 	    u.set("username", "JohnDoe");
 	    u.set("email_address", "JohnDoe@gmail.com");
 	    u.save();
-	    UserStat us = new UserStat();
-	    us.set("user_id", u.getId());
-	    us.save();
+	    UserStat.createUserStat(u);
+		UserStat us = UserStat.findFirst("user_id = ?", u.get("id"));
 	    UserStat us2 = UserStat.getUserStat(u);
 	    assertEquals(us.getId().toString(), us2.getId().toString());
 	    assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
