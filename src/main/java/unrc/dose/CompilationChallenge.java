@@ -3,15 +3,9 @@ package unrc.dose;
 import org.javalite.activejdbc.Model;
 
 /*	
-	Atributos de la tabla:
-		id: integer,
-		user_id :integer,
-		title :varchar (50),
-		description :varchar(50),
-		source :varchar(100000),
-		point :integer,
-		owner_:id integer,
-		owner_solution_id :integer
+Atributos de la tabla:
+	id integer not null auto_increment primary key,
+    challenge_id integer not null
 */
 public class CompilationChallenge extends Model {
 

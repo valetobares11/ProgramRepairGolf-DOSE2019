@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS test_challenge(
+CREATE TABLE IF NOT EXISTS test_challenges(
     id integer not null auto_increment primary key,
     challenge_id integer not null,
     test varchar(1000) not null,
