@@ -10,4 +10,21 @@ Atributos de la tabla:
 */
 public class TestChallenge extends Model {
 
+    public TestChallenge() {}
+
+    public int getChallengeId(){    
+        return getInteger("challenge_id");
+    }
+
+    public void setChallengeId(int challenge_id){
+        set("challenge_id",challenge_id);
+    }
+
+    public String getTest(){    
+        return getString("test");
+    }
+
+    public void setTest(String test){
+        set("test",test);
+    }
 }
