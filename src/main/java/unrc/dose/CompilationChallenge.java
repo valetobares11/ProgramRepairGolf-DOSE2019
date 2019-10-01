@@ -9,5 +9,14 @@ Atributos de la tabla:
 */
 public class CompilationChallenge extends Model {
 
+    public CompilationChallenge() {}
+
+    public int getChallengeId(){    
+        return getInteger("challenge_id");
+    }
+
+    public void setChallengeId(int challenge_id){
+        set("challenge_id",challenge_id);
+    }
 
 }
