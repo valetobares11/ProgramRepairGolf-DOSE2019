@@ -25,14 +25,17 @@ public class Comment extends Model {
   *@param description this the comment's body
   *@param challenge_id this is the challenge's id which is commented
   *@param user_id this is the user's id who commented
-  *@return Nothing.
   **/
   /**
   *Create a new Response.
   *@param description this the response's body
   *@param challenge_id this is the challenge's id which is commented
   *@param user_id this is the user's id who responded to a comment
-  *@return Nothing.
+  **/
+  /**
+  *isResponse
+  *@param comment_id this is comments or response to evaluate
+  *@return return if the selected comment_id si a comment or a response.
   **/
   public void createComment (String title,String description, int challenge_id, int user_id ){
     this.set("title",title);
@@ -41,12 +44,13 @@ public class Comment extends Model {
     this.set("user_id", user_id);
     this.saveIt();
   }
+
   public boolean isResponse(int comment_id){
     Comment c = Comment.findById(comment_id);
     return ((c.getInteger("comment_id")) != (null));
   }
 
-  public void createResponse (String description, int user_id, String comment_id) throws NullPointerException{
+  public void createResponse (String description, int user_id, int comment_id) throws NullPointerException{
     if (!isResponse(comment_id)){
     Comment c = Comment.findById(comment_id);
     this.set("description", description);
