@@ -46,6 +46,8 @@ public class ChallengeStat extends Model {
 	}
 
 	public static void updateAverageScore(int challengeId, int newScore) {
+			
+
 		List <ChallengeStat> challengeSingleList=ChallengeStat.where("challenge_id == ?", challengeId);
 		ChallengeStat challengeToUpdate=challengeSingleList.get(0);
 		
