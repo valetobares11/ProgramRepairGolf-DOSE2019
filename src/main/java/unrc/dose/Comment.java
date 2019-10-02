@@ -34,5 +34,11 @@ public class Comment extends Model {
     this.set("user_id", user_id);
     this.saveIt();
   }
-
+  public void createResponse (String description, int user_id, String comment_id) throws NullPointerException{
+    Comment c = Comment.findbyid(comment_id);
+    this.set("description", description);
+    this.set("user_id", user_id);
+      this.set("title", "Re :" + c.getString("title"))
+      this.saveIt();
+  }
 }
