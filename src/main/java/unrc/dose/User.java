@@ -19,8 +19,8 @@ import org.javalite.activejdbc.LazyList;
 
 public class User extends Model {
 
-	static final String user_delete;
-	static final String user_not_found;
+	static final String USER_DELETE = "Usuario eliminado";
+	static final String USER_NOT_FOUND = "Usuario no encontrado";
 
 	 /**
      * this method remove logically a user
@@ -35,8 +35,8 @@ public class User extends Model {
         if(users.size() > 0){
 			user = users.get(0);
 			user.set("active_account", false);
-			return user_delete;
+			return USER_DELETE;
 		}
-		return user_not_found;
+		return USER_NOT_FOUND;
 	}
 }
