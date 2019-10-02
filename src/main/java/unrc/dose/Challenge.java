@@ -87,8 +87,7 @@ public class Challenge extends Model {
         return c;
     }
 
-    public static void deleteCallenge(int id){
-        Challenge c = Challenge.findById(id);
+    public static void deleteCallenge(Challenge c){
         c.deleteCascade();
     }
 
