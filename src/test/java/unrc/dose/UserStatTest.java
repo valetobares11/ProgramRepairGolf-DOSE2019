@@ -44,8 +44,7 @@ public class UserStatTest {
 		assertNotNull(stat);
 		assertEquals((int)stat.get("created_challenges"),0);
 		assertEquals((int)stat.get("solved_challenges"),0);
-		assertEquals((int)stat.get("current_points"),0);
-			
+		assertEquals((int)stat.get("current_points"),0);	
 	}
 	/**
 	 * Test the method getUserStat from 
@@ -53,17 +52,15 @@ public class UserStatTest {
 	 */
 	@Test
 	public void getUserStat() {
-	    User u = new User();
-	    u.set("password", "JohnDoe");
-	    u.set("username", "JohnDoe");
-	    u.set("email_address", "JohnDoe@gmail.com");
-	    u.save();
-	    UserStat.createUserStat(u);
+		User u = new User();
+		u.set("password", "JohnDoe");
+		u.set("username", "JohnDoe");
+		u.set("email_address", "JohnDoe@gmail.com");
+		u.save();
+		UserStat.createUserStat(u);
 		UserStat us = UserStat.findFirst("user_id = ?", u.get("id"));
-	    UserStat us2 = UserStat.getUserStat(u);
-	    assertEquals(us.getId().toString(), us2.getId().toString());
-	    assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
+		UserStat us2 = UserStat.getUserStat(u);
+		assertEquals(us.getId().toString(), us2.getId().toString());
+		assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
 	}
-	
-
 }
