@@ -14,14 +14,21 @@ import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.DBException;
 
 public class UserStat extends Model {
+	/*Validators for model*/
+	static {
+		validatePresenceOf("user_id");
+		validatePresenceOf("created_challenges");
+		validatePresenceOf("solved_challenges");
+		validatePresenceOf("current_points");
+	}
 	
 	/**
 	 * Create the statistics for a given user.
-	 * @param u The user who statistics we will create. 
+	 * @param id The id of the user who statistics we will create. 
 	 */
-	public static void createUserStat(User u){
+	public static void createUserStat(int id){
 		UserStat stat = new UserStat();
-		stat.set("user_id",u.get("id"));
+		stat.set("user_id",id);
 		stat.set("created_challenges", 0);
 		stat.set("solved_challenges",0);
 		stat.set("current_points", 0);
