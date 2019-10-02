@@ -1,5 +1,6 @@
 package unrc.dose;
 
+import unrc.dose.Challenge;
 import org.javalite.activejdbc.Model;
 
 /*	
