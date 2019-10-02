@@ -23,7 +23,7 @@ public class Challenge extends Model {
     }
 
     public void setUserId(int user_id){
-        set("user_id",user_id);
+        set("user_id", user_id);
     }
 
     public String getTitle(){
@@ -31,7 +31,7 @@ public class Challenge extends Model {
     }
 
     public void setTitle(String title){
-        set("title",title);
+        set("title", title);
     }
 
     public String getDescription(){
@@ -39,7 +39,7 @@ public class Challenge extends Model {
     }
 
     public void setDescription(String description){
-        set("description",description);
+        set("description", description);
     }
 
     public String getSource(){
@@ -47,15 +47,49 @@ public class Challenge extends Model {
     }
 
     public void setSource(String source){
-        set("source",source);
+        set("source", source);
     }
+
     public int getPoint(){
         return getInteger("point");
     }
 
-    public void setPoint(String point){
-        set("point",point);
+    public void setPoint(int point){
+        set("point", point);
     }
 
-    
+    public int getOwnerId(){
+        return getInteger("owner_id");
+    }
+
+    public void setOwnerId(int onwer_id){
+        set("owner_id", onwer_id);
+    }
+
+    public int getOwnerSolutionId(){
+        return getInteger("owner_solution_id");
+    }
+
+    public void setOwnerSolutionId(int owner_solution_id){
+        set("owner_solution_id", owner_solution_id);
+    }
+
+    public static Challenge addChallenge(int user_id, String title, String description, String source, int point, int owner_id, int owner_solution_id){
+        Challenge c = new Challenge();
+        c.setUserId(user_id);
+        c.setTitle(title);
+        c.setDescription(description);
+        c.setSource(source);
+        c.setPoint(point);
+        c.setOwnerId(owner_id);
+        c.setOwnerSolutionId(owner_solution_id);
+        c.saveIt();
+        return c;
+    }
+
+    public static void deleteCallenge(int id){
+        Challenge c = Challenge.findById(id);
+        c.deleteCascade();
+    }
+
 }

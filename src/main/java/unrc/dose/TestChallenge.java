@@ -27,4 +27,16 @@ public class TestChallenge extends Model {
     public void setTest(String test){
         set("test",test);
     }
+
+    public boolean validateTestChallenge(Challenge c){
+        return true;
+    }
+
+    public static TestChallenge addTestChallenge(int challenge_id, String test){
+        TestChallenge t = new TestChallenge();
+        t.setChallengeId(challenge_id);
+        t.setTest(test);
+        t.saveIt();
+        return t;
+    }
 }

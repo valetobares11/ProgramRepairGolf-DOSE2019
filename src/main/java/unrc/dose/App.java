@@ -11,10 +11,20 @@ import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.LazyList;
 
 import unrc.dose.User;
+import unrc.dose.Challenge;
+import unrc.dose.TestChallenge;
 
 public class App
 {
     public static void main( String[] args ) {
+      Base.open();
+      Challenge.addChallenge(12,"---","hello", "cascsdavADF<SAFc",10,1,1);
+      TestChallenge.addTestChallenge(1, "hello");
+      TestChallenge p = new TestChallenge();
+      p.setChallengeId(1);
+      p.setTest("NNNfksdlandflasdfjasldfjld<");
+      p.saveIt();
+      Base.close();
       before((request, response) -> {
         Base.open();
       });
