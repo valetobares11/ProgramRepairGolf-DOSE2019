@@ -1,41 +1,63 @@
 package unrc.dose;
-
 /*
-
-== Schema Info
-
-	Table name: challenge_stats
-
-    id 				:INTEGER auto_increment primary key
-    challenge_id 	:INTEGER not null
-    average_score 	:FLOAT
-    solved_count 	:INTEGER 
-    created_at 		:DATETIME
-	updated_at 		:DATETIME
-
-*/
-
+* == Schema Info
+*
+* Table name: challenge_stats
+*	
+*	id INTEGER auto_increment primary key,
+*   challenge_id INTEGER not null,
+*   solved_count INTEGER, //alter table
+*   average_score INTEGER, //alter table
+*   created_at DATETIME,
+*	updated_at DATETIME
+*
+**/
 import org.javalite.activejdbc.Model;
 
 public class ChallengeStat extends Model {
 
-	public 
+	public static float getAverageScore(int challengeId) {
+		//Getting the score of currentChallenge
+		Challenge currentChallenge=Challenge.findbyid(challengeId);
+		int challengeScore=currentChallenge.get("point");
 
+		//Getting all distances from users who solved currentChallenge
+		List <Proposition> allPropositions=Proposition.where("challenge_id == ?", challengeId);
+		float sum=0;
+		Proposition aux;
 
-	public int getNumberOfSolutions() {
-		//TODO : Implement, this should return the number of valid solutions given to the challenge.
-		return 0;
+		for(int i=0; i<allPropositions.size(); i++){
+			aux=allPropositions.get(i);
+			sum+=challengeScore-(aux.get("distance"));
+		}
+
+		return sum/allPropositions.size();
 	}
 
-	public int getNumberOfProposal() {
-		//TODO :
-		return 0;
+
+	public static void updateSolvedCount(int challengeId) {
+		List <ChallengeStat> challengeSingleList=ChallengeStat.where("challenge_id == ?", challengeId);
+		ChallengeStat challengeToUpdate=challengeSingleList.get(0);
+		int currentSolvedCount=challengeToUpdate.get("solved_count");
+		currentSolvedCount++;
+		challengeToUpdate.set("solved_count", "currentSolvedCount");
+		challengeToUpdate.saveIt();
+
 	}
 
-	public int getSuccessRate() {
-		//TODO :
-		return 0;
+	public static void updateAverageScore(int challengeId, int newScore) {
+		List <ChallengeStat> challengeSingleList=ChallengeStat.where("challenge_id == ?", challengeId);
+		ChallengeStat challengeToUpdate=challengeSingleList.get(0);
+		
+		//getting the current average score and the current solved count
+		float currentAverage=challengeToUpdate.get("average_score");
+		int currentSolvedCount=challengeToUpdate.get("solved_count");
+		
+		float updatedAverageScore=currentAverage+((newScore-currentAverage)/currentSolvedCount)
+
+		challengeToUpdate.set("average_score", "updatedAverageScore");
+		challengeToUpdate.saveIt();
+
 	}
-
-
 }
+	
