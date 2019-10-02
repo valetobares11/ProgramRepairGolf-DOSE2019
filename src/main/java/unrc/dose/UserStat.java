@@ -36,10 +36,10 @@ public class UserStat extends Model {
 	}
 	
 	/**
-	* This method return the statics of the user
-	* @param user
-	* @return UserStat of the user
-	*/
+	 * This method return the statics of the user
+	 * @param user
+	 * @return UserStat of the user
+	 */
 	public static UserStat getUserStat(User user) {
 		return UserStat.findFirst("user_id = ?", user.getId());
 	}

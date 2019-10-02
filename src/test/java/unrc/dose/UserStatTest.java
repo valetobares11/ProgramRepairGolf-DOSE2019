@@ -1,7 +1,6 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
 import org.javalite.activejdbc.Base;
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class UserStatTest {
 	
-	private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
+private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	
 	@BeforeClass
 	public static void beforeAll() {
