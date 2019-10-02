@@ -30,22 +30,30 @@ public class UserTest {
     	Base.close();
   	}
 
+  	/**
+	 * delete an user
+	 * @result delete logically a user logged
+	 */
 	@Test
-	public void userFound(){
-		String name = "JohnConnor";
-		String pass = "VeryHardPass";
-		String email = "JohnConnor@gmail.com";
+	public void deleteUserSuccessfully(){
+		String username = "JohnConnor";
+		String password = "VeryHardPass";
 
-		assertEquals(true ,User.searchUser(name, pass, email));
+		assertEquals("Usuario eliminado",User.deleteUser(username, password));
 	}
 
-
+	/**
+	 * delete Unsuccessfully user
+	 * @result user not found
+	 */
 	@Test
-	public void userNotFound(){
-		String name = "Pity";
-		String pass = "Martinez";
-		String email = "YvaelTercero@gmail.com";
+	public void deleteUserUnsuccessfully(){
+		String username = "Pity";
+		String password = "Martinez";
 
-		assertEquals(false ,User.searchUser(name, pass, email));
+		assertEquals("Usuario no encontrado",User.deleteUser(username, password));
 	}
 }
+
+
+

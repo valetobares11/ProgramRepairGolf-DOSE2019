@@ -8,6 +8,7 @@
 *  password        :varchar(20)    not null,
 *  email_address   :varchar(50)    not null,
 *  admin           BOOLEAN not null default 0
+*  active_account  BOOLEAN not null default 1
 *
 **/
 
@@ -18,14 +19,24 @@ import org.javalite.activejdbc.LazyList;
 
 public class User extends Model {
 
-	public static Boolean searchUser(String name, String pass, String email){
-		LazyList<User> users = User.where("username = ? and password = ? and email_address = ?", name, pass, email);
+	static final String user_delete;
+	static final String user_not_found;
 
-		if(users.size() > 0){
-			return true;
+	 /**
+     * this method remove logically a user
+     * @param username_user this username is for delete logicaly, his account associate
+     * @param password_user this param is used for confirm the operation
+     * @return a string with this exit of remove or no remove the user
+     */
+	public static String deleteUser(String username_user, String password_user){
+		User user = new User();
+		LazyList<User> users = User.where("username = ? and password = ?", username_user, password_user);
+		
+        if(users.size() > 0){
+			user = users.get(0);
+			user.set("active_account", false);
+			return user_delete;
 		}
-		return false;
+		return user_not_found;
 	}
-
-
 }
