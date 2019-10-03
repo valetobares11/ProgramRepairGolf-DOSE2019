@@ -31,46 +31,65 @@ public class UserTest {
     	Base.close();
   	}
 
-
+    /**
+    * found a user by his username succesfully
+    * @result user found 
+    */
 	@Test
-	public void userFound() {
+	public void userFoundByName() {
 		String name = "JohnConnor";
-		String pass = "VeryHardPass";
-		String email = "JohnConnor@gmail.com";
 
-		assertEquals(true ,User.searchUser(name, pass, email));
+		assertEquals(false , User.searchUserByUsername(name));
 	}
 
-
+    /**
+    * user not found by his username
+    * @result user not found  
+    */
 	@Test
-	public void userNotFound() {
+	public void userNotFoundByName() {
 		String name = "Pity";
-		String pass = "Martinez";
+
+		assertEquals(true , User.searchUserByUsername(name));
+	}
+
+    /**
+    * found a user by his email_address succesfully 
+    * @result email_addres found  
+    */
+	@Test
+	public void userFoundByEmail() {
+		String email = "JohnConnor@gmail.com";
+
+		assertEquals(false , User.searchUserByEmail(email));
+	}
+
+    /**
+    * user not found by his email_address
+    * @result email_addres not found  
+    */
+	@Test
+	public void userNotFoundByEmail() {
 		String email = "YvaelTercero@gmail.com";
 
-		assertEquals(false ,User.searchUser(name, pass, email));
+		assertEquals(true , User.searchUserByEmail(email));
 	}
 
-
+    /**
+    * load all the fields of a user with his data
+    * @result user charged with fields that have passed by the user 
+    */
 	@Test
-	public void userSignUpSuccess() {
-		String name = "Json";
-		String pass = "Mcperson";
-		String email = "Jerson@gmail.com";
+	public void userSet() {
+		String name = "Enzo";
+		String password = "Ferrari";
+		String email = "F40@gmail.com";
 		Boolean admin = false;
+		User pepe = new User();
 
-		assertEquals("User created successfully. " ,User.signUp(name, pass, email, admin));
-	}
+		pepe = User.set(name, password, email, admin);	
 
-
-	@Test
-	public void userSignUpFailed() {
-		String name = "JohnConnor";
-		String pass = "VeryHardPass";
-		String email = "JohnConnor@gmail.com";
-		Boolean admin = false;
-
-		assertEquals("Username already used. Choose other. " ,User.signUp(name, pass, email, admin));
+		assertEquals(name , pepe.get("username"));
 	}
 
 }
