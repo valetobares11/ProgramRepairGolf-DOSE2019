@@ -1,5 +1,7 @@
 package unrc.dose;
 
+import unrc.dose.TestChallenge;
+import unrc.dose.CompilationChallenge;
 import org.javalite.activejdbc.Model;
 
 /*	
@@ -10,7 +12,6 @@ Atributos de la tabla:
     description varchar(50),
     source varchar(10000),
     point integer,
-    owner_id integer,
     owner_solution_id integer
 */
 public class Challenge extends Model {
@@ -58,14 +59,6 @@ public class Challenge extends Model {
         set("point", point);
     }
 
-    public int getOwnerId(){
-        return getInteger("owner_id");
-    }
-
-    public void setOwnerId(int onwer_id){
-        set("owner_id", onwer_id);
-    }
-
     public int getOwnerSolutionId(){
         return getInteger("owner_solution_id");
     }
@@ -74,20 +67,45 @@ public class Challenge extends Model {
         set("owner_solution_id", owner_solution_id);
     }
 
-    public static Challenge addChallenge(int user_id, String title, String description, String source, int point, int owner_id, int owner_solution_id){
+    /**
+     */
+    public static Challenge addChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id){
         Challenge c = new Challenge();
         c.setUserId(user_id);
         c.setTitle(title);
         c.setDescription(description);
         c.setSource(source);
         c.setPoint(point);
-        c.setOwnerId(owner_id);
         c.setOwnerSolutionId(owner_solution_id);
         c.saveIt();
         return c;
     }
 
-    public static void deleteCallenge(Challenge c){
+    /**
+     */
+    public static boolean addTestChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id, String test){
+        Challenge c = addChallenge(user_id, title, description, source, point, owner_solution_id);
+        TestChallenge t = TestChallenge.addTestChallenge(c.getInteger("id"), test);
+        if (TestChallenge.validateTestChallenge(c, t))
+            return true;
+        else 
+            return false;
+    }
+
+    /**
+     */
+    public static boolean addCompilationChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id){
+        Challenge c = addChallenge(user_id, title, description, source, point, owner_solution_id);
+        CompilationChallenge t = CompilationChallenge.addCompilationChallenge(c.getInteger("id"));
+        if (CompilationChallenge.validateCompilationChallenge(c))
+            return true;
+        else 
+            return false;
+    }
+
+    /**
+     */
+    public static void deleteChallenge(Challenge c){
         c.deleteCascade();
     }
 

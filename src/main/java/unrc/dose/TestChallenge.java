@@ -29,7 +29,7 @@ public class TestChallenge extends Model {
         set("test",test);
     }
 
-    public boolean validateTestChallenge(Challenge c){
+    public static boolean validateTestChallenge(Challenge c, TestChallenge t){
         return true;
     }
 

@@ -20,11 +20,11 @@ public class CompilationChallenge extends Model {
         set("challenge_id",challenge_id);
     }
 
-    public boolean validateCompilationChallenge(Challenge c){
+    public static boolean validateCompilationChallenge(Challenge c){
         return true;
     }
 
-    public static CompilationChallenge addTestChallenge(int challenge_id){
+    public static CompilationChallenge addCompilationChallenge(int challenge_id){
         CompilationChallenge t = new CompilationChallenge();
         t.setChallengeId(challenge_id);
         t.saveIt();
