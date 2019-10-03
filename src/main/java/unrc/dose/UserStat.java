@@ -1,5 +1,5 @@
 /* db-attributes of userStats:
-	id
+	id 
 	user_id
 	created_challenges
 	solved_challenges
@@ -15,15 +15,6 @@ import org.javalite.activejdbc.DBException;
 import org.javalite.activejdbc.LazyList;
 
 public class UserStat extends Model {
-
-  public static LazyList showAllUsers (){
-    LazyList<User> users = User.findAll();
-
-    return users;
-  }
-
-
-public class UserStat extends Model {
 	/*Validators for model*/
 	static {
 		validatePresenceOf("user_id");
@@ -32,15 +23,14 @@ public class UserStat extends Model {
 		validatePresenceOf("current_points");
 	}
 
-/**
- * Show all users who are registered in the system
- *@return LazyList with all te users
- */
-public static LazyList showAllUsers (){
-  LazyList<User> users = User.findAll();
-
-  return users;
-  }
+	/**
+	 * Show all users who are registered in the system
+	 *@return LazyList with all the users.
+	 */
+	public static LazyList<User> showAllUsers (){
+		LazyList<User> users = User.findAll();
+		return users;
+	}
 
 	/**
 	 * Create the statistics for a given user.
