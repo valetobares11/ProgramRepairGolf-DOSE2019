@@ -40,6 +40,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	public void afterTest() {
 		Base.rollbackTransaction();
 	}
+
 	/**
 	 * Test the method createUserStat from
 	 * UserStat class.
@@ -58,6 +59,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		assertEquals((int)stat.get("solved_challenges"),0);
 		assertEquals((int)stat.get("current_points"),0);
 	}
+
 	/**
 	 * Test the method getUserStat from
 	 * UserStat class.
@@ -75,9 +77,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		assertEquals(us.getId().toString(), us2.getId().toString());
 		assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
 	}
+
 	/**
-	 *Test the method showAllUsers
-	 *UserStat class.
+	 * Test the method showAllUsers
+	 * UserStat class.
 	 */
 	@Test
 	public void showAllUsers() {
