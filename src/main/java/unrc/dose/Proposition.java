@@ -1,6 +1,9 @@
 package unrc.dose;
 
+
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.Table;
+import java.util.*;
 
 /*
 * == Schema Info
@@ -18,6 +21,107 @@ import org.javalite.activejdbc.Model;
 **/
 public class Proposition extends Model {
 
+    public Integer getId() {
+        return getId();
+    }
+
+    /**
+     * 
+     * @return id of user
+     */
+    public Integer getUserId() {
+        return (Integer) this.get("user_id");
+    }
+
+    /**
+     * 
+     * @return id of challenge
+     */
+    public Integer getChallengeId() {
+        return (Integer) this.get("challenge_id");
+    }
+
+    /**
+     * 
+     * @return code of the proposed solution
+     */
+    public String getSource() {
+        return (String) this.get("source");
+    }
+
+    /**
+     * 
+     * @return status of the proposed solution
+     */
+    public Integer getIsSubmit() {
+        return (Integer) this.get("isSubmit");
+    }
+
+    /**
+     * 
+     * @return distance obtained from the proposed solution
+     */
+    public Integer getDistance() {
+        return (Integer) this.get("distance");
+    }
+
+    /**
+     * 
+     * @return amount of tests passed by the proposed solution
+     */
+    public Integer getCantTestPassed() {
+        return (Integer) this.get("cantTestPassed");
+    }
+
+    /**
+     * 
+     * @param userId
+     */
+    public void setUserId(Integer userId) {
+        this.set("user_id", userId);
+    }
+
+    /**
+     * 
+     * @param challengeId
+     */
+    public void setChallengeId(Integer challengeId) {
+        this.set("challenge_id", challengeId);
+    }
+
+    /**
+     * 
+     * @param source
+     */
+    public void setSource(String source) {
+        this.set("source", source);
+    }
+
+    /**
+     * 
+     * @param isSubmit
+     */
+    public void setIsSubmit(Integer isSubmit) {
+        this.set("isSubmit", isSubmit);
+    }
+
+    /**
+     * 
+     * @param distance
+     */
+    public void setDistance(Integer distance) {
+        this.set("distance", distance);
+    }
+
+    /**
+     * 
+     * @param cantTestPassed
+     */
+    public void setCantTestPassed(Integer cantTestPassed) {
+        this.set("cantTestPased", cantTestPassed);
+    }
+
+    
 	/**
 	 * This method calculates the distance of editing between two string
 	 * @param str1 represents the original string

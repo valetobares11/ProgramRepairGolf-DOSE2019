@@ -27,6 +27,53 @@ public class PropositionTest {
     	Base.close();
   	}
 
+
+	//--------test get----//
+	@Test
+	public void invalidUserId() {
+		Proposition proposition = new Proposition();
+		proposition.setUserId(-1);
+		assertEquals(proposition.isValid(), false);
+	}
+
+	@Test
+	public void invalidChallengeId() {
+		Proposition proposition = new Proposition();
+		proposition.setChallengeId(-1);
+		assertEquals(proposition.isValid(), false);
+	}
+
+	@Test
+	public void sourceIsEmpty() {
+		Proposition proposition = new Proposition();
+		proposition.setSource("");
+		assertEquals(proposition.isValid(), false);
+	}
+
+	@Test
+	public void invalidIsSubmit() {
+		Proposition proposition = new Proposition();
+		proposition.setIsSubmit(-1);
+		assertEquals(proposition.isValid(), false);
+	}
+
+	@Test
+	public void invalidDistance() {
+		Proposition proposition = new Proposition();
+		proposition.setDistance(-1);
+		assertEquals(proposition.isValid(), false);
+	}
+
+	@Test
+	public void invalidCantTestPassed() {
+		Proposition proposition = new Proposition();
+		proposition.setCantTestPassed(-1);
+		assertEquals(proposition.isValid(), false);
+	}
+
+	//-------end test get-----//
+
+
   	@Test
   	public void sameDistance() {
   		String str1 = "Hola";
@@ -41,5 +88,8 @@ public class PropositionTest {
   		String str2 = "Hola";
 
   		assertEquals(0, Proposition.computeLevenshteinDistance(str1, str2));
-  	}
+	  }
+	  
+
+
 }
