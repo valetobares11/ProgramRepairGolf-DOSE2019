@@ -32,7 +32,6 @@ public class ChallengeTest {
     challenge.setDescription("Test Hello Word");
     challenge.setSource("System.out.println('Hello Word')");
     challenge.setPoint(100);
-    challenge.setOwnerId(5);
     challenge.setOwnerSolutionId(6);
 
     assertEquals(2,challenge.getUserId());
@@ -40,14 +39,13 @@ public class ChallengeTest {
     assertEquals("Test Hello Word",challenge.getDescription());
     assertEquals("System.out.println('Hello Word')",challenge.getSource());
     assertEquals(100,challenge.getPoint());
-    assertEquals(5,challenge.getOwnerId());
     assertEquals(6,challenge.getOwnerSolutionId());
   }
 
   @Test
   public void addChallengeTest() {
     Challenge challenge = new Challenge();
-    challenge = Challenge.addChallenge(5,"Hello Word","Test Hello Word","System.out.println('Hello Word')",300,8,10);
+    challenge = Challenge.addChallenge(5,"Hello Word","Test Hello Word","System.out.println('Hello Word')",300,10);
 
     assertEquals(5,challenge.getUserId());
 
