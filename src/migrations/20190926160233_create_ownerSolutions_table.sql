@@ -1,4 +1,4 @@
-create table if not exists ownerSolutions (
+create table if not exists owner_solutions (
 	id integer auto_increment primary key,
 	id_challenge integer,
 	user_id integer,
