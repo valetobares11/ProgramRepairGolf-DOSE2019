@@ -1,7 +1,6 @@
 package unrc.dose;
 
 import unrc.dose.Challenge;
-
 import org.javalite.activejdbc.Base;
 import org.junit.After;
 import org.junit.Before;
@@ -12,18 +11,26 @@ public class ChallengeTest {
 
   @Before
   public void before(){
-      Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/repair_game_test", "root", "root");
-      System.out.println("ChallengeTest setup");
-      Base.openTransaction();
+      if (!Base.hasConnection()) {
+        Base.open();
+        System.out.println("ChallengeTest setup");
+        Base.openTransaction();
+      }
   }
 
   @After
   public void after(){
-      System.out.println("ChallengeTest tearDown");
-      Base.rollbackTransaction();
-      Base.close();
+      if (Base.hasConnection()) {
+        Base.rollbackTransaction();
+        System.out.println("ChallengeTest tearDown");
+        Base.close();
+      }  
   }
 
+  /**
+   * Test the method set and get
+   * from Challenge class 
+   */
   @Test
   public void setAndGetTest() {
     Challenge challenge = new Challenge();
@@ -33,7 +40,7 @@ public class ChallengeTest {
     challenge.setSource("System.out.println('Hello Word')");
     challenge.setPoint(100);
     challenge.setOwnerSolutionId(6);
-
+    challenge.saveIt();
     assertEquals(2,challenge.getUserId());
     assertEquals("Hello Word",challenge.getTitle());
     assertEquals("Test Hello Word",challenge.getDescription());
@@ -42,25 +49,74 @@ public class ChallengeTest {
     assertEquals(6,challenge.getOwnerSolutionId());
   }
 
+  /**
+   * Test the method addChallenge
+   * from Challenge class 
+   */
   @Test
   public void addChallengeTest() {
     Challenge challenge = new Challenge();
-    challenge = Challenge.addChallenge(5,"Hello Word","Test Hello Word","System.out.println('Hello Word')",300,10);
-
-    assertEquals(5,challenge.getUserId());
-
+    int userId = 1; 
+    String title= "Hello Word";
+    String description = "Test Hellos Word";
+    String source = "System.out.println('Hello Word')";
+    int point = 100;
+    int ownerSolutionId = 9;
+    challenge = Challenge.addChallenge(userId,title,description,source,point,ownerSolutionId);
+    challenge.saveIt();
+    assertEquals(1,challenge.getUserId());
   }
 
-  /*
+  /**
+   * Test the method addTestChallenge
+   * from Challenge class 
+   */
+  @Test
+  public void addTestChallengeTest() {
+    int userId = 32; 
+    String title= "Hello Word";
+    String description = "Test Hellos Word";
+    String source = "System.out.println('Hello Word')";
+    int point = 52;
+    int ownerSolutionId = 3;
+    String test = "this is a challenge test";
+    boolean validation = Challenge.addTestChallenge(userId,title,description,source,point,ownerSolutionId,test);
+    assertEquals(true,validation);
+  }
+
+   /**
+   * Test the method addCompilationChallenge
+   * from Challenge class 
+   */
+  @Test
+  public void addCompilationChallengeTest() {
+    int userId = 32; 
+    String title= "Hello Word";
+    String description = "Test Hellos Word";
+    String source = "System.out.println('Hello Word')";
+    int point = 52;
+    int ownerSolutionId = 3;
+    boolean validate = Challenge.addCompilationChallenge(userId,title,description,source,point,ownerSolutionId);
+    assertEquals(true,validate);
+  }
+
+  /**
+   * Test the method deleteChallenge
+   * from Challenge class 
+   */
   @Test
   public void deleteChallengeTest() {
     Challenge challenge = new Challenge();
-
-    challenge = Challenge.addChallenge(5,"Hello Word","Test Hellos Word","System.out.println('Hello Word')",300,8,10);
-
+    int userId = 5; 
+    String title= "Hello Word";
+    String description = "Test Hellos Word";
+    String source = "System.out.println('Hello Word')";
+    int point = 300;
+    int ownerSolutionId = 10;
+    challenge = Challenge.addChallenge(userId,title,description,source,point,ownerSolutionId);
+    challenge.saveIt();
     Challenge.deleteChallenge(challenge);
-
-    assertEquals (null,Challenge.where("user_id = ?",5));   
+    assertEquals(null,Challenge.findFirst("title = ?",title));   
   } 
-  */   
+ 
 }
