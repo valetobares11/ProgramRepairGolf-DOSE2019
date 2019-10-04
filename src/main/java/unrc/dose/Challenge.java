@@ -5,7 +5,7 @@ import unrc.dose.CompilationChallenge;
 import org.javalite.activejdbc.Model;
 
 /*	
-Atributos de la tabla:
+ * table attributes:
     id integer auto_increment primary key,
     user_id: integer,
     title varchar (50),
@@ -68,6 +68,14 @@ public class Challenge extends Model {
     }
 
     /**
+     * This method allows to create a challenge
+     * @param user_id user id that created it
+     * @param title title that will have the challenge
+     * @param description a brief description of what the challenge is about
+     * @param source source code that will have the challenge
+     * @param point points given by the admin that for the challenge
+     * @param owner_solution_id id of the solution proposed by a user
+     * @return challenge created
      */
     public static Challenge addChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id){
         Challenge c = new Challenge();
@@ -82,6 +90,15 @@ public class Challenge extends Model {
     }
 
     /**
+     * This method allows you to create a test challenge and validate it.
+     * @param user_id user id that created it.
+     * @param title title that will have the challenge.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param owner_solution_id id of the solution proposed by a user.
+     * @param test test corresponding to the challenge.
+     * @return true in case the validation is successful, otherwise false.
      */
     public static boolean addTestChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id, String test){
         Challenge c = addChallenge(user_id, title, description, source, point, owner_solution_id);
@@ -93,10 +110,18 @@ public class Challenge extends Model {
     }
 
     /**
+     * This method allows you to create a compilation challenge and validate it.
+     * @param user_id user id that created it.
+     * @param title title that will have the challenge.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param owner_solution_id id of the solution proposed by a user.
+     * @return true in case the validation is successful, otherwise false.
      */
     public static boolean addCompilationChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id){
         Challenge c = addChallenge(user_id, title, description, source, point, owner_solution_id);
-        CompilationChallenge t = CompilationChallenge.addCompilationChallenge(c.getInteger("id"));
+        CompilationChallenge.addCompilationChallenge(c.getInteger("id"));
         if (CompilationChallenge.validateCompilationChallenge(c))
             return true;
         else 
@@ -104,6 +129,8 @@ public class Challenge extends Model {
     }
 
     /**
+     * This method allows you to delete a challenge created.
+     * @param c challenge to eliminate.
      */
     public static void deleteChallenge(Challenge c){
         c.deleteCascade();
