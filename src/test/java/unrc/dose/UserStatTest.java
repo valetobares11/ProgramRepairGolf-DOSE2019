@@ -18,6 +18,12 @@ import org.slf4j.LoggerFactory;
 public class UserStatTest {
 
 private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
+	
+
+	@Before
+	public void onSetUp() {
+	Base.openTransaction();
+	}
 
 	@BeforeClass
 	public static void beforeAll() {
@@ -25,19 +31,71 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		Base.open();
 	}
 	
-	@Before
-	public void beforeTest() {
-		Base.openTransaction();
+	@After
+	public void onTearDown() {
+		Base.rollbackTransaction();
 	}
-
+	
 	@AfterClass
 	public static void afterAll() {
 		log.info("UserStatTest AfterClass");
 		Base.close();
 	}
 	
-	@After
-	public void afterTest() {
+	
+	@Test
+	public void getUserIdTest() {
+		Base.openTransaction();
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat.createUserStat(u.getInteger("id"));
+		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		assertEquals(stat.getUserId(),stat.get("user_id"));
+		Base.rollbackTransaction();
+	}
+	
+	@Test
+	public void getUserIdTest() {
+		Base.openTransaction();
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat.createUserStat(u.getInteger("id"));
+		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		assertEquals(stat.getUserId(),stat.get("user_id"));
+		Base.rollbackTransaction();
+	}
+	
+	@Test
+	public void getUserIdTest() {
+		Base.openTransaction();
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat.createUserStat(u.getInteger("id"));
+		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		assertEquals(stat.getUserId(),stat.get("user_id"));
+		Base.rollbackTransaction();
+	}
+	
+	@Test
+	public void getUserIdTest() {
+		Base.openTransaction();
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat.createUserStat(u.getInteger("id"));
+		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		assertEquals(stat.getUserId(),stat.get("user_id"));
 		Base.rollbackTransaction();
 	}
 
@@ -47,17 +105,19 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void createUserStat() {
+		Base.openTransaction();
 		User u = new User();
-		u.set("username","Hackerman");
+		u.set("username","Hackerman-san");
 		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsa@gmail.com");
+		u.set("email_address", "hackingnsrl@gmail.com");
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertNotNull(stat);
-		assertEquals((int)stat.get("created_challenges"),0);
-		assertEquals((int)stat.get("solved_challenges"),0);
-		assertEquals((int)stat.get("current_points"),0);
+		assertEquals(stat.getCreatedChallenges(),0);
+		assertEquals(stat.getSolvedChallenges(),0);
+		assertEquals(stat.getCurrentPoints(),0);
+		Base.rollbackTransaction();
 	}
 
 	/**
@@ -66,6 +126,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void getUserStat() {
+		Base.openTransaction();
 		User u = new User();
 		u.set("password", "JohnDoe");
 		u.set("username", "JohnDoe");
@@ -76,6 +137,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat us2 = UserStat.getUserStat(u);
 		assertEquals(us.getId().toString(), us2.getId().toString());
 		assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
+		Base.rollbackTransaction();
 	}
 
 	/**
@@ -84,6 +146,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void showAllUsers() {
+		Base.openTransaction();
 		User.deleteAll();
 		User u = new User();
 		u.set("password", "ElMejor");
@@ -100,5 +163,6 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 			User user = users.get(i);
 			assertTrue(user.get("username").toString().equals("LaMosca")|| user.get("username").toString().equals("Themosque"));
 		}
+		Base.rollbackTransaction();
 	}
 }

@@ -54,7 +54,7 @@ public class UserStat extends Model {
 	 * @return The points of the user.
 	 */
 	public int getCurrentPoints() {
-		return this.getInteger("curent_points");
+		return this.getInteger("current_points");
 	}
 
 	/**
