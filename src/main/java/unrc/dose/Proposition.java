@@ -21,16 +21,12 @@ import java.util.*;
 **/
 public class Proposition extends Model {
 
-    public Integer getId() {
-        return getId();
-    }
-
     /**
      * 
      * @return id of user
      */
-    public Integer getUserId() {
-        return (Integer) this.get("user_id");
+    public Integer getUserId() {        
+    	return (Integer) this.get("user_id");    
     }
 
     /**
@@ -120,7 +116,18 @@ public class Proposition extends Model {
     public void setCantTestPassed(Integer cantTestPassed) {
         this.set("cantTestPased", cantTestPassed);
     }
-
+    
+    /**
+     * This method find the proposition that is not a solution yet.
+     * @param userId represents the user
+     * @param challengeId represent the challenge
+     * @return null if there is no proposition or the proposition, or the proposition found.
+     */
+    public static Proposition getPropositionNoSubmit(int userId, int challengeId) {
+    	
+    	return Proposition.findFirst("user_id = ? and challenge_id = ? and isSubmit = ?", userId, challengeId, 0);
+    
+    }
     
 	/**
 	 * This method calculates the distance of editing between two string
