@@ -43,7 +43,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		Base.close();
 	}
 	
-	
+	/**
+	 * Test the method getUserId from
+	 * UserStat class.
+	 */
 	@Test
 	public void getUserIdTest() {
 		User u = new User();
@@ -55,7 +58,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getUserId(),stat.get("user_id"));
 	}
-	
+	/**
+	 * Test the method getCreatedChallenges from
+	 * UserStat class.
+	 */
 	@Test
 	public void getCreatedChallengesTest() {
 		User u = new User();
@@ -67,7 +73,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getCreatedChallenges(),stat.get("created_challenges"));
 	}
-	
+	/**
+	 * Test the method getSolvedChallenges from
+	 * UserStat class.
+	 */
 	@Test
 	public void getSolvedChallengesTest() {
 		User u = new User();
@@ -79,7 +88,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getSolvedChallenges(),stat.get("solved_challenges"));
 	}
-	
+	/**
+	 * Test the method getCurrentPoints from
+	 * UserStat class.
+	 */
 	@Test
 	public void getCurrentPointsTest() {
 		User u = new User();
