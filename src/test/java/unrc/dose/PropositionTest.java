@@ -5,6 +5,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+
+import java.awt.List;
+
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
 
@@ -16,6 +19,7 @@ import spark.Spark;
 
 import unrc.dose.Proposition;
 import org.junit.Test;
+import org.javalite.activejdbc.LazyList;
 
 public class PropositionTest {
 
@@ -153,6 +157,88 @@ public class PropositionTest {
 		assertEquals(proposition.get("cantTestPassed"), 1);
 
 	}
+
+	
+	//------test para isue --> get compromised solution #101
+	@Test 
+	public void solutionsForUserInChallengeTest() {
+		Challenge challenger = new Challenge();
+  		User usr = new User();
+  		challenger.set("title", "Challenger 1");
+  		usr.set("username", "Gaston");
+  		usr.set("password", "abc123");
+  		usr.set("email_address", "pepe@gmail.com");
+  		challenger.saveIt(); 
+  		usr.saveIt();
+  		
+  		Integer usrId = usr.getInteger("id");
+  		Integer challId = challenger.getInteger("id");
+  		  		
+ 	  		
+  		Proposition p1 = new Proposition();
+		p1.set("challenge_id", challId);
+		p1.set("user_id", usrId);
+		p1.set("source", "System.out.println('Hello World');");
+		p1.set("isSubmit", 1);
+		p1.set("distance", Integer.MAX_VALUE);
+		p1.set("cantTestPassed", 0);
+		p1.saveIt();
+		  
+		Proposition p2 = new Proposition();
+		p2.set("challenge_id", challId);
+		p2.set("user_id", usrId);
+		p2.set("source", "System.out.println('Hello World');");
+		p2.set("isSubmit", 1);
+		p2.set("distance", Integer.MAX_VALUE);
+		p2.set("cantTestPassed", 0);
+		p2.saveIt();
+
+		Proposition proposition = new Proposition();
+
+		LazyList<Proposition> propositions = proposition.solutionsForUserInChallenge(usrId, challId);
+
+		assertEquals(2, propositions.size());
+
+		Proposition.deleteAll();
+		Challenge.deleteAll();
+		User.deleteAll();
+	}
+
+	// ----test para issue --> save a proposed solutipon as definitive #104
+		@Test
+		public void saveSolutionTest() {
+			Challenge challenger = new Challenge();
+
+			User usr = new User();
+			challenger.set("title", "Challenger 1");
+			usr.set("username", "Gaston");
+			usr.set("password", "abc123");
+			usr.set("email_address", "pepe@gmail.com");
+			challenger.saveIt();
+			usr.saveIt();
+
+			Integer usrId = usr.getInteger("id");
+			Integer challId = challenger.getInteger("id");
+
+			Proposition p1 = new Proposition();
+			p1.set("challenge_id", challId);
+			p1.set("user_id", usrId);
+			p1.set("source", "System.out.println('Hello World');");
+			p1.set("isSubmit", 0);
+			p1.set("distance", Integer.MAX_VALUE);
+			p1.set("cantTestPassed", 0);
+			p1.saveIt();
+
+			p1.saveSolution("hola mundo;", 10);
+
+			int isSubmit = p1.getIsSubmit();
+
+			assertEquals(1, isSubmit);
+
+			Proposition.deleteAll();
+			Challenge.deleteAll();
+			User.deleteAll();
+		}
 
 	
 	

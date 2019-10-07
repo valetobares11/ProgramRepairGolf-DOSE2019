@@ -5,6 +5,7 @@ import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 import java.util.*;
+import org.javalite.activejdbc.LazyList;
 
 /*
 * == Schema Info
@@ -117,6 +118,32 @@ public class Proposition extends Model {
     public void setCantTestPassed(Integer cantTestPassed) {
         this.set("cantTestPassed", cantTestPassed);
     }
+
+    /**
+     * Get the solutions for a challenge by a user
+     * 
+     * @param userId
+     * @param challengeId
+     * @return List of proposition for user in challenge
+     */
+    public LazyList<Proposition> solutionsForUserInChallenge(Integer userId, Integer challengeId) {
+        return Proposition.where("user_id = ? and challenge_id = ? and isSubmit = ?", userId, challengeId, 1);
+    }
+
+    /**
+     * Save a user's solution in a challenge
+     * 
+     * @param sourceCurrent
+     * @param distanceObtained
+     */
+    public void saveSolution(String sourceCurrent, Integer distanceObtained) {
+        this.set("source", sourceCurrent);
+        this.set("distance", distanceObtained);
+        this.set("isSubmit", 1);
+    }
+ 
+
+
     
     /**
      * This method find the proposition that is not a solution yet.
