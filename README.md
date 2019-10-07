@@ -35,6 +35,11 @@ and use your own secret credentials
 #### Correr el servidor web
 Use `./run.sh` script
 
+#### Run linter before push any code
+```
+mvn checkstyle:check
+```
+
 #### Curl How to 
 
 * List Users
