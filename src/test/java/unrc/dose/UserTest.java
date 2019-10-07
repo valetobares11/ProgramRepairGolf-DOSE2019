@@ -92,4 +92,28 @@ public class UserTest {
 		assertEquals(name , pepe.get("username"));
 	}
 
+	/**
+	 * delete an user
+	 * @result delete logically a user logged
+	 */
+	@Test
+	public void deleteUserSuccessfully(){
+		String username = "JohnConnor";
+		String password = "VeryHardPass";
+
+		assertEquals(true,User.deleteUser(username, password));
+	}
+
+	/**
+	 * delete Unsuccessfully user
+	 * @result user not found
+	 */
+	@Test
+	public void deleteUserUnsuccessfully(){
+		String username = "Pity";
+		String password = "Martinez";
+
+		assertEquals(false,User.deleteUser(username, password));
+	}
+
 }

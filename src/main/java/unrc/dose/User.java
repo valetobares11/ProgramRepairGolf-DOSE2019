@@ -8,6 +8,7 @@
 *  password        :varchar(20)    not null,
 *  email_address   :varchar(50)    not null,
 *  admin           BOOLEAN not null default 0
+*  active_account  BOOLEAN not null default 1
 *  unique(username),
 *  unique(email_address)
 *
@@ -114,6 +115,33 @@ public class User extends Model {
 		u.set(PASSWORD, pass);
 		u.set(EMAIL, email);
 		u.set(ADMIN, admin);
+	}
+
+	 /**
+     * this method remove logically a user.
+     * @param usernameUser this username is for delete logicaly,
+     * his account associate
+     * @param passwordUser this param is used for confirm the operation
+     * @return a boolean with this exit of remove or no remove the user
+     */
+	public static boolean deleteUser(final String usernameUser, final String passwordUser) {
+		User user = User.findFirst("username = ? and password = ?", usernameUser, passwordUser);
+        if (user != null) {
+			user.set("active_account", false);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+     * this method is for login the user.
+     * @param usernameUser this username is for login
+     * @param passwordUser this param is used for finally operation
+     * @return a boolean for see if coincide username and pass
+     */
+	public static boolean login(final String usernameUser, final String passwordUser) {
+		User user = User.findFirst("username = ? and password = ?", usernameUser, passwordUser);
+		return (user != null);
 	}
 
 }
