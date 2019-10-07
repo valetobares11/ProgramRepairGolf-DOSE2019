@@ -2,8 +2,7 @@ package unrc.dose;
 
 import org.javalite.activejdbc.Model;
 
-/*
-* == Schema Info
+/** == Schema Info.
 *
 * Table name: comments
 *
@@ -13,51 +12,56 @@ import org.javalite.activejdbc.Model;
 * challenge_id    :integer     not null
 * user_id         :integer    not null
 * comment_id      :integer
-**/
-/**
-*@author Celi Yanina, de Prada Hernan, Goldenberg Erika
-**/
+*/
 public class Comment extends Model {
 
   /**
   *Create a new comment.
   *@param title this is the comment's title
   *@param description this the comment's body
-  *@param challenge_id this is the challenge's id which is commented
-  *@param user_id this is the user's id who commented
+  *@param challengeId this is the challenge's id which is commented
+  *@param userId this is the user's id who commented
+  *@return the comment created
   **/
-
-  public void createComment (String title,String description, int challenge_id, int user_id ){
-    this.set("title",title);
-    this.set("description",description);
-    this.set("challenge_id", challenge_id);
-    this.set("user_id", user_id);
-    this.saveIt();
+  public static Comment createComment(final String title,
+  final String description, final int challengeId, final int userId) {
+    Comment c = new Comment();
+    c.set("title", title);
+    c.set("description", description);
+    c.set("challenge_id", challengeId);
+    c.set("user_id", userId);
+    c.saveIt();
+    return c;
   }
-  /*
-  *isResponse
-  *@param comment_id this is comments or response to evaluate
+  /**
+  *isResponse.
+  *@param commentId this is comments or response to evaluate
   *@return return if the selected comment_id si a comment or a response.
   **/
-  public boolean isResponse(int comment_id){
-    Comment c = Comment.findById(comment_id);
+  public static boolean isResponse(final int commentId) {
+    Comment c = Comment.findById(commentId);
     return ((c.getInteger("comment_id")) != (null));
   }
   /**
   *Create a new Response.
   *@param description this the response's body
-  *@param challenge_id this is the challenge's id which is commented
-  *@param user_id this is the user's id who responded to a comment
+  *@param userId this is the user's id who responded to a comment
+  *@param commentId this is the id to the comment it references
+  *@return the created response
+  *@throws NullPointerException when doesn't exits the comment which this id
   **/
-  public void createResponse (String description, int user_id, int comment_id) throws NullPointerException{
-    if (!isResponse(comment_id)){
-    Comment c = Comment.findById(comment_id);
-    this.set("description", description);
-    this.set("user_id", user_id);
-    this.set("title", "Re :" + c.getString("title"));
-    this.set("comment_id", comment_id);
-    this.set("challenge_id", c.getInteger("challenge_id"));
-    this.saveIt();
-  }
+  public static Comment createResponse(final String description,
+  final int userId, final int commentId) throws NullPointerException {
+    Comment comment = new Comment();
+    if (!isResponse(commentId)) {
+      Comment c = Comment.findById(commentId);
+      comment.set("description", description);
+      comment.set("user_id", userId);
+      comment.set("title", "Re :" + c.getString("title"));
+      comment.set("comment_id", commentId);
+      comment.set("challenge_id", c.getInteger("challenge_id"));
+      comment.saveIt();
+    }
+    return comment;
   }
 }
