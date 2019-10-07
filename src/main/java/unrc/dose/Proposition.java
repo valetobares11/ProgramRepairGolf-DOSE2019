@@ -26,7 +26,7 @@ public class Proposition extends Model {
      * @return id of user
      */
     public Integer getUserId() {        
-    	return (Integer) this.get("user_id");    
+    	return this.getInteger("user_id");    
     }
 
     /**
@@ -34,7 +34,7 @@ public class Proposition extends Model {
      * @return id of challenge
      */
     public Integer getChallengeId() {
-        return (Integer) this.get("challenge_id");
+        return this.getInteger("challenge_id");
     }
 
     /**
@@ -42,7 +42,7 @@ public class Proposition extends Model {
      * @return code of the proposed solution
      */
     public String getSource() {
-        return (String) this.get("source");
+        return this.getString("source");
     }
 
     /**
@@ -50,7 +50,7 @@ public class Proposition extends Model {
      * @return status of the proposed solution
      */
     public Integer getIsSubmit() {
-        return (Integer) this.get("isSubmit");
+        return this.getInteger("isSubmit");
     }
 
     /**
@@ -58,7 +58,7 @@ public class Proposition extends Model {
      * @return distance obtained from the proposed solution
      */
     public Integer getDistance() {
-        return (Integer) this.get("distance");
+        return this.getInteger("distance");
     }
 
     /**
@@ -66,7 +66,7 @@ public class Proposition extends Model {
      * @return amount of tests passed by the proposed solution
      */
     public Integer getCantTestPassed() {
-        return (Integer) this.get("cantTestPassed");
+        return this.getInteger("cantTestPassed");
     }
 
     /**
@@ -114,7 +114,7 @@ public class Proposition extends Model {
      * @param cantTestPassed
      */
     public void setCantTestPassed(Integer cantTestPassed) {
-        this.set("cantTestPased", cantTestPassed);
+        this.set("cantTestPassed", cantTestPassed);
     }
     
     /**

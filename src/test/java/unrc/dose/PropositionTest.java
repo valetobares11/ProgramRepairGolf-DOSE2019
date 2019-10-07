@@ -19,7 +19,7 @@ public class PropositionTest {
 	@BeforeClass
   	public static void beforeAll() {
 		if (!Base.hasConnection()) {
-			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/repair_game_test?nullNamePatternMatchesAll=True", "admin", "password");
+			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/repair_game_test?nullNamePatternMatchesAll=True", "root", "root");
 			System.out.println("PropositionTest setup");
 			Base.openTransaction();
   		}
@@ -35,50 +35,125 @@ public class PropositionTest {
   	}
 
 
-	//--------test get----//
 	@Test
-	public void invalidUserId() {
+	public void getUserIdTest() {
+
 		Proposition proposition = new Proposition();
-		proposition.setUserId(-1);
-		assertEquals(proposition.isValid(), false);
+		proposition.set("user_id", 2);
+		int userId = proposition.getUserId();
+		assertEquals(userId, 2);
+		
 	}
 
 	@Test
-	public void invalidChallengeId() {
+	public void getChallengeIdTest() {
+
 		Proposition proposition = new Proposition();
-		proposition.setChallengeId(-1);
-		assertEquals(proposition.isValid(), false);
+		proposition.set("challenge_id", 2);
+		int challengeId = proposition.getChallengeId();
+		assertEquals(challengeId, 2);
+
 	}
 
 	@Test
-	public void sourceIsEmpty() {
+	public void getSourceTest() {
+
 		Proposition proposition = new Proposition();
-		proposition.setSource("");
-		assertEquals(proposition.isValid(), false);
+		proposition.set("source", "hola mundo;");
+		String source = proposition.getSource();
+		assertEquals(source, "hola mundo;");
+
 	}
 
 	@Test
-	public void invalidIsSubmit() {
+	public void getIsSubmitTest() {
+
 		Proposition proposition = new Proposition();
-		proposition.setIsSubmit(-1);
-		assertEquals(proposition.isValid(), false);
+		proposition.set("isSubmit", 1);
+		int isSubmit = proposition.getIsSubmit();
+		assertEquals(isSubmit, 1);
+
 	}
 
 	@Test
-	public void invalidDistance() {
+	public void getDistanceTest() {
+
 		Proposition proposition = new Proposition();
-		proposition.setDistance(-1);
-		assertEquals(proposition.isValid(), false);
+		proposition.set("distance", 1);
+		int distance = proposition.getDistance();
+		assertEquals(distance, 1);
+
 	}
 
-	/*@Test
-	public void invalidCantTestPassed() {
-		Proposition proposition = new Proposition();
-		proposition.setCantTestPassed(-1);
-		assertEquals(proposition.isValid(), false);
-	}*/
+	@Test
+	public void getCantTestPassedTest() {
 
-	//-------end test get-----//
+		Proposition proposition = new Proposition();
+		proposition.set("cantTestPassed", 1);
+		int cantTestPassed = proposition.getCantTestPassed();
+		assertEquals(cantTestPassed, 1);
+	
+	}
+
+
+
+	@Test
+	public void setUserIdTest() {
+
+		Proposition proposition = new Proposition();
+		proposition.setUserId(1);
+		assertEquals(proposition.get("user_id"), 1);
+
+	}
+	
+	@Test
+	public void setChallengeIdTest() {
+
+		Proposition proposition = new Proposition();
+		proposition.setChallengeId(1);
+		assertEquals(proposition.get("challenge_id"), 1);
+
+	}
+
+	
+	@Test
+	public void setSourceTest() {
+
+		Proposition proposition = new Proposition();
+		proposition.setSource("hola mundo;");
+		assertEquals(proposition.get("source"), "hola mundo;");
+
+	}
+
+	
+	@Test
+	public void setIsSubmitTest() {
+
+		Proposition proposition = new Proposition();
+		proposition.setIsSubmit(1);
+		assertEquals(proposition.get("isSubmit"), 1);
+
+	}
+
+	@Test
+	public void setDistanceTest() {
+
+		Proposition proposition = new Proposition();
+		proposition.setDistance(1);
+		assertEquals(proposition.get("distance"), 1);
+
+	}
+
+	@Test
+	public void setCantTestPassedTest() {
+
+		Proposition proposition = new Proposition();
+		proposition.setCantTestPassed(1);
+		assertEquals(proposition.get("cantTestPassed"), 1);
+
+	}
+
+	
 	
 	@Test
   	public void nullGetPropositionNoSubmitTest() {
