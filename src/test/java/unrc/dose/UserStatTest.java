@@ -19,22 +19,10 @@ public class UserStatTest {
 
 private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	
-
-	@Before
-	public void onSetUp() {
-	Base.openTransaction();
-	User.deleteAll();
-	}
-
 	@BeforeClass
 	public static void beforeAll() {
 		log.info("UserStatTest BeforeClass");
 		Base.open();
-	}
-	
-	@After
-	public void onTearDown() {
-		Base.rollbackTransaction();
 	}
 	
 	@AfterClass
@@ -57,6 +45,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getUserId(),stat.get("user_id"));
+		u.delete();
 	}
 	/**
 	 * Test the method getCreatedChallenges from
@@ -72,6 +61,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getCreatedChallenges(),stat.get("created_challenges"));
+		u.delete();
 	}
 	/**
 	 * Test the method getSolvedChallenges from
@@ -87,6 +77,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getSolvedChallenges(),stat.get("solved_challenges"));
+		u.delete();
 	}
 	/**
 	 * Test the method getCurrentPoints from
@@ -102,6 +93,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
 		assertEquals(stat.getCurrentPoints(),stat.get("current_points"));
+		u.delete();
 	}
 
 	/**
@@ -121,6 +113,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		assertEquals(stat.getCreatedChallenges(),0);
 		assertEquals(stat.getSolvedChallenges(),0);
 		assertEquals(stat.getCurrentPoints(),0);
+		u.delete();
 	}
 
 	/**
@@ -139,6 +132,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		UserStat us2 = UserStat.getUserStat(u);
 		assertEquals(us.getId().toString(), us2.getId().toString());
 		assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
+		u.delete();
 	}
 
 	/**
@@ -147,20 +141,23 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void showAllUsers() {
+		Base.openTransaction();
+		User.deleteAll();
 		User u = new User();
 		u.set("password", "ElMejor");
 		u.set("username", "LaMosca");
 		u.set("email_address", "LaMosca@gmail.com");
 		u.save();
-		u = new User();
-		u.set("password", "NotJohnConnor");
-		u.set("username", "Themosque");
-		u.set("email_address", "LaMosquita@gmail.com");
-		u.save();
+		User u2 = new User();
+		u2.set("password", "NotJohnConnor");
+		u2.set("username", "Themosque");
+		u2.set("email_address", "LaMosquita@gmail.com");
+		u2.save();
 		LazyList<User> users = UserStat.showAllUsers();
 		for (int i = 0; i < users.size(); i++){
 			User user = users.get(i);
 			assertTrue(user.get("username").toString().equals("LaMosca")|| user.get("username").toString().equals("Themosque"));
 		}
+		Base.rollbackTransaction();
 	}
 }
