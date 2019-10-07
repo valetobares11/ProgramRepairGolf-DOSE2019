@@ -128,6 +128,18 @@ public class Proposition extends Model {
     	return Proposition.findFirst("user_id = ? and challenge_id = ? and isSubmit = ?", userId, challengeId, 0);
     
     }
+    /**
+     * This method calculates the editing distance of a Proposition
+     * @param p represents a Proposition
+     * @return the editing distance of both string
+     */
+    public static int getDistanceProposition(Proposition p) {
+    	String str1 = p.getSource();
+    	Challenge challenge = Challenge.findById(p.get("challenge_id"));
+    	String str2 = challenge.getString("source");
+    	
+    	return computeLevenshteinDistance(str1, str2);
+    }
     
 	/**
 	 * This method calculates the distance of editing between two string
@@ -135,8 +147,8 @@ public class Proposition extends Model {
 	 * @param str2 represents the modified string
 	 * @return the editing distance of both string
 	 */
-    public static int computeLevenshteinDistance(String str1, String str2) {
-        return computeLevenshteinDistance(str1.toCharArray(),
+    public static int computeLevenshteinDistance(String str1, String str2) {        
+    	return computeLevenshteinDistance(str1.toCharArray(),
                                           str2.toCharArray());
     }
 

@@ -194,24 +194,80 @@ public class PropositionTest {
   		assertEquals(proposition.getInteger("id"), p.getInteger("id"));
   			
   	}
-
-
+  	
   	@Test
   	public void sameDistance() {
-  		String str1 = "Hola";
+  		String str1 = "hola";
   		String str2 = "";
   		
   		assertEquals(4, Proposition.computeLevenshteinDistance(str1, str2));
   	}
-
+  	
   	@Test
   	public void distanceZero() {
-  		String str1 = "Hola";
-  		String str2 = "Hola";
-
+  		String str1 = "hola";
+  		String str2 = "hola";
+  		
   		assertEquals(0, Proposition.computeLevenshteinDistance(str1, str2));
+  	}
+  	
+  	@Test
+  	public void getDistancePTotal() {
+  		Challenge challenger = new Challenge();
+  		User usr = new User();
+  		challenger.set("title", "Challenger 1");
+  		challenger.set("source", "hello");
+  		usr.set("username", "Gaston");
+  		usr.set("password", "abc123");
+  		usr.set("email_address", "pepe@gmail.com");
+  		challenger.saveIt(); 
+  		usr.saveIt();
+  		
+  		Integer usrId = usr.getInteger("id");
+  		Integer challId = challenger.getInteger("id");
+  		
+  		Proposition p = new Proposition();
+		p.set("challenge_id", challId);
+		p.set("user_id", usrId);
+		p.set("source", "");
+		p.set("isSubmit", 0);
+		p.set("distance", 5);
+		p.set("cantTestPassed", 0);
+		p.saveIt();
+		
+  		assertEquals(5, Proposition.getDistanceProposition(p));
+  		Proposition.deleteAll();
+  		Challenge.deleteAll();
+  		User.deleteAll();
+  	}
+
+	@Test
+  	public void getDistancePZero() {
+		Challenge challenger = new Challenge();
+  		User usr = new User();
+  		challenger.set("title", "Challenger 1");
+  		challenger.set("source", "hello");
+  		usr.set("username", "Gaston");
+  		usr.set("password", "abc123");
+  		usr.set("email_address", "pepe@gmail.com");
+  		challenger.saveIt(); 
+  		usr.saveIt();
+  		
+  		Integer usrId = usr.getInteger("id");
+  		Integer challId = challenger.getInteger("id");
+  		  			
+  		Proposition p = new Proposition();
+		p.set("challenge_id", challId);
+		p.set("user_id", usrId);
+		p.set("source", "hello");
+		p.set("isSubmit", 0);
+		p.set("distance", 0);
+		p.set("cantTestPassed", 0);
+		p.saveIt();
+
+  		assertEquals(0, Proposition.getDistanceProposition(p));
+  		Proposition.deleteAll();
+  		Challenge.deleteAll();
+  		User.deleteAll();
 	  }
-	  
-
-
 }
