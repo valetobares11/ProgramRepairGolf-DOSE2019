@@ -64,4 +64,22 @@ public class Comment extends Model {
     }
     return comment;
   }
+
+  /**
+  *create a list of comments.
+  *@param id the object's id
+  *@param obj the object which the id is searched
+  *@return a list of comments
+  */
+  public LazyList<Comment> viewComment(final int id, final Object obj) {
+    LazyList<Comment> lista = null;
+    if (obj instanceof User) {
+      lista = Comment.where("user_id=?", id);
+    } else if (obj instanceof Challenge) {
+     lista = Comment.where("challenge_id=?", id);
+    } else if (obj instanceof Comment) {
+      lista = Comment.where("comment_id=?", id);
+    }
+    return lista;
+  }
 }
