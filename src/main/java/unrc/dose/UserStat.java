@@ -22,6 +22,40 @@ public class UserStat extends Model {
 		validatePresenceOf("solved_challenges");
 		validatePresenceOf("current_points");
 	}
+	/**
+	 * Gets the id of the user who has assigned this statistics 
+	 * in the database.
+	 * @return The id of the user.
+	 */
+	public int getUserId() {
+		return this.getInteger("user_id");
+	}
+	
+	/**
+	 * Gets the number of created challenges by the user
+	 * who has assigned this statistics in the database.
+	 * @return The number of created challenges.
+	 */
+	public int getCreatedChallenges() {
+		return this.getInteger("created_challenges");
+	}
+	
+	/**
+	 * Gets the number of solved challenges by the user
+	 * who has assigned this statistics in the database.
+	 * @return The number of solved challenges.
+	 */
+	public int getSolvedChallenges() {
+		return this.getInteger("solved_challenges");
+	}
+	
+	/**
+	 * Gets the points that the user earned solving challenges.
+	 * @return The points of the user.
+	 */
+	public int getCurrentPoints() {
+		return this.getInteger("current_points");
+	}
 
 	/**
 	 * Show all users who are registered in the system
