@@ -4,11 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
 
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DB;
+import org.javalite.activejdbc.LazyList;
+
 import spark.Spark;
 
 import unrc.dose.Proposition;
@@ -19,7 +22,7 @@ public class PropositionTest {
 	@BeforeClass
   	public static void beforeAll() {
 		if (!Base.hasConnection()) {
-			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/repair_game_test?nullNamePatternMatchesAll=True", "root", "root");
+			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/repair_game_test?nullNamePatternMatchesAll=True", "admin", "password");
 			System.out.println("PropositionTest setup");
 			Base.openTransaction();
   		}
@@ -95,8 +98,6 @@ public class PropositionTest {
 	
 	}
 
-
-
 	@Test
 	public void setUserIdTest() {
 
@@ -158,7 +159,7 @@ public class PropositionTest {
 	@Test
   	public void nullGetPropositionNoSubmitTest() {
   		
-  		assertNull(Proposition.getPropositionNoSubmit(5, 2));
+  		assertTrue(Proposition.getPropositionNoSubmit(0, 0).isEmpty());
   	
   	}
   	
@@ -188,11 +189,56 @@ public class PropositionTest {
 		p.saveIt();
   		
 		
-		Proposition proposition = Proposition.getPropositionNoSubmit(challId, usrId);
+		LazyList<Proposition> proposition = Proposition.getPropositionNoSubmit(usrId, challId);
   		
   		
-  		assertEquals(proposition.getInteger("id"), p.getInteger("id"));
+  		assertEquals(1, proposition.size());
+  		Proposition.deleteAll();
+  		Challenge.deleteAll();
+  		User.deleteAll();
+
   			
+  	}
+  	
+  	@Test
+  	public void nullAllSolutionChallengeTest() {
+  		assertTrue(Proposition.allSolutionChallenge(0).isEmpty());
+  	}
+  	
+  	@Test
+  	public void allSolutionChallengeTest() {
+  		Challenge challenge = new Challenge();
+  		User usr1 = new User();
+  		User usr2 = new User();
+  		Proposition solution1 = new Proposition();
+  		Proposition solution2 = new Proposition();
+  		challenge.set("title", "challenge 2");
+  		usr1.set("username", "Gaston");
+  		usr1.set("password", "abc123");
+  		usr1.set("email_address", "pepe@gmail.com");
+  		usr2.set("username", "Agustin");
+  		usr2.set("password", "abc123");
+  		usr2.set("email_address", "agustin@gmail.com");
+  		challenge.saveIt();
+  		usr1.saveIt();
+  		usr2.saveIt();
+  		solution1.set("user_id", usr1.getInteger("id"));
+  		solution1.set("challenge_id", challenge.getInteger("id"));
+  		solution1.set("source", "Hola mundo!!;");
+  		solution1.set("isSubmit", 1);
+  		solution2.set("user_id", usr2.getInteger("id"));
+  		solution2.set("challenge_id", challenge.getInteger("id"));
+  		solution2.set("source", "Hola mundo!!;");
+  		solution2.set("isSubmit", 1);
+  		solution1.saveIt();
+  		solution2.saveIt();
+  		
+  		LazyList<Proposition> allSolution = Proposition.allSolutionChallenge(challenge.getInteger("id"));
+  		
+  		assertEquals(2,allSolution.size());
+  		Proposition.deleteAll();
+  		Challenge.deleteAll();
+  		User.deleteAll();
   	}
 
 

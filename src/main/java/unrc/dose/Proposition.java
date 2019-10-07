@@ -1,6 +1,7 @@
 package unrc.dose;
 
 
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 import java.util.*;
@@ -123,9 +124,20 @@ public class Proposition extends Model {
      * @param challengeId represent the challenge
      * @return null if there is no proposition or the proposition, or the proposition found.
      */
-    public static Proposition getPropositionNoSubmit(int userId, int challengeId) {
+    public static LazyList<Proposition> getPropositionNoSubmit(int userId, int challengeId) {
     	
-    	return Proposition.findFirst("user_id = ? and challenge_id = ? and isSubmit = ?", userId, challengeId, 0);
+    	return Proposition.where("user_id = ? and challenge_id = ? and isSubmit = ?", userId, challengeId, 0);
+    
+    }
+    
+    /**
+     * This method find the proposition that is solution for one specific challenge.
+     * @param challengerId represent the challenge.
+     * @return null if there is no solution for the challenge, else one list with all solutions.
+     */
+    public static LazyList<Proposition> allSolutionChallenge(int challengerId) {
+    	
+    	return Proposition.where("challenge_id = ? and isSubmit = ?", challengerId, 1);
     
     }
     
