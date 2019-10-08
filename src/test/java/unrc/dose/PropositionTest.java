@@ -157,6 +157,31 @@ public class PropositionTest {
 		assertEquals(proposition.get("cantTestPassed"), 1);
 
 	}
+	
+	@Test
+	public void newPropositionTest() {
+  		Challenge challenger = new Challenge();
+  		User usr = new User();
+  		challenger.set("title", "Challenger 1");
+  		challenger.set("source", "hola mundo;");
+  		usr.set("username", "Gaston");
+  		usr.set("password", "abc123");
+  		usr.set("email_address", "pepe@gmail.com");
+  		challenger.saveIt(); 
+  		usr.saveIt();
+  		int challengerId = challenger.getInteger("id");
+  		int usrId = usr.getInteger("id");
+  		
+  		Proposition newProp = Proposition.newProposition(usrId, challengerId);
+  		LazyList<Proposition> listProp = Proposition.where("user_id = ? and challenge_id = ?", usrId, challengerId);   		
+  		Proposition propDB = listProp.get(0);
+  		
+  		assertEquals(newProp.getInteger("id"), propDB.getInteger("id"));
+  		
+  		Proposition.deleteAll();
+  		Challenge.deleteAll();
+  		User.deleteAll();
+	}
 
 	
 	//------test para isue --> get compromised solution #101
