@@ -118,6 +118,25 @@ public class Proposition extends Model {
     public void setCantTestPassed(Integer cantTestPassed) {
         this.set("cantTestPassed", cantTestPassed);
     }
+    
+    /**
+     * Method for creates new proposition in the database.
+     * @param userId reference the user for the new proposition.
+     * @param challengeId reference the challenge for the new proposition.
+     * @return the proposition created in the database.
+     */
+    public static Proposition newProposition(int userId, int challengeId) {
+    	Proposition newProposition = new Proposition();
+    	Challenge currentChallenge = Challenge.findById(challengeId);
+    	newProposition.set("user_id", userId);
+    	newProposition.set("challenge_id", challengeId);
+    	newProposition.set("source", currentChallenge.get("source"));
+    	newProposition.set("isSubmit", 0);
+    	newProposition.set("distance", Integer.MAX_VALUE);
+    	newProposition.set("cantTestPassed", 0);
+    	newProposition.saveIt();
+    	return newProposition;
+    }
 
     /**
      * Get the solutions for a challenge by a user
