@@ -1,42 +1,54 @@
 package unrc.dose;
 
-import unrc.dose.Challenge;
 import org.javalite.activejdbc.Model;
 
-/*	
- * table attributes:
-	id integer not null auto_increment primary key,
-    challenge_id integer not null
-*/
+/**
+ * table attributes.
+ * id integer not null auto_increment primary key.
+ * challenge_id integer not null.
+ */
 public class CompilationChallenge extends Model {
 
-    public CompilationChallenge() {}
+    /**
+     * the class constructor.
+     */
+    public CompilationChallenge() { }
 
-    public int getChallengeId(){    
+    /**
+     * method that returns the id of a challenge.
+     * @return challenge id.
+     */
+    public int getChallengeId() {
         return getInteger("challenge_id");
     }
 
-    public void setChallengeId(int challenge_id){
-        set("challenge_id",challenge_id);
+    /**
+     * method to modify the challenge id.
+     * @param challengeId challenge id that created it.
+     */
+    public void setChallengeId(final int challengeId) {
+        set("challenge_id", challengeId);
     }
 
     /**
      * This method is responsible for validating the compilation challenge.
      * @param c challenge to validate.
-     * @return True in case the validation passes (source does not compile), otherwise false.
+     * @return True in case the validation passes (source does not compile),
+     * otherwise false.
      */
-    public static boolean validateCompilationChallenge(Challenge c){
+    public static boolean validateCompilationChallenge(final Challenge c) {
         return true;
     }
 
     /**
      * This method allows you to create a test challenge.
-     * @param challenge_id challenge id.
+     * @param challengeId challenge id.
      * @return compilation challenge already created.
      */
-    public static CompilationChallenge addCompilationChallenge(int challenge_id){
+    public static CompilationChallenge addCompilationChallenge(
+        final int challengeId) {
         CompilationChallenge t = new CompilationChallenge();
-        t.setChallengeId(challenge_id);
+        t.setChallengeId(challengeId);
         t.saveIt();
         return t;
     }
