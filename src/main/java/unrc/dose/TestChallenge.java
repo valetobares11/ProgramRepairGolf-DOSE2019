@@ -1,53 +1,76 @@
 package unrc.dose;
 
-import unrc.dose.Challenge;
 import org.javalite.activejdbc.Model;
 
-/*	
- * table attributes:
-    id integer not null auto_increment primary key,
-    challenge_id integer not null,
-    test varchar(1000) not null
-*/
+/**
+ *  table attributes.
+ *  id integer not null auto_increment primary key.
+ *  challenge_id integer not null.
+ *  test varchar(1000) not null.
+ */
 public class TestChallenge extends Model {
 
-    public TestChallenge() {}
+    /**
+     * the class constructor.
+     */
+    public TestChallenge() { }
 
-    public int getChallengeId(){    
+    /**
+     * method that returns the id of a challenge.
+     * @return challenge id.
+     */
+    public int getChallengeId() {
         return getInteger("challenge_id");
     }
 
-    public void setChallengeId(int challenge_id){
-        set("challenge_id",challenge_id);
+    /**
+     * method to modify the challenge id.
+     * @param challengeId challenge id that created it.
+     */
+    public void setChallengeId(final int challengeId) {
+        set("challenge_id", challengeId);
     }
 
-    public String getTest(){    
+    /**
+     * method that returns the test of a challenge.
+     * @return test of a challenge.
+     */
+    public String getTest() {
         return getString("test");
     }
 
-    public void setTest(String test){
-        set("test",test);
+    /**
+     * method to modify the challenge test.
+     * @param test test that will have the challenge.
+     */
+    public void setTest(final String test) {
+        set("test", test);
     }
-    
+
     /**
      * This method is responsible for validating the compilation challenge.
      * @param c challenge to validate.
      * @param t test challenge to validate
-     * @return True in case the validation passes (the source compiles and the tests run), otherwise, false.
+     * @return True in case the validation passes (the source compiles and
+     * the tests run), otherwise, false.
      */
-    public static boolean validateTestChallenge(Challenge c, TestChallenge t){
+    public static boolean validateTestChallenge(
+        final Challenge c,
+        final TestChallenge t) {
         return true;
     }
 
     /**
      * This method allows you to create a compilation challenge.
-     * @param challenge_id challenge id.
+     * @param challengeId challenge id.
      * @param test test code.
      * @return test challenge already created.
      */
-    public static TestChallenge addTestChallenge(int challenge_id, String test){
+    public static TestChallenge addTestChallenge(
+        final int challengeId,
+        final String test) {
         TestChallenge t = new TestChallenge();
-        t.setChallengeId(challenge_id);
+        t.setChallengeId(challengeId);
         t.setTest(test);
         t.saveIt();
         return t;
