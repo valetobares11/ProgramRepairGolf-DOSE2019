@@ -1,138 +1,213 @@
 package unrc.dose;
 
-import unrc.dose.TestChallenge;
-import unrc.dose.CompilationChallenge;
 import org.javalite.activejdbc.Model;
 
-/*	
- * table attributes:
-    id integer auto_increment primary key,
-    user_id: integer,
-    title varchar (50),
-    description varchar(50),
-    source varchar(10000),
-    point integer,
-    owner_solution_id integer
-*/
+/**
+ *  table attributes:.
+ *  id integer auto_increment primary key,
+ *  user_id: integer,
+ *  title varchar (50),
+ *  description varchar(50),
+ *  source varchar(10000),
+ *  point integer,
+ *  owner_solution_id integer
+ */
 public class Challenge extends Model {
 
+    /**
+     * the class constructor.
+     */
+    public Challenge() { }
 
-    public Challenge() {}
-
-    public int getUserId(){    
+    /**
+     * method that returns the id of a user.
+     * @return user id.
+     */
+    public int getUserId() {
         return getInteger("user_id");
     }
 
-    public void setUserId(int user_id){
-        set("user_id", user_id);
-    }
-
-    public String getTitle(){
-        return getString("title");
-    }
-
-    public void setTitle(String title){
-        set("title", title);
-    }
-
-    public String getDescription(){
-        return getString("description");
-    }
-
-    public void setDescription(String description){
-        set("description", description);
-    }
-
-    public String getSource(){
-        return getString("source");
-    }
-
-    public void setSource(String source){
-        set("source", source);
-    }
-
-    public int getPoint(){
-        return getInteger("point");
-    }
-
-    public void setPoint(int point){
-        set("point", point);
-    }
-
-    public int getOwnerSolutionId(){
-        return getInteger("owner_solution_id");
-    }
-
-    public void setOwnerSolutionId(int owner_solution_id){
-        set("owner_solution_id", owner_solution_id);
+    /**
+     * method to modify user id.
+     * @param userId user id that created it.
+     */
+    public void setUserId(final int userId) {
+        set("user_id", userId);
     }
 
     /**
-     * This method allows to create a challenge
-     * @param user_id user id that created it
-     * @param title title that will have the challenge
-     * @param description a brief description of what the challenge is about
-     * @param source source code that will have the challenge
-     * @param point points given by the admin that for the challenge
-     * @param owner_solution_id id of the solution proposed by a user
+     * method that returns the title of a challenge.
+     * @return title of a challenge.
+     */
+    public String getTitle() {
+        return getString("title");
+    }
+
+    /**
+     * method to modify the challenge title.
+     * @param title title that will have the challenge.
+     */
+    public void setTitle(final String title) {
+        set("title", title);
+    }
+
+    /**
+     * method that returns the description of a challenge.
+     * @return description of a challenge.
+     */
+    public String getDescription() {
+        return getString("description");
+    }
+
+    /**
+     * method to modify the challenge description.
+     * @param description a brief description of what the challenge is about.
+     */
+    public void setDescription(final String description) {
+        set("description", description);
+    }
+
+    /**
+     * method that returns the source of a challenge.
+     * @return source of a challenge.
+     */
+    public String getSource() {
+        return getString("source");
+    }
+
+    /**
+     * method to modify the challenge source.
+     * @param source source code that will have the challenge.
+     */
+    public void setSource(final String source) {
+        set("source", source);
+    }
+
+    /**
+     * method that returns the point of a challenge.
+     * @return point of a challenge.
+     */
+    public int getPoint() {
+        return getInteger("point");
+    }
+
+    /**
+     * method to modify the challenge point.
+     * @param point points given by the admin that for the challenge.
+     */
+    public void setPoint(final int point) {
+        set("point", point);
+    }
+
+    /**
+     * method that returns the owner solution id of a challenge.
+     * @return owner solution id of a challenge.
+     */
+    public int getOwnerSolutionId() {
+        return getInteger("owner_solution_id");
+    }
+
+    /**
+     * method to modify the challenge owner solution id.
+     * @param ownerSolutionId id of the solution proposed by a user.
+     */
+    public void setOwnerSolutionId(final int ownerSolutionId) {
+        set("owner_solution_id", ownerSolutionId);
+    }
+
+    /**
+     * This method allows to create a challenge.
+     * @param userId user id that created it.
+     * @param title title that will have the challenge.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param ownerSolutionId id of the solution proposed by a user.
      * @return challenge created
      */
-    public static Challenge addChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id){
+    public static Challenge addChallenge(
+        final int userId,
+        final String title,
+        final String description,
+        final String source,
+        final int point,
+        final int ownerSolutionId) {
         Challenge c = new Challenge();
-        c.setUserId(user_id);
+        c.setUserId(userId);
         c.setTitle(title);
         c.setDescription(description);
         c.setSource(source);
         c.setPoint(point);
-        c.setOwnerSolutionId(owner_solution_id);
+        c.setOwnerSolutionId(ownerSolutionId);
         c.saveIt();
         return c;
     }
 
     /**
      * This method allows you to create a test challenge and validate it.
-     * @param user_id user id that created it.
+     * @param userId user id that created it.
      * @param title title that will have the challenge.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
-     * @param owner_solution_id id of the solution proposed by a user.
+     * @param ownerSolutionId id of the solution proposed by a user.
      * @param test test corresponding to the challenge.
      * @return true in case the validation is successful, otherwise false.
      */
-    public static boolean addTestChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id, String test){
-        Challenge c = addChallenge(user_id, title, description, source, point, owner_solution_id);
-        TestChallenge t = TestChallenge.addTestChallenge(c.getInteger("id"), test);
-        if (TestChallenge.validateTestChallenge(c, t))
-            return true;
-        else 
-            return false;
+    public static boolean addTestChallenge(
+        final int userId,
+        final String title,
+        final String description,
+        final String source,
+        final int point,
+        final int ownerSolutionId,
+        final String test) {
+        Challenge c = addChallenge(
+            userId,
+            title,
+            description,
+            source,
+            point,
+            ownerSolutionId);
+        TestChallenge t = TestChallenge.addTestChallenge(
+            c.getInteger("id"),
+            test);
+        return (TestChallenge.validateTestChallenge(c, t));
     }
 
     /**
      * This method allows you to create a compilation challenge and validate it.
-     * @param user_id user id that created it.
+     * @param userId user id that created it.
      * @param title title that will have the challenge.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
-     * @param owner_solution_id id of the solution proposed by a user.
+     * @param ownerSolutionId id of the solution proposed by a user.
      * @return true in case the validation is successful, otherwise false.
      */
-    public static boolean addCompilationChallenge(int user_id, String title, String description, String source, int point, int owner_solution_id){
-        Challenge c = addChallenge(user_id, title, description, source, point, owner_solution_id);
+    public static boolean addCompilationChallenge(
+        final int userId,
+        final String title,
+        final String description,
+        final String source,
+        final int point,
+        final int ownerSolutionId) {
+        Challenge c = addChallenge(
+            userId,
+            title,
+            description,
+            source,
+            point,
+            ownerSolutionId);
         CompilationChallenge.addCompilationChallenge(c.getInteger("id"));
-        if (CompilationChallenge.validateCompilationChallenge(c))
-            return true;
-        else 
-            return false;
+        return (CompilationChallenge.validateCompilationChallenge(c));
     }
 
     /**
      * This method allows you to delete a challenge created.
      * @param c challenge to eliminate.
      */
-    public static void deleteChallenge(Challenge c){
+    public static void deleteChallenge(final Challenge c) {
         c.deleteCascade();
     }
 
