@@ -1,6 +1,8 @@
 package unrc.dose;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
+
 
 /** == Schema Info.
 *
@@ -33,6 +35,7 @@ public class Comment extends Model {
     c.saveIt();
     return c;
   }
+
   /**
   *isResponse.
   *@param commentId this is comments or response to evaluate
@@ -42,6 +45,7 @@ public class Comment extends Model {
     Comment c = Comment.findById(commentId);
     return ((c.getInteger("comment_id")) != (null));
   }
+
   /**
   *Create a new Response.
   *@param description this the response's body
@@ -71,7 +75,7 @@ public class Comment extends Model {
   *@param obj the object which the id is searched
   *@return a list of comments
   */
-  public LazyList<Comment> viewComment(final int id, final Object obj) {
+  public static LazyList<Comment> viewComment(final int id, final Object obj) {
     LazyList<Comment> lista = null;
     if (obj instanceof User) {
       lista = Comment.where("user_id=?", id);
@@ -82,4 +86,15 @@ public class Comment extends Model {
     }
     return lista;
   }
+
+  /**
+  *creation of equal method.
+  *@param c a comment
+  *@param aux another comment
+  *@return true if two comments are equals
+  */
+  public static boolean equalsComment(final Comment c, final Comment aux) {
+    return (aux.getInteger("id").equals(c.getInteger("id")));
+  }
+
 }
