@@ -40,7 +40,7 @@ public class CompilationChallenge extends Model {
         String title = c.getTitle();
         String source = c.getSource();
         String nameFile = Challenge.generateFileJava(title, source);
-        return (Challenge.runProcess("javac /../tmp/" + nameFile)!=0);
+        return (Challenge.runCompilation(nameFile) != 0);
     }
 
     /**
