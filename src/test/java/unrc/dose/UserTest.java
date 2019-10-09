@@ -101,7 +101,7 @@ public class UserTest {
 		String username = "JohnConnor";
 		String password = "VeryHardPass";
 
-		assertEquals(true,User.deleteUser(username, password));
+		assertEquals(true, User.deleteUser(username, password));
 	}
 
 	/**
@@ -113,7 +113,54 @@ public class UserTest {
 		String username = "Pity";
 		String password = "Martinez";
 
-		assertEquals(false,User.deleteUser(username, password));
+		assertEquals(false, User.deleteUser(username, password));
 	}
 
+	/**
+	 * Unsuccessfully basic login the user
+	 * @result user not found
+	 */
+	@Test
+	public void userLoginBasicUnsuccessfully(){
+		String username = "Pity";
+		String password = "Martinez";
+
+		assertEquals(false, User.login(username, password));
+	}
+
+	/**
+	 * Successfully basic login the user with data correct
+	 * @result user found whit data get into
+	 */
+	@Test
+	public void userLoginBasicSuccessfully(){
+		String username = "JohnConnor";
+		String password = "VeryHardPass";
+
+		assertEquals(true, User.login(username, password));
+	}
+
+	/**
+	 * Successfully basic login the user with password incorrect
+	 * @result user not found
+	 */
+	@Test
+	public void userLoginBasicUnsuccessfullyWithoutPassCorrect(){
+		String username = "JohnConnor";
+		String password = "VeryH";
+
+		assertEquals(false, User.login(username, password));
+	}
+
+	/**
+	 * Successfully basic login the user with password or username incorrect
+	 * @result user not found
+	 */
+	@Test
+	public void userLoginBasicUnsuccessfullyWithoutDataCorrect(){
+		String username = "JohnConnor";
+		String password = "VeryHardPass";
+
+		assertEquals(false, User.login(username, password));
+	}
 }

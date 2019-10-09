@@ -124,8 +124,10 @@ public class User extends Model {
      * @param passwordUser this param is used for confirm the operation
      * @return a boolean with this exit of remove or no remove the user
      */
-	public static boolean deleteUser(final String usernameUser, final String passwordUser) {
-		User user = User.findFirst("username = ? and password = ?", usernameUser, passwordUser);
+	public static boolean deleteUser(final String usernameUser,
+		final String passwordUser) {
+		User user = User.findFirst("username = ? and password = ?",
+			usernameUser, passwordUser);
         if (user != null) {
 			user.set("active_account", false);
 			return true;
@@ -139,8 +141,10 @@ public class User extends Model {
      * @param passwordUser this param is used for finally operation
      * @return a boolean for see if coincide username and pass
      */
-	public static boolean login(final String usernameUser, final String passwordUser) {
-		User user = User.findFirst("username = ? and password = ?", usernameUser, passwordUser);
+	public static boolean login(final String usernameUser,
+		final String passwordUser) {
+		User user = User.findFirst("username = ? and password = ?",
+			usernameUser, passwordUser);
 		return (user != null);
 	}
 
