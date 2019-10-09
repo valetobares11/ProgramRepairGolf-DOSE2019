@@ -1,16 +1,9 @@
-/*
-*	== Schema Info
-*
-*	Table name: challenge_stats
-*   id integer auto_increment primary key,
-*   challenge_id integer not null,
-*
-*/
-
 package unrc.dose;
 
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.Model;
+
+import java.util.List;
 
 /*
 * == Schema Info
@@ -33,8 +26,8 @@ public class ChallengeStat extends Model {
 	 *@param challengeSToupdate The challenge stat which contains the current number of solutions.
 	 *@return Returns the updated solved count.
 	 */
-	private static int updateSolvedCount(ChallengeStat challengeSToupdate) {
-		int currentSolvedCount= challengeSToupdate.get("solved_count");
+	private static int incrementSolvedCount(ChallengeStat challengeSToupdate) {
+		int currentSolvedCount= (int) challengeSToupdate.get("solved_count");
 		currentSolvedCount++;
 		return currentSolvedCount;
 	}
@@ -45,12 +38,12 @@ public class ChallengeStat extends Model {
 	 */
 	public static void updateAverageScore(int propositionId) {
 		//getting the info about the proposition
-		Proposition solution=Proposition.findbyid(propositionId);
-		int distance=solution.get("distance");
-		int challengeId=solution.get("challenge_id");
+		Proposition solution=Proposition.findById(propositionId);
+		int distance= (int) solution.get("distance");
+		int challengeId= (int) solution.get("challenge_id");
 
-		Challenge currentChallenge=Challenge.findbyid(challengeId);
-		int challengePoints=currentChallenge.get("point");
+		Challenge currentChallenge= Challenge.findById(challengeId);
+		int challengePoints= (int) currentChallenge.get("point");
 
 		int userScore=challengePoints - distance;
 
@@ -58,10 +51,10 @@ public class ChallengeStat extends Model {
 		ChallengeStat challengeSToupdate=challengeSingleList.get(0);
 
 		//getting the current average score and the current solved count
-		float currentAverage=challengeSToupdate.get("average_score");
-		int currentSolvedCount=updateSolvedCount(challengeSToupdate);
+		float currentAverage= (float) challengeSToupdate.get("average_score");
+		int currentSolvedCount=incrementSolvedCount(challengeSToupdate);
 
-		float updatedAverageScore=currentAverage+((userScore - currentAverage) / currentSolvedCount)
+		float updatedAverageScore=currentAverage+((userScore - currentAverage) / currentSolvedCount);
 
 		challengeSToupdate.set("average_score", "updatedAverageScore");
 		challengeSToupdate.saveIt();
