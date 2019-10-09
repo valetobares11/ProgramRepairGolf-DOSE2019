@@ -1,10 +1,13 @@
 package unrc.dose;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.FileWriter;
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
 
 /**
  *  table attributes:.
@@ -213,6 +216,60 @@ public class Challenge extends Model {
      */
     public static void deleteChallenge(final Challenge c) {
         c.deleteCascade();
+    }
+
+    /**
+     * method that returns a list of all challenges.
+     * @return list of all challange.
+     */
+    public static LazyList<Challenge> viewAllChallange() {
+        return Challenge.findAll();
+    }
+
+    /**
+     * method that returns a list of resolved challenges.
+     * @return list of challanges resolved.
+     */
+    public static List<Challenge> viewSolvedChallange() {
+        LazyList<OwnerSolution> ownerSol = OwnerSolution.findAll();
+        LinkedList<Challenge> resolved = new LinkedList<Challenge>();
+        if (!ownerSol.isEmpty()) {
+            for (OwnerSolution challengeResolved : ownerSol) {
+                Challenge res = Challenge.findFirst(
+                    "id = ?",
+                    challengeResolved.get("challenge_id"));
+                resolved.add(res);
+            }
+        }
+        return resolved;
+    }
+
+    /**
+     * method that returns a list of unresolved challenges.
+     * @return list of challanges unresolved.
+     */
+    public static List<Challenge> viewUnsolvedChallange() {
+        LazyList<Proposition> prop = Proposition.findAll();
+        LinkedList<Challenge> unresolved = new LinkedList<Challenge>();
+        if (!prop.isEmpty()) {
+            for (Proposition challengeUnresolved : prop) {
+                Challenge res = Challenge.findFirst(
+                    "id = ?",
+                    challengeUnresolved.get("challenge_id"));
+                unresolved.add(res);
+            }
+        }
+        return unresolved;
+    }
+
+    /**
+     * method that returns a list of the challenges associated with the user.
+     * @param userId user id to be treated.
+     * @return list of challenges associated with the user.
+     */
+    public static LazyList<Challenge> viewUserAssociatedChallange(
+        final int userId) {
+        return Challenge.where("user_id = ?", userId);
     }
 
     /**
