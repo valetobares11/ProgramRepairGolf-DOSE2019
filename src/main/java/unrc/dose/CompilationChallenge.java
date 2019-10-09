@@ -37,7 +37,10 @@ public class CompilationChallenge extends Model {
      * otherwise false.
      */
     public static boolean validateCompilationChallenge(final Challenge c) {
-        return true;
+        String title = c.getTitle();
+        String source = c.getSource();
+        String nameFile = Challenge.generateFileJava(title, source);
+        return (Challenge.runProcess("javac /../tmp/" + nameFile)!=0);
     }
 
     /**
