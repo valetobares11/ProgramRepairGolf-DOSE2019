@@ -1,13 +1,10 @@
 package unrc.dose;
 
-import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.LazyList;
-import java.util.List;
+import org.javalite.activejdbc.Model;
 
 /** == Schema Info.
-*
 * Table name: comments
-*
 * id              :integer    not null, primary key
 * title           :varchar(50)    not null
 * description     :varchar(300)    not null
@@ -26,7 +23,7 @@ public class Comment extends Model {
   *@return the comment created
   **/
   public static Comment createComment(final String title,
-  final String description, final int challengeId, final int userId) {
+      final String description, final int challengeId, final int userId) {
     Comment c = new Comment();
     c.set("title", title);
     c.set("description", description);
@@ -35,6 +32,7 @@ public class Comment extends Model {
     c.saveIt();
     return c;
   }
+  
   /**
   *isResponse.
   *@param commentId this is comments or response to evaluate
@@ -44,6 +42,7 @@ public class Comment extends Model {
     Comment c = Comment.findById(commentId);
     return ((c.getInteger("comment_id")) != (null));
   }
+  
   /**
   *Create a new Response.
   *@param description this the response's body
@@ -53,7 +52,7 @@ public class Comment extends Model {
   *@throws NullPointerException when doesn't exits the comment which this id
   **/
   public static Comment createResponse(final String description,
-  final int userId, final int commentId) throws NullPointerException {
+      final int userId, final int commentId) throws NullPointerException {
     Comment comment = new Comment();
     if (!isResponse(commentId)) {
       Comment c = Comment.findById(commentId);
@@ -78,7 +77,7 @@ public class Comment extends Model {
     if (obj instanceof User) {
       lista = Comment.where("user_id=?", id);
     } else if (obj instanceof Challenge) {
-     lista = Comment.where("challenge_id=?", id);
+      lista = Comment.where("challenge_id=?", id);
     } else if (obj instanceof Comment) {
       lista = Comment.where("comment_id=?", id);
     }
