@@ -16,92 +16,116 @@
 package unrc.dose;
 
 import org.javalite.activejdbc.Model;
-import org.javalite.activejdbc.LazyList;
 
+/**
+* User class represents a person into the system.
+*/
 
 public class User extends Model {
+    /**
+    * The value of ID is {@value}.
+    */
+    static final String ID = "id";
+    /**
+    * The value of USERNAME is {@value}.
+    */
+    static final String USERNAME = "username";
+    /**
+    * The value of PASSWORD is {@value}.
+    */
+    static final String PASSWORD = "password";
+    /**
+    * The value of EMAIL is {@value}.
+    */
+    static final String EMAIL = "email_address";
+    /**
+    * The value of ADMIN is {@value}.
+    */
+    static final String ADMIN = "admin";
 
-	static final String ID = "id";
-	static final String USERNAME = "username";
-	static final String PASSWORD = "password";
-	static final String EMAIL = "email_address";
-	static final String ADMIN = "admin";
+    /**
+    * @param name : username that user wants: String
+    * @return value that represents if username already exits: Boolean
+    */
+    public static Boolean searchUserByUsername(final String name) {
+        User user = User.findFirst(USERNAME + " = ?", name);
 
-	/**
-	* @param name : username that user wants: String
-	* @return value that represents if username already exits: Boolean 
-	*/
-	public static Boolean searchUserByUsername (String name) {
-		User user = User.findFirst(USERNAME + " = ?", name);
+        return (user == null);
+    }
 
-		return (user == null);
-	}
+    /**
+    * @param email : username that user wants: String
+    * @return value that represents if username already exits: Boolean
+    */
+    public static Boolean searchUserByEmail(final String email) {
+        User user = User.findFirst(EMAIL + " = ?", email);
 
-	/**
-	* @param email : username that user wants: String
-	* @return value that represents if username already exits: Boolean 
-	*/
-	public static Boolean searchUserByEmail (String email) {
-		User user = User.findFirst(EMAIL + " = ?", email);
+        return (user == null);
+    }
 
-		return (user == null);
-	}
-
-	/**
+    /**
     * @param name : username that user charge: String
     * @param pass : password that user charge: String
     * @param email : email_address that user charge: String
     * @param admin : if user has privileges of admin users: Boolean
-    * @return user created: User 
+    * @return user created: User
     */
-	public static User set (String name, String pass, String email, Boolean admin) {
-		User user = new User();
-		
-		user.load(user, name, pass, email, admin);
-		
-		return user;
+    public static User set(final String name, final String pass,
+        final String email, final Boolean admin) {
+        User user = new User();
+        Password p = new Password();
 
-	}
+        byte[] salt = Password.getNextSalt();
+
+        p.set("salt", salt);
+        p.set(USERNAME, name);
+
+        byte[] passw = Password.hash(pass.toCharArray(), salt);
+        user.load(user, name, passw, email, admin);
+        p.saveIt();
+
+        return user;
+    }
 
     /**
     * @return id of a user: Integer
     */
-	public Integer getId() {
-		return this.getInteger(ID);
+    public Integer getId() {
+        return this.getInteger(ID);
 
-	}
+    }
 
     /**
     * @return username of the user: String
     */
-	public String getName() {
-		return this.getString(USERNAME);
+    public String getName() {
+        return this.getString(USERNAME);
 
-	}
+    }
 
     /**
     * @return password of the user: String
     */
-	public String getPass() {
-		return this.getString(PASSWORD);
+    public String getPass() {
+        return this.getString(PASSWORD);
 
-	}
+    }
 
     /**
     * @return email_address of the user: String
     */
-	public String getEmail() {
-		return this.getString(EMAIL);
+    public String getEmail() {
+        return this.getString(EMAIL);
 
-	}
+    }
 
     /**
     * @return represents if user has privileges of admin: Boolean
     */
-	public Boolean getAdmin() {
-		return this.getBoolean(ADMIN);
+    public Boolean getAdmin() {
+        return this.getBoolean(ADMIN);
 
-	}
+    }
 
     /**
     * @param u : user: User
@@ -110,11 +134,12 @@ public class User extends Model {
     * @param email : email_address that user charge: String
     * @param admin : if user has privileges of admin users: Boolean
     */
-	private void load(User u, String name, String pass, String email, Boolean admin) {
-		u.set(USERNAME, name);
-		u.set(PASSWORD, pass);
-		u.set(EMAIL, email);
-		u.set(ADMIN, admin);
-	}
+    private void load(final User u, final String name,
+        final byte[] pass, final String email, final Boolean admin) {
+        u.set(USERNAME, name);
+        u.set(PASSWORD, pass);
+        u.set(EMAIL, email);
+        u.set(ADMIN, admin);
+    }
 
 }
