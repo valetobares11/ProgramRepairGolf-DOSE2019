@@ -1,3 +1,12 @@
+/*
+*	== Schema Info
+*
+*	Table name: challenge_stats
+*   id integer auto_increment primary key,
+*   challenge_id integer not null,
+*
+*/
+
 package unrc.dose;
 
 import org.javalite.activejdbc.Base;

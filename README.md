@@ -35,6 +35,11 @@ and use your own secret credentials
 #### Correr el servidor web
 Use `./run.sh` script
 
+#### Run linter before push any code
+```
+mvn checkstyle:check
+```
+
 #### Curl How to 
 
 * List Users
@@ -63,4 +68,4 @@ curl -X PUT http://localhost:4567/users/1 \
 
 # Licence
 
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the LICENSE.md file for details.
