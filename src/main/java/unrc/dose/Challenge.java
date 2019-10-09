@@ -1,5 +1,9 @@
 package unrc.dose;
 
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.FileWriter;
 import org.javalite.activejdbc.Model;
 
 /**
@@ -209,6 +213,43 @@ public class Challenge extends Model {
      */
     public static void deleteChallenge(final Challenge c) {
         c.deleteCascade();
+    }
+
+    /**
+     * method to generate the java file of the challenge.
+     * @param name file name.
+     * @param source source file.
+     * @return file name.
+     */
+    public static String generateFileJava(
+        final String name,
+        final String source) {
+        try {
+            String nameFile = "/tmp/" + name + ".java";
+            File file = new File(nameFile);
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write(source);
+            bw.close();
+            return nameFile;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error the read file");
+        }
+    }
+
+    /**
+     * method for execute the command (javac and java).
+     * @param command command to execute
+     * @return 0 if run otherwise 1.
+     */
+    public static int runProcess(final String command) {
+        try {
+            Process pro = Runtime.getRuntime().exec(command);
+            pro.waitFor();
+            return pro.exitValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
     }
 
 }
