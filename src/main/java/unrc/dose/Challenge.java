@@ -252,4 +252,21 @@ public class Challenge extends Model {
         }
     }
 
+    /**
+     * This method will allow you to compile a java program.
+     * @param nameFile name of the file to compile.
+     * @return 0 if run otherwise 1.
+     */
+    public static int runCompilation(final String nameFile) {
+        return runProcess("javac /../tmp/" + nameFile);
+    }
+
+    /**
+     * This method will allow you to run a java program.
+     * @param nameFile name of the file to execute.
+     * @return 0 if run otherwise 1.
+     */
+    public static int runExecute(final String nameFile) {
+        return runProcess("java /../tmp/" + nameFile);
+    }
 }
