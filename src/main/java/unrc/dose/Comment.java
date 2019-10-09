@@ -1,6 +1,8 @@
 package unrc.dose;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
+import java.util.List;
 
 /** == Schema Info.
 *
@@ -71,7 +73,7 @@ public class Comment extends Model {
   *@param obj the object which the id is searched
   *@return a list of comments
   */
-  public LazyList<Comment> viewComment(final int id, final Object obj) {
+  public static LazyList<Comment> viewComment(final int id, final Object obj) {
     LazyList<Comment> lista = null;
     if (obj instanceof User) {
       lista = Comment.where("user_id=?", id);
@@ -81,5 +83,9 @@ public class Comment extends Model {
       lista = Comment.where("comment_id=?", id);
     }
     return lista;
+  }
+
+  public static boolean equalsComment(Comment c, Comment aux) {
+    return (aux.getInteger("id").equals(c.getInteger("id")));
   }
 }
