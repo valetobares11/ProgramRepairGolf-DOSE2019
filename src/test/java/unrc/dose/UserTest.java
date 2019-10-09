@@ -91,5 +91,77 @@ public class UserTest {
 
 		assertEquals(name , pepe.get("username"));
 	}
+	/**
+	 * test that verifies that the password has been modified successfully
+	'' * @result false bescause the email is not registered in the DB
+	 */
+	@Test
+	public void updatePasswordUnSuccessfully() {
+		String email = "juanPerez@gmail.com";
+		String pass = "NewPass";
 
+		assertEquals(false, User.updatePassword(email, pass));
+	}
+
+
+	/**.
+	 * test that verifies that the password could not be modified
+	 * @result true (password reset)
+	*/
+	@Test
+	public void updatePasswordSuccessfully() {
+		String email = "JohnConnor@gmail.com";
+		String pass = "NewPass";
+
+		assertEquals(true, User.updatePassword(email, pass));
+	}
+	
+	/**.
+	 * test that verifies that not exists an username with east emails
+	 * @result true because no user with east email provided
+	*/
+	@Test
+	public void userNotExists() {
+		String email = "JohnConnor@gmail.com";
+		String name = "juan";
+
+		assertEquals(true, User.searchUsernameAndEmail(email, name));
+	}
+
+	/**
+	 * test that verifies that  exists an username with east emails
+	 * @result false because exists an user with east email provided
+	*/
+	@Test
+	public void userExists() {
+		String email = "JohnConnor@gmail.com";
+		String name = "JohnConnor";
+
+		assertEquals(false, User.searchUsernameAndEmail(email, name));
+	}
+
+	/**
+	 * test that verifies that the password provided is the same as the current password.
+	 * @result false since the password of the previous account cannot be updated with the same password
+	*/
+	@Test
+	public void repeatedPassword() {
+		String email = "JohnConnor@gmail.com";
+		String newPass = "VeryHardPass";
+
+		assertEquals(false, User.updatePassword(email, newPass));
+	}
+
+	/**
+	 * test that verifies that the password provided doesn't comply with password policies, 
+	 * where the password character range must be greater than 6 and less than 20
+	 * @result false since the password doesn't comply with password policies
+	*/
+	@Test
+	public void invalidPassword() {
+		String email = "JohnConnor@gmail.com";
+		String newPass = "1234";
+
+		assertEquals(false, User.updatePassword(email, newPass));
+	}
 }

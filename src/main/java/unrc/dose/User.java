@@ -20,7 +20,8 @@ import org.javalite.activejdbc.LazyList;
 
 
 public class User extends Model {
-
+	static final Integer MIN_VALUE = 6;
+	static final Integer MAX_VALUE = 20;
 	static final String ID = "id";
 	static final String USERNAME = "username";
 	static final String PASSWORD = "password";
@@ -116,5 +117,71 @@ public class User extends Model {
 		u.set(EMAIL, email);
 		u.set(ADMIN, admin);
 	}
+
+
+
+	/**.
+	 * Method that given un email and new password returns a boolean ,
+	 * if the password has been modified successfully
+     * @param email : the email of the user who wants to change the password
+	 * @param  pass : the new password
+	 * @return A boolean if the password has been modified successfully
+	 */
+	public static Boolean updatePassword(final String email,
+		final String pass) {
+		User user = User.findFirst("email_address = ?", email);
+		if (user != null) {
+
+		String password = user.getString("Password");
+			if (password.equals(pass)
+				|| (pass.length() <= MIN_VALUE
+				|| pass.length() >= MAX_VALUE)) {
+				return false;
+			} else {
+				user.set("password", pass);
+				user.saveIt();
+			return true;
+			}
+		}
+		return false;
+	}
+
+	/**.
+	 * Method that given un email and new username returns a boolean ,
+	 * if the username  has been modified successfully
+     * @param email : the email of the user who wants to change the username
+	 * @param  username : the new username
+     * @return A boolean if the username has been modified successfully
+	 */
+
+	public static Boolean updateUsername(final String email,
+		final String username) {
+		User user = User.findFirst("email_address = ?", email);
+		if (user != null) {
+			user.set("username", username);
+			user.saveIt();
+			return true;
+		}
+		return false;
+	}
+
+
+	/**.
+	 * Method that given un email and  username returns,
+	 * a boolean if the user exists
+     * @param email :  with which you want to search for the user
+	 * @param  username : with which you want to search for the user
+     * @return A boolean if the username has been found
+	 */
+	public static Boolean searchUsernameAndEmail(final String email,
+		final String username) {
+		User user = User.findFirst("email_address = ? and username = ?",
+			email, username);
+
+		return (user == null);
+	}
+
+
+
 
 }
