@@ -21,16 +21,13 @@ public class ChallengeStat extends Model {
 
 	/**
 	 * Updates the number of times that a challenge has been solved.
-	 *@param challengeId The id of the challenge that has been solved.
+	 *@param challengeSToupdate The challenge stat which contains the current number of solutions.
+	 *@return Returns the updated solved count.
 	 */
-	public static void updateSolvedCount(int challengeId) {
-		List <ChallengeStat> challengeSingleList=ChallengeStat.where("challenge_id == ?", challengeId);
-		ChallengeStat challengeToUpdate=challengeSingleList.get(0);
-		int currentSolvedCount=challengeToUpdate.get("solved_count");
+	private static int updateSolvedCount(ChallengeStat challengeSToupdate) {
+		int currentSolvedCount= challengeSToupdate.get("solved_count");
 		currentSolvedCount++;
-		challengeToUpdate.set("solved_count", "currentSolvedCount");
-		challengeToUpdate.saveIt();
-
+		return currentSolvedCount;
 	}
 
 	/**
@@ -48,18 +45,25 @@ public class ChallengeStat extends Model {
 
 		int userScore=challengePoints - distance;
 
-		updateSolvedCount(challengeId);
 		List <ChallengeStat> challengeSingleList=ChallengeStat.where("challenge_id == ?", challengeId);
-		ChallengeStat challengeToUpdate=challengeSingleList.get(0);
+		ChallengeStat challengeSToupdate=challengeSingleList.get(0);
 
 		//getting the current average score and the current solved count
-		float currentAverage=challengeToUpdate.get("average_score");
-		int currentSolvedCount=challengeToUpdate.get("solved_count");
+		float currentAverage=challengeSToupdate.get("average_score");
+		int currentSolvedCount=updateSolvedCount(challengeSToupdate);
 
 		float updatedAverageScore=currentAverage+((userScore - currentAverage) / currentSolvedCount)
 
-		challengeToUpdate.set("average_score", "updatedAverageScore");
-		challengeToUpdate.saveIt();
+		challengeSToupdate.set("average_score", "updatedAverageScore");
+		challengeSToupdate.saveIt();
 
 	}
+
+	/**
+	 *Generates a new ChallengeStat table for a incoming new challenge.
+	 *@param challengeId The id of the new challenge.
+	 */
+    public static void newChallengeStat (int challengeId) {
+	    ChallengeStat c = ChallengeStat.createIt("challenge_id", challengeId, "average_score", 0, "solved_count", 0);
+    }
 }
