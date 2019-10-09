@@ -47,9 +47,11 @@ public class CompilationChallengeTest {
 	@Test
 	public void validateCompilationChallengeTest() {
 		Challenge challenge = new Challenge();
+		challenge.setTitle("Not found");
+		challenge.setSource("Not found");
 		challenge.saveIt();
 		boolean validate = CompilationChallenge.validateCompilationChallenge(challenge);
-		assertEquals(true,validate);
+		assertEquals(true ,validate);
 	}
 
 	/**
