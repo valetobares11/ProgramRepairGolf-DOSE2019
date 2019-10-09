@@ -219,6 +219,7 @@ public class Challenge extends Model {
      * method to generate the java file of the challenge.
      * @param name file name.
      * @param source source file.
+     * @return true generate correct.
      */
     public static boolean generateFileJava(
         final String name,
@@ -238,7 +239,7 @@ public class Challenge extends Model {
     /**
      * method for execute the command (javac and java).
      * @param command command to execute
-     * @return 0 if run otherwise 1.
+     * @return true if run otherwise false.
      */
     public static boolean runProcess(final String command) {
         try {
@@ -254,7 +255,7 @@ public class Challenge extends Model {
     /**
      * This method will allow you to compile a java program.
      * @param nameFile name of the file to compile.
-     * @return 0 if run otherwise 1.
+     * @return true if run otherwise false.
      */
     public static boolean runCompilation(final String nameFile) {
         return runProcess("javac /../tmp/" + nameFile + ".java");
@@ -263,7 +264,7 @@ public class Challenge extends Model {
     /**
      * This method will allow you to run a java program.
      * @param nameFile name of the file to execute.
-     * @return 0 if run otherwise 1.
+     * @return true if run otherwise false.
      */
     public static boolean runExecute(final String nameFile) {
         return runProcess("java /../tmp/" + nameFile);
