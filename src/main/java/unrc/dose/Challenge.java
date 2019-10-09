@@ -219,9 +219,8 @@ public class Challenge extends Model {
      * method to generate the java file of the challenge.
      * @param name file name.
      * @param source source file.
-     * @return file name.
      */
-    public static String generateFileJava(
+    public static boolean generateFileJava(
         final String name,
         final String source) {
         try {
@@ -230,7 +229,7 @@ public class Challenge extends Model {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write(source);
             bw.close();
-            return nameFile;
+            return true;
         } catch (IOException e) {
             throw new IllegalArgumentException("Error the read file");
         }
@@ -241,14 +240,14 @@ public class Challenge extends Model {
      * @param command command to execute
      * @return 0 if run otherwise 1.
      */
-    public static int runProcess(final String command) {
+    public static boolean runProcess(final String command) {
         try {
             Process pro = Runtime.getRuntime().exec(command);
             pro.waitFor();
-            return pro.exitValue();
+            return (pro.exitValue() == 0);
         } catch (Exception e) {
             e.printStackTrace();
-            return 1;
+            return false;
         }
     }
 
@@ -257,8 +256,8 @@ public class Challenge extends Model {
      * @param nameFile name of the file to compile.
      * @return 0 if run otherwise 1.
      */
-    public static int runCompilation(final String nameFile) {
-        return runProcess("javac /../tmp/" + nameFile);
+    public static boolean runCompilation(final String nameFile) {
+        return runProcess("javac /../tmp/" + nameFile + ".java");
     }
 
     /**
@@ -266,7 +265,7 @@ public class Challenge extends Model {
      * @param nameFile name of the file to execute.
      * @return 0 if run otherwise 1.
      */
-    public static int runExecute(final String nameFile) {
+    public static boolean runExecute(final String nameFile) {
         return runProcess("java /../tmp/" + nameFile);
     }
 }
