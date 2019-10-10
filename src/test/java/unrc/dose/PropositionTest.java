@@ -26,7 +26,7 @@ public class PropositionTest {
 	@BeforeClass
   	public static void beforeAll() {
 		if (!Base.hasConnection()) {
-			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/repair_game_test?nullNamePatternMatchesAll=True", "admin", "password");
+			Base.open();
 			System.out.println("PropositionTest setup");
 			Base.openTransaction();
   		}
@@ -220,7 +220,7 @@ public class PropositionTest {
 
 		Proposition proposition = new Proposition();
 
-		LazyList<Proposition> propositions = proposition.solutionsForUserInChallenge(usrId, challId);
+		LazyList<Proposition> propositions = proposition.solutionsUserChallenge(usrId, challId);
 
 		assertEquals(2, propositions.size());
 
@@ -313,7 +313,7 @@ public class PropositionTest {
   	
   	@Test
   	public void nullAllSolutionChallengeTest() {
-  		assertTrue(Proposition.allSolutionChallenge(0).isEmpty());
+  		assertTrue(Proposition.allSolChall(0).isEmpty());
   	}
   	
   	@Test
@@ -344,7 +344,7 @@ public class PropositionTest {
   		solution1.saveIt();
   		solution2.saveIt();
   		
-  		LazyList<Proposition> allSolution = Proposition.allSolutionChallenge(challenge.getInteger("id"));
+  		LazyList<Proposition> allSolution = Proposition.allSolChall(challenge.getInteger("id"));
   		
   		assertEquals(2,allSolution.size());
   		Proposition.deleteAll();
