@@ -282,7 +282,7 @@ public class Challenge extends Model {
         final String name,
         final String source) {
         try {
-            String nameFile = "/tmp/" + name + ".java";
+            String nameFile = "/../tmp/" + name + ".java";
             File file = new File(nameFile);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write(source);
@@ -324,6 +324,8 @@ public class Challenge extends Model {
      * @return true if run otherwise false.
      */
     public static boolean runExecute(final String nameFile) {
-        return runProcess("java /../tmp/" + nameFile);
+        String je= "java -classpath " + "\"/../tmp\" "+nameFile;
+        System.out.println(je);
+        return runProcess(je);
     }
 }

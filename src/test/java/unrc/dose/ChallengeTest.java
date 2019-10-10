@@ -2,16 +2,16 @@ package unrc.dose;
 
 import unrc.dose.Challenge;
 import org.javalite.activejdbc.Base;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ChallengeTest {
 
-	@Before
-	public void before(){
+	@BeforeClass
+	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
 			System.out.println("ChallengeTest setup");
@@ -19,8 +19,8 @@ public class ChallengeTest {
 		}
 	}
 
-	@After
-	public void after(){
+	@AfterClass
+	public static void after(){
 		if (Base.hasConnection()) {
 			Base.rollbackTransaction();
 			System.out.println("ChallengeTest tearDown");
@@ -122,12 +122,29 @@ public class ChallengeTest {
 
 	@Test
 	public void generateFileJavaTest() {
-		assertTrue(true);
+		String name = "Hola";
+		String source = "public class Hola { \n";
+			   source+= "    public static void main(String[] args) {\n";
+			   source+= "        System.out.println("+"\"Hello Word\""+");\n";
+			   source+= "    }\n";
+			   source+= "}\n";
+		boolean obtained = Challenge.generateFileJava(name, source);
+		assertTrue(obtained);
 	} 
 
 	@Test
-	public void runProcessTest() {
-		assertTrue(true);
-	} 
+	public void runCompilationTest() {
+		String nameFile = "Hola";
+		boolean obtained = Challenge.runCompilation(nameFile);
+		assertEquals(true, obtained);
+	}
+
+	@Test
+	public void runExecuteTest() {
+		String nameFile = "Hola";
+		System.out.println("----------- "+Challenge.runExecute(nameFile));
+		boolean obtained = Challenge.runExecute(nameFile);
+		assertEquals(true, obtained);
+	}
 
 }
