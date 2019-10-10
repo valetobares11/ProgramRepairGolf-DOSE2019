@@ -122,29 +122,27 @@ public class ChallengeTest {
 
 	@Test
 	public void generateFileJavaTest() {
-		String name = "Hola";
-		String source = "public class Hola { \n";
-			   source+= "    public static void main(String[] args) {\n";
+		String name = "Test";
+		String source = "    public static void main(String[] args) {\n";
 			   source+= "        System.out.println("+"\"Hello Word\""+");\n";
 			   source+= "    }\n";
-			   source+= "}\n";
 		boolean obtained = Challenge.generateFileJava(name, source);
 		assertTrue(obtained);
 	} 
 
 	@Test
 	public void runCompilationTest() {
-		String nameFile = "Hola";
+		String nameFile = "Test";
 		boolean obtained = Challenge.runCompilation(nameFile);
 		assertEquals(true, obtained);
 	}
 
-	@Test
+	/*@Test
 	public void runExecuteTest() {
-		String nameFile = "Hola";
+		String nameFile = "Test";
 		System.out.println("----------- "+Challenge.runExecute(nameFile));
 		boolean obtained = Challenge.runExecute(nameFile);
 		assertEquals(true, obtained);
-	}
+	}*/
 
 }
