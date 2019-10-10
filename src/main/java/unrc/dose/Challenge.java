@@ -43,6 +43,22 @@ public class Challenge extends Model {
     }
 
     /**
+     *  method that returns the id of a user.
+     * @return class name.
+     */
+    public String getClassName() {
+        return getString("class_name");
+    }
+
+    /**
+     *  method to modify the class name.
+     * @param className class name of a challenge.
+     */
+    public void setClassName(final String className) {
+        set("class_name", className);
+    }
+
+    /**
      * method that returns the title of a challenge.
      * @return title of a challenge.
      */
@@ -285,7 +301,9 @@ public class Challenge extends Model {
             String nameFile = "/../tmp/" + name + ".java";
             File file = new File(nameFile);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("public class " + name + " {\n");
             bw.write(source);
+            bw.write("}");
             bw.close();
             return true;
         } catch (IOException e) {
@@ -324,7 +342,7 @@ public class Challenge extends Model {
      * @return true if run otherwise false.
      */
     public static boolean runExecute(final String nameFile) {
-        String je= "java -classpath " + "\"/../tmp\" "+nameFile;
+        String je = "java -classpath " + "\"/../tmp\" " + nameFile;
         System.out.println(je);
         return runProcess(je);
     }

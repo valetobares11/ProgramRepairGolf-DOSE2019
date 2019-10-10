@@ -37,7 +37,7 @@ public class CompilationChallenge extends Model {
      * otherwise false.
      */
     public static boolean validateCompilationChallenge(final Challenge c) {
-        String title = c.getTitle();
+        String title = c.getClassName();
         String source = c.getSource();
         Challenge.generateFileJava(title, source);
         return !(Challenge.runCompilation(c.getTitle()));
@@ -56,4 +56,12 @@ public class CompilationChallenge extends Model {
         return t;
     }
 
+    /**
+     * aasa.
+     * @param idChallenge asasa.
+     * @return asdasd.
+     */
+    public static CompilationChallenge getChallenge(final int idChallenge) {
+        return CompilationChallenge.findFirst("challenge_id", idChallenge);
+    }
 }

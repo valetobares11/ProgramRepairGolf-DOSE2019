@@ -75,4 +75,13 @@ public class TestChallenge extends Model {
         t.saveIt();
         return t;
     }
+
+    /**
+     * dasdas.
+     * @param idChallenge asasa.
+     * @return asasdsa.
+     */
+    public static TestChallenge getChallenge(final int idChallenge) {
+        return TestChallenge.findFirst("challenge_id", idChallenge);
+    }
 }
