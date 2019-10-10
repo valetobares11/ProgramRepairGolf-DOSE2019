@@ -136,11 +136,11 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	}
 
 	/**
-	 * Test the method showAllUsers
+	 * Test the method showAllUserStat
 	 * UserStat class.
 	 */
 	@Test
-	public void showAllUsers() {
+	public void showAllUserStat() {
 		Base.openTransaction();
 		User.deleteAll();
 		User u = new User();
@@ -153,9 +153,9 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		u2.set("username", "Themosque");
 		u2.set("email_address", "LaMosquita@gmail.com");
 		u2.save();
-		LazyList<User> users = UserStat.showAllUsers();
+		LazyList<UserStat> users = UserStat.showAllUserStat();
 		for (int i = 0; i < users.size(); i++){
-			User user = users.get(i);
+			UserStat user = users.get(i);
 			assertTrue(user.get("username").toString().equals("LaMosca")|| user.get("username").toString().equals("Themosque"));
 		}
 		Base.rollbackTransaction();

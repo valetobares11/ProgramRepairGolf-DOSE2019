@@ -63,11 +63,11 @@ static {
     }
 
     /**
-     * Show all users who are registered in the system.
-     * @return LazyList with all the users.
+     * Show all UserStat registered in the system.
+     * @return LazyList with all the UserStat.
      */
-    public static LazyList<User> showAllUsers() {
-        LazyList<User> users = User.findAll();
+    public static LazyList<UserStat> showAllUserStat() {
+        LazyList<UserStat> users = UserStat.findAll();
         return users;
     }
 
