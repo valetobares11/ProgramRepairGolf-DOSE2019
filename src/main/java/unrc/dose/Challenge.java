@@ -142,6 +142,7 @@ public class Challenge extends Model {
      * This method allows to create a challenge.
      * @param userId user id that created it.
      * @param title title that will have the challenge.
+     * @param className title for class and name file.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
@@ -151,6 +152,7 @@ public class Challenge extends Model {
     public static Challenge addChallenge(
         final int userId,
         final String title,
+        final String className,
         final String description,
         final String source,
         final int point,
@@ -158,6 +160,7 @@ public class Challenge extends Model {
         Challenge c = new Challenge();
         c.setUserId(userId);
         c.setTitle(title);
+        c.setClassName(className);
         c.setDescription(description);
         c.setSource(source);
         c.setPoint(point);
@@ -170,6 +173,7 @@ public class Challenge extends Model {
      * This method allows you to create a test challenge and validate it.
      * @param userId user id that created it.
      * @param title title that will have the challenge.
+     * @param className title for class and name file.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
@@ -180,6 +184,7 @@ public class Challenge extends Model {
     public static boolean addTestChallenge(
         final int userId,
         final String title,
+        final String className,
         final String description,
         final String source,
         final int point,
@@ -188,6 +193,7 @@ public class Challenge extends Model {
         Challenge c = addChallenge(
             userId,
             title,
+            className,
             description,
             source,
             point,
@@ -202,6 +208,7 @@ public class Challenge extends Model {
      * This method allows you to create a compilation challenge and validate it.
      * @param userId user id that created it.
      * @param title title that will have the challenge.
+     * @param className title for class and name file.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
@@ -211,6 +218,7 @@ public class Challenge extends Model {
     public static boolean addCompilationChallenge(
         final int userId,
         final String title,
+        final String className,
         final String description,
         final String source,
         final int point,
@@ -218,6 +226,7 @@ public class Challenge extends Model {
         Challenge c = addChallenge(
             userId,
             title,
+            className,
             description,
             source,
             point,
@@ -341,9 +350,7 @@ public class Challenge extends Model {
      * @param nameFile name of the file to execute.
      * @return true if run otherwise false.
      */
-    public static boolean runExecute(final String nameFile) {
-        String je = "java -classpath " + "\"/../tmp\" " + nameFile;
-        System.out.println(je);
-        return runProcess(je);
+    public static boolean runJava(final String nameFile) {
+        return runProcess("java -cp .:/tmp/ " + nameFile);
     }
 }
