@@ -17,7 +17,8 @@ import org.javalite.activejdbc.LazyList;
  *  description varchar(50),
  *  source varchar(10000),
  *  point integer,
- *  owner_solution_id integer
+ *  owner_solution_id integer,
+ *  class_name varchar (30)
  */
 public class Challenge extends Model {
 
@@ -274,14 +275,21 @@ public class Challenge extends Model {
      * @return list of challanges unresolved.
      */
     public static List<Challenge> viewUnsolvedChallange() {
-        LazyList<Proposition> prop = Proposition.findAll();
-        LinkedList<Challenge> unresolved = new LinkedList<Challenge>();
-        if (!prop.isEmpty()) {
-            for (Proposition challengeUnresolved : prop) {
-                Challenge res = Challenge.findFirst(
-                    "id = ?",
-                    challengeUnresolved.get("challenge_id"));
-                unresolved.add(res);
+        List<Challenge> resolved = viewSolvedChallange();
+        List<Challenge> allChallenge = viewAllChallange();
+        List<Challenge> unresolved = new LinkedList<Challenge>();
+        if (!allChallenge.isEmpty()) {
+            for (Challenge allCh : allChallenge) {
+                boolean state = true;
+                for (Challenge res : resolved) {
+                    if (allCh.getInteger("id") == res.getInteger("id")) {
+                        state = false;
+                        break;
+                    }
+                }
+                if (state) {
+                    unresolved.add(allCh);
+                }
             }
         }
         return unresolved;
