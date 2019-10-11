@@ -126,9 +126,9 @@ public class ChallengeTest {
 	 */
 	@Test
 	public void generateFileJavaTest() {
-		String name = "Test";
+		String name = "TestGenerateFile";
 		String source = "    public static void main(String[] args) {\n";
-			   source+= "        System.out.println("+"\"Hello Word\""+");\n";
+			   source+= "        System.out.println("+"\"TestGenerateFile\""+");\n";
 			   source+= "    }\n";
 		boolean obtained = Challenge.generateFileJava(name, source);
 		assertTrue(obtained);
@@ -139,7 +139,11 @@ public class ChallengeTest {
 	 */
 	@Test
 	public void runCompilationTest() {
-		String nameFile = "Test";
+		String nameFile = "TestCompilation";
+		String source = "    public static void main(String[] args) {\n";
+			   source+= "        System.out.println("+"\"Test Compilation\""+");\n";
+			   source+= "    }\n";
+		Challenge.generateFileJava(nameFile, source);
 		boolean obtained = Challenge.runCompilation(nameFile);
 		assertEquals(true, obtained);
 	}
@@ -149,7 +153,12 @@ public class ChallengeTest {
 	 */
 	@Test
 	public void runJavaTest() {
-		String nameFile = "Test";
+		String nameFile = "TestRunJava";
+		String source = "    public static void main(String[] args) {\n";
+			   source+= "        System.out.println("+"\"Test RunJava\""+");\n";
+			   source+= "    }\n";
+		Challenge.generateFileJava(nameFile, source);
+		Challenge.runCompilation(nameFile);
 		boolean obtained = Challenge.runJava(nameFile);
 		assertEquals(true, obtained);
 	}
