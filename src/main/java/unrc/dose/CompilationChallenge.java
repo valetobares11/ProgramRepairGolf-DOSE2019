@@ -40,7 +40,7 @@ public class CompilationChallenge extends Model {
         String title = c.getClassName();
         String source = c.getSource();
         Challenge.generateFileJava(title, source);
-        return !(Challenge.runCompilation(c.getTitle()));
+        return !(Challenge.runCompilation(title));
     }
 
     /**
@@ -57,9 +57,10 @@ public class CompilationChallenge extends Model {
     }
 
     /**
-     * aasa.
-     * @param idChallenge asasa.
-     * @return asdasd.
+     * method that returns the compilation challenge according to
+     * the id of the challenge.
+     * @param idChallenge challenge id.
+     * @return CompilationChallenge.
      */
     public static CompilationChallenge getChallenge(final int idChallenge) {
         return CompilationChallenge.findFirst("challenge_id", idChallenge);

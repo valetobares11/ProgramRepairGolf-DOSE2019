@@ -77,9 +77,10 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * dasdas.
-     * @param idChallenge asasa.
-     * @return asasdsa.
+     * method that returns the test challenge according to
+     * the id of the challenge.
+     * @param idChallenge challenge id.
+     * @return TestChallenge.
      */
     public static TestChallenge getChallenge(final int idChallenge) {
         return TestChallenge.findFirst("challenge_id", idChallenge);
