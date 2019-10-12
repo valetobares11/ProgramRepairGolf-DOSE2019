@@ -1,6 +1,9 @@
 package unrc.dose;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
 
 /**
  * table attributes.
@@ -65,4 +68,63 @@ public class CompilationChallenge extends Model {
     public static CompilationChallenge getChallenge(final int idChallenge) {
         return CompilationChallenge.findFirst("challenge_id", idChallenge);
     }
+
+    /**
+     * method that returns a list of all compilation challenges.
+     * @return list of all compilation challange.
+     */
+    public static List<Challenge> viewAllCompilationChallange() {
+        LazyList<CompilationChallenge> compChall =
+        CompilationChallenge.findAll();
+        LinkedList<Challenge> allChallenge = new LinkedList<Challenge>();
+        if (!compChall.isEmpty()) {
+            for (CompilationChallenge compilationChallenge : compChall) {
+                Challenge res = Challenge.findFirst(
+                    "id = ?",
+                    compilationChallenge.get("challenge_id"));
+                allChallenge.add(res);
+            }
+        }
+        return allChallenge;
+    }
+
+
+    /**
+     * method that returns a list of resolved compilation challenges.
+     * @return list of compilacion challanges resolved.
+     */
+    public static List<Challenge> viewSolvedCompilationChallange() {
+        LazyList<OwnerSolution> ownerSol = OwnerSolution.findAll();
+        LinkedList<Challenge> resolved = new LinkedList<Challenge>();
+        if (!ownerSol.isEmpty()) {
+            for (OwnerSolution challengeResolved : ownerSol) {
+                if (CompilationChallenge.exists(
+                    challengeResolved.get("challenge_id"))) {
+                    Challenge res = Challenge.findFirst(
+                        "id = ?",
+                        challengeResolved.get("challenge_id"));
+                    resolved.add(res);
+                }
+            }
+        }
+        return resolved;
+    }
+
+    /**
+     * method that returns a list of unresolved compilation challenges.
+     * @return list of compilation challanges unresolved.
+     */
+    public static List<Challenge> viewUnsolvedCompilationChallange() {
+        List<Challenge> resolved = viewSolvedCompilationChallange();
+        List<Challenge> unresolved = new LinkedList<Challenge>();
+        if (!resolved.isEmpty()) {
+            for (Challenge res : resolved) {
+                if (!(CompilationChallenge.exists(res.get("challenge_id")))) {
+                    unresolved.add(res);
+                }
+            }
+        }
+        return unresolved;
+    }
+
 }

@@ -1,6 +1,5 @@
 package unrc.dose;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.io.File;
 import java.io.BufferedWriter;
@@ -245,54 +244,51 @@ public class Challenge extends Model {
     }
 
     /**
-     * method that returns a list of all challenges.
-     * @return list of all challange.
+     * method that returns a list of all compilation challenges.
+     * @return list of all compilation challange.
      */
-    public static LazyList<Challenge> viewAllChallange() {
-        return Challenge.findAll();
+    public static List<Challenge> viewAllCompilationChallange() {
+        return CompilationChallenge.viewAllCompilationChallange();
     }
 
     /**
-     * method that returns a list of resolved challenges.
-     * @return list of challanges resolved.
+     * method that returns a list of all test challenges.
+     * @return list of all test challange.
      */
-    public static List<Challenge> viewSolvedChallange() {
-        LazyList<OwnerSolution> ownerSol = OwnerSolution.findAll();
-        LinkedList<Challenge> resolved = new LinkedList<Challenge>();
-        if (!ownerSol.isEmpty()) {
-            for (OwnerSolution challengeResolved : ownerSol) {
-                Challenge res = Challenge.findFirst(
-                    "id = ?",
-                    challengeResolved.get("challenge_id"));
-                resolved.add(res);
-            }
-        }
-        return resolved;
+    public static List<Challenge> viewAllTestChallange() {
+        return TestChallenge.viewAllTestChallange();
     }
 
     /**
-     * method that returns a list of unresolved challenges.
-     * @return list of challanges unresolved.
+     * method that returns a list of resolved compilation challenges.
+     * @return list of compilacion challanges resolved.
      */
-    public static List<Challenge> viewUnsolvedChallange() {
-        List<Challenge> resolved = viewSolvedChallange();
-        List<Challenge> allChallenge = viewAllChallange();
-        List<Challenge> unresolved = new LinkedList<Challenge>();
-        if (!allChallenge.isEmpty()) {
-            for (Challenge allCh : allChallenge) {
-                boolean state = true;
-                for (Challenge res : resolved) {
-                    if (allCh.getInteger("id") == res.getInteger("id")) {
-                        state = false;
-                        break;
-                    }
-                }
-                if (state) {
-                    unresolved.add(allCh);
-                }
-            }
-        }
-        return unresolved;
+    public static List<Challenge> viewSolvedCompilationChallange() {
+        return CompilationChallenge.viewAllCompilationChallange();
+    }
+
+    /**
+     * method that returns a list of resolved test challenges.
+     * @return list of test challanges resolved.
+     */
+    public static List<Challenge> viewSolvedTestChallange() {
+        return TestChallenge.viewSolvedTestChallange();
+    }
+
+    /**
+     * method that returns a list of unresolved compilation challenges.
+     * @return list of compilation challanges unresolved.
+     */
+    public static List<Challenge> viewUnsolvedCompilationChallange() {
+        return CompilationChallenge.viewUnsolvedCompilationChallange();
+    }
+
+    /**
+     * method that returns a list of unresolved test challenges.
+     * @return list of test challanges unresolved.
+     */
+    public static List<Challenge> viewUnsolvedTestChallange() {
+        return TestChallenge.viewUnsolvedTestChallange();
     }
 
     /**

@@ -1,6 +1,9 @@
 package unrc.dose;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.LazyList;
 
 /**
  *  table attributes.
@@ -48,7 +51,7 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * This method is responsible for validating the compilation challenge.
+     * This method is responsible for validating the test challenge.
      * @param c challenge to validate.
      * @param t test challenge to validate
      * @return True in case the validation passes (the source compiles and
@@ -61,7 +64,7 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * This method allows you to create a compilation challenge.
+     * This method allows you to create a test challenge.
      * @param challengeId challenge id.
      * @param test test code.
      * @return test challenge already created.
@@ -84,5 +87,62 @@ public class TestChallenge extends Model {
      */
     public static TestChallenge getChallenge(final int idChallenge) {
         return TestChallenge.findFirst("challenge_id", idChallenge);
+    }
+
+    /**
+     * method that returns a list of all test challenges.
+     * @return list of all test challange.
+     */
+    public static List<Challenge> viewAllTestChallange() {
+        LazyList<TestChallenge> testChall = TestChallenge.findAll();
+        LinkedList<Challenge> allChallenge = new LinkedList<Challenge>();
+        if (!testChall.isEmpty()) {
+            for (TestChallenge tChallenge : testChall) {
+                Challenge res = Challenge.findFirst(
+                    "id = ?",
+                    tChallenge.get("challenge_id"));
+                allChallenge.add(res);
+            }
+        }
+        return allChallenge;
+    }
+
+
+    /**
+     * method that returns a list of resolved test challenges.
+     * @return list of test challanges resolved.
+     */
+    public static List<Challenge> viewSolvedTestChallange() {
+        LazyList<OwnerSolution> ownerSol = OwnerSolution.findAll();
+        LinkedList<Challenge> resolved = new LinkedList<Challenge>();
+        if (!ownerSol.isEmpty()) {
+            for (OwnerSolution challengeResolved : ownerSol) {
+                if (TestChallenge.exists(
+                    challengeResolved.get("challenge_id"))) {
+                    Challenge res = Challenge.findFirst(
+                        "id = ?",
+                        challengeResolved.get("challenge_id"));
+                    resolved.add(res);
+                }
+            }
+        }
+        return resolved;
+    }
+
+    /**
+     * method that returns a list of unresolved test challenges.
+     * @return list of test challanges unresolved.
+     */
+    public static List<Challenge> viewUnsolvedTestChallange() {
+        List<Challenge> resolved = viewSolvedTestChallange();
+        List<Challenge> unresolved = new LinkedList<Challenge>();
+        if (!resolved.isEmpty()) {
+            for (Challenge res : resolved) {
+                if (!(TestChallenge.exists(res.get("challenge_id")))) {
+                    unresolved.add(res);
+                }
+            }
+        }
+        return unresolved;
     }
 }
