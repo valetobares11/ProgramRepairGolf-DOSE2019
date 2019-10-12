@@ -3,15 +3,15 @@ package unrc.dose;
 import unrc.dose.TestChallenge;
 import unrc.dose.Challenge;
 import org.javalite.activejdbc.Base;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TestChallengeTest {
 
-	@Before
-	public void before(){
+	@BeforeClass
+	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
 			System.out.println("TestChallengeTest setup");
@@ -19,8 +19,8 @@ public class TestChallengeTest {
 		}
 	}
 
-	@After
-	public void after(){
+	@AfterClass
+	public static void after(){
 		if (Base.hasConnection()) {
 			System.out.println("TestChallengeTest tearDown");
 			Base.rollbackTransaction();

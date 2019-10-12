@@ -3,15 +3,15 @@ package unrc.dose;
 import unrc.dose.Challenge;
 import unrc.dose.CompilationChallenge;
 import org.javalite.activejdbc.Base;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class CompilationChallengeTest {
 
-	@Before
-	public void before(){
+	@BeforeClass
+	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
 			System.out.println("CompilationChallengeTest setup");
@@ -19,8 +19,8 @@ public class CompilationChallengeTest {
 		}
 	}
 
-	@After
-	public void after(){
+	@AfterClass
+	public static void after(){
 		if (Base.hasConnection()) {
 			Base.rollbackTransaction();
 			System.out.println("Compilation ChallengeTest tearDown");
@@ -29,8 +29,7 @@ public class CompilationChallengeTest {
 	}
 
 	/**
-	 * Test the method set and get
-	 * from CompilationChallenge class 
+	 * Test the method set and get.
 	 */
 	@Test
 	public void setAndGetTest() {
@@ -41,13 +40,13 @@ public class CompilationChallengeTest {
 	}
 
 	/**
-	 * Test the method validateCompilationChallenge
-	 * from CompilationChallenge class 
+	 * Test the method validateCompilationChallenge.
 	 */
 	@Test
 	public void validateCompilationChallengeTest() {
 		Challenge challenge = new Challenge();
 		challenge.setTitle("Not found");
+		challenge.setClassName("NotFound");
 		challenge.setSource("Not found");
 		challenge.saveIt();
 		boolean validate = CompilationChallenge.validateCompilationChallenge(challenge);
@@ -55,8 +54,7 @@ public class CompilationChallengeTest {
 	}
 
 	/**
-	 * Test the method addCompilationChallenge
-	 * from CompilationChallenge class 
+	 * Test the method addCompilationChallenge.
 	 */
 	@Test
 	public void addCompilationChallengeTest() {
