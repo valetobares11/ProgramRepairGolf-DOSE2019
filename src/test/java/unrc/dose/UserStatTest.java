@@ -136,14 +136,11 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	}
 
 	/**
-	 * Test the method showAllUsers
+	 * Test the method showAllUserStat
 	 * UserStat class.
 	 */
 	@Test
-	public void showAllUsers() {
-		Base.openTransaction();
-		User.deleteAll();
-		UserStat.deleteAll();
+	public void showAllUserStat() {
 		User u = new User();
 		u.set("password", "ElMejor");
 		u.set("username", "LaMosca");
@@ -161,6 +158,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 			UserStat stat = userStats.get(i);
 			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
-		Base.rollbackTransaction();
+    u.delete();
+    u2.delete();
 	}
 }
