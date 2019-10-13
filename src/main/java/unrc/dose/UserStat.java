@@ -14,6 +14,7 @@ import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.validation.UniquenessValidator;;
 
 /**
  * Class for UserStat.
@@ -23,6 +24,7 @@ public class UserStat extends Model {
 /* Validators for model */
 static {
     validatePresenceOf("user_id");
+    validateWith(new UniquenessValidator("user_id"));
     validatePresenceOf("created_challenges");
     validatePresenceOf("solved_challenges");
     validatePresenceOf("current_points");
