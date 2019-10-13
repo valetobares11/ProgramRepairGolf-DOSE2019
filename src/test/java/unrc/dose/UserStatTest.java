@@ -1,6 +1,7 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -160,5 +161,98 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		}
     u.delete();
     u2.delete();
+	}
+	
+	/*Test for validators*/
+
+	/**
+	 * Test the validator of
+	 * presence of user_id 
+	 */
+	@Test
+	public void validatePresenceOfUserId() {
+		UserStat stat = new UserStat();
+		stat.set("created_challenges", 0);
+		stat.set("solved_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+	}
+	
+	/**
+	 * Test the validator of
+	 * presence of created_challenges 
+	 */
+	@Test
+	public void validatePresenceOfCreatedChallenges() {
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("solved_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+		u.delete();
+	}
+	
+	/**
+	 * Test the validator of
+	 * presence of solved_challenges 
+	 */
+	@Test
+	public void validatePresenceOfSolvedChallenges() {
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("created_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+		u.delete();
+	}
+	
+	/**
+	 * Test the validator of
+	 * presence of current_points 
+	 */
+	@Test
+	public void validatePresenceOfCurrentPoints() {
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("created_challenges", 0);
+		stat.set("solved_challenges", 0);
+		assertFalse(stat.isValid());
+		u.delete();
+	}
+	
+	/**
+	 * Test the validator of
+	 * uniqueness for user_id 
+	 */
+	@Test
+	public void validateUniquenessOfUserId() {
+		User u = new User();
+		u.set("username","Hackerman");
+		u.set("password", "T3H4ck303lC0r4z0n");
+		u.set("email_address", "hackingnsa@gmail.com");
+		u.saveIt();
+		UserStat.createUserStat(u.getId());
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("created_challenges", 0);
+		stat.set("solved_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+		u.delete();
 	}
 }
