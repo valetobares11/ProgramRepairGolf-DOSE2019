@@ -18,19 +18,19 @@ import org.slf4j.LoggerFactory;
 public class UserStatTest {
 
 private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
-	
+
 	@BeforeClass
 	public static void beforeAll() {
 		log.info("UserStatTest BeforeClass");
 		Base.open();
 	}
-	
+
 	@AfterClass
 	public static void afterAll() {
 		log.info("UserStatTest AfterClass");
 		Base.close();
 	}
-	
+
 	/**
 	 * Test the method getUserId from
 	 * UserStat class.
@@ -141,23 +141,24 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void showAllUserStat() {
-		Base.openTransaction();
-		User.deleteAll();
 		User u = new User();
 		u.set("password", "ElMejor");
 		u.set("username", "LaMosca");
 		u.set("email_address", "LaMosca@gmail.com");
 		u.save();
+		UserStat.createUserStat(u.getInteger("id"));
 		User u2 = new User();
 		u2.set("password", "NotJohnConnor");
 		u2.set("username", "Themosque");
 		u2.set("email_address", "LaMosquita@gmail.com");
 		u2.save();
-		LazyList<UserStat> users = UserStat.showAllUserStat();
-		for (int i = 0; i < users.size(); i++){
-			UserStat user = users.get(i);
-			assertTrue(user.get("username").toString().equals("LaMosca")|| user.get("username").toString().equals("Themosque"));
+		UserStat.createUserStat(u2.getInteger("id"));
+		LazyList<UserStat> userStats = UserStat.showAllUserStat();
+		for (int i = 0; i < userStats.size(); i++){
+			UserStat stat = userStats.get(i);
+			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
-		Base.rollbackTransaction();
+    u.delete();
+    u2.delete();
 	}
 }
