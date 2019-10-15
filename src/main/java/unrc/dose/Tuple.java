@@ -5,6 +5,7 @@ package unrc.dose;
  * @param <A> accept any type A.
  * @param <B> accept any type B.
  * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
 */
 public class Tuple<A, B> {
 	/**
