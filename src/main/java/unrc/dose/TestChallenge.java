@@ -6,10 +6,12 @@ import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.LazyList;
 
 /**
- *  table attributes.
- *  id integer not null auto_increment primary key.
- *  challenge_id integer not null.
- *  test varchar(1000) not null.
+ * Table test_challenges - Attributes.
+ * id integer not null auto_increment primary key.
+ * challenge_id integer not null.
+ * test varchar(1000) not null.
+ * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
  */
 public class TestChallenge extends Model {
 
@@ -80,31 +82,26 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * method that returns the test challenge according to
-     * the id of the challenge.
-     * @param idChallenge challenge id.
-     * @return TestChallenge.
-     */
-    public static TestChallenge getChallenge(final int idChallenge) {
-        return TestChallenge.findFirst("challenge_id", idChallenge);
-    }
-
-    /**
      * method that returns a list of all test challenges.
      * @return list of all test challange.
      */
-    public static List<Challenge> viewAllTestChallange() {
-        LazyList<TestChallenge> testChall = TestChallenge.findAll();
-        LinkedList<Challenge> allChallenge = new LinkedList<Challenge>();
-        if (!testChall.isEmpty()) {
-            for (TestChallenge tChallenge : testChall) {
-                Challenge res = Challenge.findFirst(
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewAllTestChallange() {
+        LazyList<TestChallenge> all = TestChallenge.findAll();
+        LinkedList<Tuple<Challenge, TestChallenge>> allChallenges
+        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        if (!all.isEmpty()) {
+            for (TestChallenge currentChallenge : all) {
+                Challenge c = Challenge.findFirst(
                     "id = ?",
-                    tChallenge.get("challenge_id"));
-                allChallenge.add(res);
+                    currentChallenge.get("challenge_id"));
+                Tuple<Challenge, TestChallenge> t =
+                new Tuple<Challenge, TestChallenge>(c,
+                currentChallenge);
+                allChallenges.add(t);
             }
         }
-        return allChallenge;
+        return allChallenges;
     }
 
 
@@ -112,17 +109,25 @@ public class TestChallenge extends Model {
      * method that returns a list of resolved test challenges.
      * @return list of test challanges resolved.
      */
-    public static List<Challenge> viewSolvedTestChallange() {
-        LazyList<OwnerSolution> ownerSol = OwnerSolution.findAll();
-        LinkedList<Challenge> resolved = new LinkedList<Challenge>();
-        if (!ownerSol.isEmpty()) {
-            for (OwnerSolution challengeResolved : ownerSol) {
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewSolvedTestChallange() {
+        LazyList<OwnerSolution> allOwnerSol = OwnerSolution.findAll();
+        LinkedList<Tuple<Challenge, TestChallenge>> resolved
+        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        if (!allOwnerSol.isEmpty()) {
+            for (OwnerSolution challengeResolved : allOwnerSol) {
                 if (TestChallenge.exists(
                     challengeResolved.get("challenge_id"))) {
-                    Challenge res = Challenge.findFirst(
+                    Challenge c = Challenge.findFirst(
                         "id = ?",
                         challengeResolved.get("challenge_id"));
-                    resolved.add(res);
+                    TestChallenge tc = TestChallenge.findFirst(
+                        "challenge_id = ?",
+                        challengeResolved.get("challenge_id"));
+                    Tuple<Challenge, TestChallenge> t =
+                    new Tuple<Challenge, TestChallenge>(c,
+                    tc);
+                    resolved.add(t);
                 }
             }
         }
@@ -133,16 +138,28 @@ public class TestChallenge extends Model {
      * method that returns a list of unresolved test challenges.
      * @return list of test challanges unresolved.
      */
-    public static List<Challenge> viewUnsolvedTestChallange() {
-        List<Challenge> resolved = viewSolvedTestChallange();
-        List<Challenge> unresolved = new LinkedList<Challenge>();
-        if (!resolved.isEmpty()) {
-            for (Challenge res : resolved) {
-                if (!(TestChallenge.exists(res.get("challenge_id")))) {
-                    unresolved.add(res);
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewUnsolvedTestChallange() {
+        LazyList<OwnerSolution> allOwnerSol = OwnerSolution.findAll();
+        LinkedList<Tuple<Challenge, TestChallenge>> unsolved
+        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        if (!allOwnerSol.isEmpty()) {
+            for (OwnerSolution challengeResolved : allOwnerSol) {
+                if (!(TestChallenge.exists(
+                    challengeResolved.get("challenge_id")))) {
+                    Challenge c = Challenge.findFirst(
+                        "id = ?",
+                        challengeResolved.get("challenge_id"));
+                    TestChallenge tc = TestChallenge.findFirst(
+                        "challenge_id = ?",
+                        challengeResolved.get("challenge_id"));
+                    Tuple<Challenge, TestChallenge> t =
+                    new Tuple<Challenge, TestChallenge>(c,
+                    tc);
+                    unsolved.add(t);
                 }
             }
         }
-        return unresolved;
+        return unsolved;
     }
 }

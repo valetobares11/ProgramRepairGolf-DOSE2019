@@ -6,9 +6,11 @@ import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.LazyList;
 
 /**
- * table attributes.
+ * Table compilation_challenges - Attributes.
  * id integer not null auto_increment primary key.
  * challenge_id integer not null.
+ * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
  */
 public class CompilationChallenge extends Model {
 
@@ -60,32 +62,21 @@ public class CompilationChallenge extends Model {
     }
 
     /**
-     * method that returns the compilation challenge according to
-     * the id of the challenge.
-     * @param idChallenge challenge id.
-     * @return CompilationChallenge.
-     */
-    public static CompilationChallenge getChallenge(final int idChallenge) {
-        return CompilationChallenge.findFirst("challenge_id", idChallenge);
-    }
-
-    /**
      * method that returns a list of all compilation challenges.
      * @return list of all compilation challange.
      */
     public static List<Challenge> viewAllCompilationChallange() {
-        LazyList<CompilationChallenge> compChall =
-        CompilationChallenge.findAll();
-        LinkedList<Challenge> allChallenge = new LinkedList<Challenge>();
-        if (!compChall.isEmpty()) {
-            for (CompilationChallenge compilationChallenge : compChall) {
-                Challenge res = Challenge.findFirst(
+        LazyList<CompilationChallenge> all = CompilationChallenge.findAll();
+        LinkedList<Challenge> allChallenges = new LinkedList<Challenge>();
+        if (!all.isEmpty()) {
+            for (CompilationChallenge currentChallenge : all) {
+                Challenge c = Challenge.findFirst(
                     "id = ?",
-                    compilationChallenge.get("challenge_id"));
-                allChallenge.add(res);
+                    currentChallenge.get("challenge_id"));
+                allChallenges.add(c);
             }
         }
-        return allChallenge;
+        return allChallenges;
     }
 
 
@@ -94,16 +85,16 @@ public class CompilationChallenge extends Model {
      * @return list of compilacion challanges resolved.
      */
     public static List<Challenge> viewSolvedCompilationChallange() {
-        LazyList<OwnerSolution> ownerSol = OwnerSolution.findAll();
+        LazyList<OwnerSolution> allOwnerSol = OwnerSolution.findAll();
         LinkedList<Challenge> resolved = new LinkedList<Challenge>();
-        if (!ownerSol.isEmpty()) {
-            for (OwnerSolution challengeResolved : ownerSol) {
+        if (!allOwnerSol.isEmpty()) {
+            for (OwnerSolution challengeResolved : allOwnerSol) {
                 if (CompilationChallenge.exists(
                     challengeResolved.get("challenge_id"))) {
-                    Challenge res = Challenge.findFirst(
+                    Challenge c = Challenge.findFirst(
                         "id = ?",
                         challengeResolved.get("challenge_id"));
-                    resolved.add(res);
+                    resolved.add(c);
                 }
             }
         }
@@ -116,15 +107,15 @@ public class CompilationChallenge extends Model {
      */
     public static List<Challenge> viewUnsolvedCompilationChallange() {
         List<Challenge> resolved = viewSolvedCompilationChallange();
-        List<Challenge> unresolved = new LinkedList<Challenge>();
+        List<Challenge> unsolved = new LinkedList<Challenge>();
         if (!resolved.isEmpty()) {
             for (Challenge res : resolved) {
                 if (!(CompilationChallenge.exists(res.get("challenge_id")))) {
-                    unresolved.add(res);
+                    unsolved.add(res);
                 }
             }
         }
-        return unresolved;
+        return unsolved;
     }
 
 }

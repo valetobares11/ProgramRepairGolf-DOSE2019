@@ -9,15 +9,17 @@ import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.LazyList;
 
 /**
- *  table attributes:.
- *  id integer auto_increment primary key,
- *  user_id: integer,
- *  title varchar (50),
- *  description varchar(50),
- *  source varchar(10000),
- *  point integer,
- *  owner_solution_id integer,
- *  class_name varchar (30)
+ * Table challenges - Attributes.
+ * id integer auto_increment primary key.
+ * user_id: integer.
+ * title varchar (50).
+ * description varchar(50).
+ * source varchar(10000).
+ * point integer.
+ * owner_solution_id integer.
+ * class_name varchar (30).
+ * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
  */
 public class Challenge extends Model {
 
@@ -255,7 +257,8 @@ public class Challenge extends Model {
      * method that returns a list of all test challenges.
      * @return list of all test challange.
      */
-    public static List<Challenge> viewAllTestChallange() {
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewAllTestChallange() {
         return TestChallenge.viewAllTestChallange();
     }
 
@@ -271,7 +274,8 @@ public class Challenge extends Model {
      * method that returns a list of resolved test challenges.
      * @return list of test challanges resolved.
      */
-    public static List<Challenge> viewSolvedTestChallange() {
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewSolvedTestChallange() {
         return TestChallenge.viewSolvedTestChallange();
     }
 
@@ -287,7 +291,8 @@ public class Challenge extends Model {
      * method that returns a list of unresolved test challenges.
      * @return list of test challanges unresolved.
      */
-    public static List<Challenge> viewUnsolvedTestChallange() {
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewUnsolvedTestChallange() {
         return TestChallenge.viewUnsolvedTestChallange();
     }
 
