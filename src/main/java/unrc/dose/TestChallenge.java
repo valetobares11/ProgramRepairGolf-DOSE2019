@@ -96,8 +96,9 @@ public class TestChallenge extends Model {
                     "id = ?",
                     currentChallenge.get("challenge_id"));
                 Tuple<Challenge, TestChallenge> t =
-                new Tuple<Challenge, TestChallenge>(c,
-                currentChallenge);
+                new Tuple<Challenge, TestChallenge>(
+                    c,
+                    currentChallenge);
                 allChallenges.add(t);
             }
         }
@@ -111,11 +112,12 @@ public class TestChallenge extends Model {
      */
     public static List<Tuple<Challenge, TestChallenge>>
         viewSolvedTestChallange() {
-        LazyList<OwnerSolution> allOwnerSol = OwnerSolution.findAll();
+        LazyList<Proposition> allProposition =
+        Proposition.where("isSubmit = ?", 1);
         LinkedList<Tuple<Challenge, TestChallenge>> resolved
         = new LinkedList<Tuple<Challenge, TestChallenge>>();
-        if (!allOwnerSol.isEmpty()) {
-            for (OwnerSolution challengeResolved : allOwnerSol) {
+        if (!allProposition.isEmpty()) {
+            for (Proposition challengeResolved : allProposition) {
                 if (TestChallenge.exists(
                     challengeResolved.get("challenge_id"))) {
                     Challenge c = Challenge.findFirst(
@@ -145,11 +147,10 @@ public class TestChallenge extends Model {
             List<Tuple<Challenge, TestChallenge>> unsolved =
             new LinkedList<Tuple<Challenge, TestChallenge>>();
             if (!resolved.isEmpty()) {
-                int max = resolved.size();
-                for (int i = 0; i < max; i++) {
+                for (Tuple<Challenge, TestChallenge> challResolv: resolved) {
                     if (!(TestChallenge.exists(
-                        resolved.get(i).getFirst().get("challenge_id")))) {
-                        unsolved.add(resolved.get(i));
+                        challResolv.getFirst().get("challenge_id")))) {
+                        unsolved.add(challResolv);
                     }
                 }
             }
