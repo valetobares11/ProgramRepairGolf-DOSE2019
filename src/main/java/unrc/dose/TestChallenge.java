@@ -140,26 +140,19 @@ public class TestChallenge extends Model {
      */
     public static List<Tuple<Challenge, TestChallenge>>
         viewUnsolvedTestChallange() {
-        LazyList<OwnerSolution> allOwnerSol = OwnerSolution.findAll();
-        LinkedList<Tuple<Challenge, TestChallenge>> unsolved
-        = new LinkedList<Tuple<Challenge, TestChallenge>>();
-        if (!allOwnerSol.isEmpty()) {
-            for (OwnerSolution challengeResolved : allOwnerSol) {
-                if (!(TestChallenge.exists(
-                    challengeResolved.get("challenge_id")))) {
-                    Challenge c = Challenge.findFirst(
-                        "id = ?",
-                        challengeResolved.get("challenge_id"));
-                    TestChallenge tc = TestChallenge.findFirst(
-                        "challenge_id = ?",
-                        challengeResolved.get("challenge_id"));
-                    Tuple<Challenge, TestChallenge> t =
-                    new Tuple<Challenge, TestChallenge>(c,
-                    tc);
-                    unsolved.add(t);
+            List<Tuple<Challenge, TestChallenge>> resolved =
+            viewSolvedTestChallange();
+            List<Tuple<Challenge, TestChallenge>> unsolved =
+            new LinkedList<Tuple<Challenge, TestChallenge>>();
+            if (!resolved.isEmpty()) {
+                int max = resolved.size();
+                for (int i = 0; i < max ; i++) {
+                    if (!(TestChallenge.exists(
+                        resolved.get(i).getFirst().get("challenge_id")))) {
+                        unsolved.add(resolved.get(i));
+                    }
                 }
             }
-        }
-        return unsolved;
+            return unsolved;
     }
 }
