@@ -84,17 +84,26 @@ public class CompilationChallenge extends Model {
      * method that returns a list of resolved compilation challenges.
      * @return list of compilacion challanges resolved.
      */
-    public static List<Challenge> viewSolvedCompilationChallange() {
-        LazyList<OwnerSolution> allOwnerSol = OwnerSolution.findAll();
-        LinkedList<Challenge> resolved = new LinkedList<Challenge>();
-        if (!allOwnerSol.isEmpty()) {
-            for (OwnerSolution challengeResolved : allOwnerSol) {
+    public static List<Tuple<Challenge, CompilationChallenge>>
+        viewSolvedCompilationChallange() {
+        LazyList<Proposition> allProposition =
+        Proposition.where("isSubmit = ?", 1);
+        LinkedList<Tuple<Challenge, CompilationChallenge>> resolved
+        = new LinkedList<Tuple<Challenge, CompilationChallenge>>();
+        if (!allProposition.isEmpty()) {
+            for (Proposition challengeResolved : allProposition) {
                 if (CompilationChallenge.exists(
                     challengeResolved.get("challenge_id"))) {
                     Challenge c = Challenge.findFirst(
                         "id = ?",
                         challengeResolved.get("challenge_id"));
-                    resolved.add(c);
+                    CompilationChallenge tc = CompilationChallenge.findFirst(
+                        "challenge_id = ?",
+                        challengeResolved.get("challenge_id"));
+                    Tuple<Challenge, CompilationChallenge> t =
+                    new Tuple<Challenge, CompilationChallenge>(c,
+                    tc);
+                    resolved.add(t);
                 }
             }
         }
@@ -105,17 +114,21 @@ public class CompilationChallenge extends Model {
      * method that returns a list of unresolved compilation challenges.
      * @return list of compilation challanges unresolved.
      */
-    public static List<Challenge> viewUnsolvedCompilationChallange() {
-        List<Challenge> resolved = viewSolvedCompilationChallange();
-        List<Challenge> unsolved = new LinkedList<Challenge>();
+    public static List<Tuple<Challenge, CompilationChallenge>>
+        viewUnsolvedCompilationChallange() {
+        List<Tuple<Challenge, CompilationChallenge>> resolved =
+        viewSolvedCompilationChallange();
+        List<Tuple<Challenge, CompilationChallenge>> unsolved =
+        new LinkedList<Tuple<Challenge, CompilationChallenge>>();
         if (!resolved.isEmpty()) {
-            for (Challenge res : resolved) {
-                if (!(CompilationChallenge.exists(res.get("challenge_id")))) {
-                    unsolved.add(res);
+            for (Tuple<Challenge, CompilationChallenge> challResolv: resolved) {
+                if (!(CompilationChallenge.exists(
+                    challResolv.getFirst().get("challenge_id")))) {
+                    unsolved.add(challResolv);
                 }
             }
         }
         return unsolved;
-    }
+}
 
 }
