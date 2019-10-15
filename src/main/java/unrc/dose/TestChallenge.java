@@ -146,7 +146,7 @@ public class TestChallenge extends Model {
             new LinkedList<Tuple<Challenge, TestChallenge>>();
             if (!resolved.isEmpty()) {
                 int max = resolved.size();
-                for (int i = 0; i < max ; i++) {
+                for (int i = 0; i < max; i++) {
                     if (!(TestChallenge.exists(
                         resolved.get(i).getFirst().get("challenge_id")))) {
                         unsolved.add(resolved.get(i));
