@@ -3,6 +3,8 @@ package unrc.dose;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -19,10 +21,22 @@ public class ChallengeTest {
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			System.out.println("ChallengeTest setup");
+			System.out.println("CompilationChallengeTest setup");
 			Base.openTransaction();
 		}
+		
+		User u = new User();
+		u.set("username", "test");
+		u.set("password", "1234");
+		u.set("email_address", "test@example.com");
+		u.saveIt();
+
+		Challenge.addChallenge(u.getId(), "Test", "Test", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getId(), "Test1", "Test1", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getId(), "Test2", "Test2", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getId(),"Test3", "Test3", "description", "source", 100, 0);
 	}
+
 
 	@AfterClass
 	public static void after(){
@@ -125,6 +139,25 @@ public class ChallengeTest {
 		Challenge.deleteChallenge(challenge);
 		assertEquals(null,Challenge.findFirst("title = ?",title));   
 	} 
+
+	/**
+	 * Test method for viewUserAssociatedChallange.
+	 */
+	@Test
+	public void viewUserAssociatedChallangeTest() {
+		User username  = User.findFirst("username = ?", "test");
+		int id = username.getInteger("id");
+		List<Challenge> all = Challenge.viewUserAssociatedChallange(id);
+		String resul = all.get(0).getString("title");
+		String resul1 = all.get(1).getString("title");
+		String resul2 = all.get(2).getString("title");
+		String resul3 = all.get(3).getString("title");
+		assertEquals(4, all.size());
+		assertEquals("Test", resul);
+		assertEquals("Test1", resul1);
+		assertEquals("Test2", resul2);
+		assertEquals("Test3", resul3);
+	}
 
 	/**
 	 * Test method for generateFileJava.
