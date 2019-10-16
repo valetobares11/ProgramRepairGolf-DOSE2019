@@ -31,10 +31,10 @@ public class ChallengeTest {
 		u.set("email_address", "test@example.com");
 		u.saveIt();
 
-		Challenge.addChallenge(u.getId(), "Test", "Test", "description", "source", 100, 0);
-		Challenge.addChallenge(u.getId(), "Test1", "Test1", "description", "source", 100, 0);
-		Challenge.addChallenge(u.getId(), "Test2", "Test2", "description", "source", 100, 0);
-		Challenge.addChallenge(u.getId(),"Test3", "Test3", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"), "Test", "Test", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"), "Test1", "Test1", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"), "Test2", "Test2", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"),"Test3", "Test3", "description", "source", 100, 0);
 	}
 
 
