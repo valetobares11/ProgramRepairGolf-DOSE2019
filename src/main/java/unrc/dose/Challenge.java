@@ -266,8 +266,8 @@ public class Challenge extends Model {
      * method that returns a list of resolved compilation challenges.
      * @return list of compilacion challanges resolved.
      */
-    public static List<Challenge> viewSolvedCompilationChallange() {
-        return CompilationChallenge.viewAllCompilationChallange();
+    public static List<Challenge> viewResolvedCompilationChallange() {
+        return CompilationChallenge.viewResolvedCompilationChallange();
     }
 
     /**
@@ -275,12 +275,12 @@ public class Challenge extends Model {
      * @return list of test challanges resolved.
      */
     public static List<Tuple<Challenge, TestChallenge>>
-        viewSolvedTestChallange() {
-        return TestChallenge.viewSolvedTestChallange();
+        viewResolvedTestChallange() {
+        return TestChallenge.viewResolvedTestChallange();
     }
 
     /**
-     * method that returns a list of unresolved compilation challenges.
+     * method that returns a list of unsolved compilation challenges.
      * @return list of compilation challanges unresolved.
      */
     public static List<Challenge> viewUnsolvedCompilationChallange() {
@@ -288,7 +288,7 @@ public class Challenge extends Model {
     }
 
     /**
-     * method that returns a list of unresolved test challenges.
+     * method that returns a list of unsolved test challenges.
      * @return list of test challanges unresolved.
      */
     public static List<Tuple<Challenge, TestChallenge>>
@@ -362,4 +362,5 @@ public class Challenge extends Model {
     public static boolean runJava(final String nameFile) {
         return runProcess("java -cp .:/tmp/ " + nameFile);
     }
+
 }

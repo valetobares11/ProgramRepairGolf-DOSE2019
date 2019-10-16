@@ -84,20 +84,16 @@ public class CompilationChallenge extends Model {
      * method that returns a list of resolved compilation challenges.
      * @return list of compilacion challanges resolved.
      */
-    public static List<Challenge> viewSolvedCompilationChallange() {
-        LazyList<Proposition> allProposition =
+    public static List<Challenge> viewResolvedCompilationChallange() {
+        LazyList<Proposition> allResolved =
         Proposition.where("isSubmit = ?", 1);
         List<Challenge> resolved = new LinkedList<Challenge>();
-        if (!allProposition.isEmpty()) {
-            for (Proposition challengeResolved : allProposition) {
-                if (CompilationChallenge.exists(
-                    challengeResolved.get("challenge_id")) && !(
-                    resolved.contains(Challenge.findFirst(
+        if (!allResolved.isEmpty()) {
+            for (Proposition challengeResolved : allResolved) {
+                Challenge c = Challenge.findFirst(
                     "id = ?",
-                    challengeResolved.get("challenge_id"))))) {
-                    Challenge c = Challenge.findFirst(
-                        "id = ?",
-                        challengeResolved.get("challenge_id"));
+                    challengeResolved.get("challenge_id"));
+                if (!(resolved.contains(c))) {
                     resolved.add(c);
                 }
             }
@@ -110,18 +106,17 @@ public class CompilationChallenge extends Model {
      * @return list of compilation challanges unresolved.
      */
     public static List<Challenge> viewUnsolvedCompilationChallange() {
-        List<Challenge> resolved = viewSolvedCompilationChallange();
+        List<Challenge> resolved = viewResolvedCompilationChallange();
+        List<Challenge> all = viewResolvedCompilationChallange();
         List<Challenge> unsolved = new LinkedList<Challenge>();
-        if (!resolved.isEmpty()) {
-            for (Challenge challResolv: resolved) {
-                if (!(CompilationChallenge.exists(
-                    challResolv.get("challenge_id")) && !(
-                    unsolved.contains(challResolv)))) {
-                    unsolved.add(challResolv);
+        if (!(all.isEmpty())) {
+            for (Challenge c: all) {
+                if (!(resolved.contains(c))) {
+                    unsolved.add(c);
                 }
             }
         }
         return unsolved;
-}
+    }
 
 }

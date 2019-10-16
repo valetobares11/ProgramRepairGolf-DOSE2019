@@ -111,24 +111,22 @@ public class TestChallenge extends Model {
      * @return list of test challanges resolved.
      */
     public static List<Tuple<Challenge, TestChallenge>>
-        viewSolvedTestChallange() {
-        LazyList<Proposition> allProposition =
+        viewResolvedTestChallange() {
+        LazyList<Proposition> allResolved =
         Proposition.where("isSubmit = ?", 1);
         LinkedList<Tuple<Challenge, TestChallenge>> resolved
         = new LinkedList<Tuple<Challenge, TestChallenge>>();
-        if (!allProposition.isEmpty()) {
-            for (Proposition challengeResolved : allProposition) {
-                if (TestChallenge.exists(
-                    challengeResolved.get("challenge_id"))) {
-                    Challenge c = Challenge.findFirst(
-                        "id = ?",
-                        challengeResolved.get("challenge_id"));
-                    TestChallenge tc = TestChallenge.findFirst(
-                        "challenge_id = ?",
-                        challengeResolved.get("challenge_id"));
-                    Tuple<Challenge, TestChallenge> t =
-                    new Tuple<Challenge, TestChallenge>(c,
-                    tc);
+        if (!allResolved.isEmpty()) {
+            for (Proposition challengeResolved : allResolved) {
+                Challenge c = Challenge.findFirst(
+                    "id = ?",
+                    challengeResolved.get("challenge_id"));
+                TestChallenge tc = TestChallenge.findFirst(
+                    "challenge_id = ?",
+                    challengeResolved.get("challenge_id"));
+                Tuple<Challenge, TestChallenge> t =
+                new Tuple<Challenge, TestChallenge>(c, tc);
+                if (!(resolved.contains(t))) {
                     resolved.add(t);
                 }
             }
@@ -137,25 +135,25 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * method that returns a list of unresolved test challenges.
+     * method that returns a list of unsolved test challenges.
      * @return list of test challanges unresolved.
      */
     public static List<Tuple<Challenge, TestChallenge>>
         viewUnsolvedTestChallange() {
-            List<Tuple<Challenge, TestChallenge>> resolved =
-            viewSolvedTestChallange();
-            List<Tuple<Challenge, TestChallenge>> unsolved =
-            new LinkedList<Tuple<Challenge, TestChallenge>>();
-            if (!resolved.isEmpty()) {
-                for (Tuple<Challenge, TestChallenge> challResolv: resolved) {
-                    if (!(TestChallenge.exists(
-                        challResolv.getFirst().get("challenge_id"))) && !(
-                            unsolved.contains(challResolv.getFirst().
-                            get("challenge_id")))) {
-                        unsolved.add(challResolv);
-                    }
+        List<Tuple<Challenge, TestChallenge>> resolved =
+        viewResolvedTestChallange();
+        List<Tuple<Challenge, TestChallenge>> all =
+        viewResolvedTestChallange();
+        List<Tuple<Challenge, TestChallenge>> unsolved =
+        new LinkedList<Tuple<Challenge, TestChallenge>>();
+        if (!all.isEmpty()) {
+            for (Tuple<Challenge, TestChallenge> c: all) {
+                if (!(resolved.contains(c))) {
+                    unsolved.add(c);
                 }
             }
-            return unsolved;
+        }
+        return unsolved;
     }
+
 }
