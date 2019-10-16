@@ -363,4 +363,15 @@ public class Challenge extends Model {
         return runProcess("java -cp .:/tmp/ " + nameFile);
     }
 
+    /**
+     * this method to compare two challenges according to id.
+     * @param c challenge as a parameter.
+     * @return true if the id of challenges are equal.
+     */
+    @Override
+    public boolean equals(final Object c) {
+        Challenge tc = (Challenge) c;
+        return getInteger("id").equals(tc.getInteger("id"));
+    }
+
 }

@@ -143,7 +143,7 @@ public class TestChallenge extends Model {
         List<Tuple<Challenge, TestChallenge>> resolved =
         viewResolvedTestChallange();
         List<Tuple<Challenge, TestChallenge>> all =
-        viewResolvedTestChallange();
+        viewAllTestChallange();
         List<Tuple<Challenge, TestChallenge>> unsolved =
         new LinkedList<Tuple<Challenge, TestChallenge>>();
         if (!all.isEmpty()) {
@@ -156,4 +156,14 @@ public class TestChallenge extends Model {
         return unsolved;
     }
 
+    /**
+     * this method to compare two test challenges according to id.
+     * @param c test challenge as a parameter.
+     * @return true if the id of challenges are equal.
+     */
+    @Override
+    public boolean equals(final Object c) {
+        TestChallenge tc = (TestChallenge) c;
+        return getInteger("id").equals(tc.getInteger("id"));
+    }
 }

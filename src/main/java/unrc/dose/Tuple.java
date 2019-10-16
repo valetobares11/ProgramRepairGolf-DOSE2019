@@ -9,7 +9,7 @@ package unrc.dose;
 */
 public class Tuple<A, B> {
 	/**
-	 * First object for tuple.
+	 * First object of tuple.
 	 */
 	private A first;
 	/**
@@ -41,6 +41,34 @@ public class Tuple<A, B> {
 	 */
 	public B getSecond() {
 		return second;
+	}
+
+	/**
+	 * hashCode() redefined.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + first.hashCode();
+		result = prime * result + second.hashCode();
+		return result;
+	}
+
+	/**
+	 * equals() redefined.
+	 * @param obj tuple to compare.
+	 * @return true if two tuples are equal.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			Tuple<A, B> t = (Tuple<A, B>) obj;
+			return (this.first.equals(t.first)
+			&& this.second.equals(t.second));
+		}
 	}
 
 }
