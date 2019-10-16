@@ -2,8 +2,9 @@ package unrc.dose;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.javalite.activejdbc.Model;
+
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 /**
  * Table test_challenges - Attributes.
@@ -154,6 +155,17 @@ public class TestChallenge extends Model {
             }
         }
         return unsolved;
+    }
+
+    /**
+     * hashCode redefined.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.getInteger("id").hashCode();
+        return result;
     }
 
     /**
