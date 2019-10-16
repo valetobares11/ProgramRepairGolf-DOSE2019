@@ -1,16 +1,17 @@
 package unrc.dose;
 
-import unrc.dose.TestChallenge;
-import unrc.dose.Challenge;
-import unrc.dose.Tuple;
-import unrc.dose.Proposition;
+import static org.junit.Assert.assertEquals;
+import java.util.List;
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import java.util.List;
 
+/**
+ * Class to test the TestChallenge class methods.
+ * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
+ */
 public class TestChallengeTest {
 
 	@BeforeClass
@@ -40,7 +41,7 @@ public class TestChallengeTest {
 		Challenge.addTestChallenge(1, "Test2", "Test2", "description", "source", 100, 0, "test");
 		Challenge c2 = Challenge.findFirst("title = ?", "Test2");
 		Challenge.addTestChallenge(1, "Test3", "Test3", "description", "source", 100, 0, "test");
-		
+
 		Proposition p = new Proposition();
 		p.set("user_id", u.getId());
 		p.set("challenge_id", c.getId());
@@ -81,8 +82,7 @@ public class TestChallengeTest {
 	}
 
 	/**
-	 * Test the method set and get
-	 * from TestChallenge class 
+	 * Test methods for set and get.
 	 */
 	@Test
 	public void setAndGetTest() {
@@ -93,9 +93,9 @@ public class TestChallengeTest {
 		assertEquals(19,testChallenge.getChallengeId());
 		assertEquals("this is a challenge test",testChallenge.getTest());
 	}
+
 	/**
-	 * Test the method validateTestChallenge
-	 * from TestChallenge class 
+	 * Test method for validateTestChallenge.
 	 */
 	@Test
 	public void validateTestChallengeTest() {
@@ -107,8 +107,7 @@ public class TestChallengeTest {
 	}
 
 	/**
-	 * Test the method addTestChallenge
-	 * from TestChallenge class 
+	 * Test method for addTestChallenge.
 	 */
 	@Test
 	public void addTestChallengeTest() {
@@ -122,7 +121,7 @@ public class TestChallengeTest {
 	}
 
 	/**
-	 * Test the method viewAllTestChallange
+	 * Test method for viewAllTestChallange.
 	 */
 	@Test
 	public void viewAllTestChallangeTest() {
@@ -139,7 +138,7 @@ public class TestChallengeTest {
 	}
 
 	/**
-	 * Test the method viewResolvedTestChallang
+	 * Test method for viewResolvedTestChallange.
 	 */
 	@Test
 	public void viewResolvedTestChallangeTest() {
@@ -152,7 +151,7 @@ public class TestChallengeTest {
 	}
 
 	/**
-	 * Test the method viewResolvedTestChallang
+	 * Test method for viewResolvedTestChallange,
 	 */
 	@Test
 	public void viewUnsolvedTestChallangeTest() {

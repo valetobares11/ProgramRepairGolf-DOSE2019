@@ -1,13 +1,18 @@
 package unrc.dose;
 
-import unrc.dose.Challenge;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+/**
+ * Class to test the Challenge class methods.
+ * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
+ */
 public class ChallengeTest {
 
 	@BeforeClass
@@ -29,7 +34,7 @@ public class ChallengeTest {
 	}
 
 	/**
-	 * Test the methods set and get.
+	 * Test methods for set and get.
 	 */
 	@Test
 	public void setAndGetTest() {
@@ -52,7 +57,7 @@ public class ChallengeTest {
 	}
 
 	/**
-	 * Test the method addChallenge.
+	 * Test method for addChallenge.
 	 */
 	@Test
 	public void addChallengeTest() {
@@ -70,7 +75,7 @@ public class ChallengeTest {
 	}
 
 	/**
-	 * Test the method addTestChallenge.
+	 * Test method for addTestChallenge.
 	 */
 	@Test
 	public void addTestChallengeTest() {
@@ -87,7 +92,7 @@ public class ChallengeTest {
 	}
 
 	/**
-	 * Test the method addCompilationChallenge.
+	 * Test method for addCompilationChallenge.
 	 */
 	@Test
 	public void addCompilationChallengeTest() {
@@ -103,7 +108,7 @@ public class ChallengeTest {
 	}
 
 	/**
-	 * Test the method deleteChallenge.
+	 * Test method for deleteChallenge.
 	 */
 	@Test
 	public void deleteChallengeTest() {
@@ -122,7 +127,7 @@ public class ChallengeTest {
 	} 
 
 	/**
-	 * Test the method generateFileJava.
+	 * Test method for generateFileJava.
 	 */
 	@Test
 	public void generateFileJavaTest() {
@@ -132,10 +137,10 @@ public class ChallengeTest {
 			   source+= "    }\n";
 		boolean obtained = Challenge.generateFileJava(name, source);
 		assertTrue(obtained);
-	} 
+	}
 
 	/**
-	 * Test the method runCompilation.
+	 * Test method for runCompilation.
 	 */
 	@Test
 	public void runCompilationTest() {
@@ -149,7 +154,7 @@ public class ChallengeTest {
 	}
 
 	/**
-	 * Test the method runJava.
+	 * Test method for runJava.
 	 */
 	@Test
 	public void runJavaTest() {
