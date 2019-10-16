@@ -1,20 +1,26 @@
 package unrc.dose;
 
-import java.io.File;
 import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 /**
- *  table attributes:.
- *  id integer auto_increment primary key,
- *  user_id: integer,
- *  title varchar (50),
- *  description varchar(50),
- *  source varchar(10000),
- *  point integer,
- *  owner_solution_id integer
+ * Table challenges - Attributes.
+ * id integer auto_increment primary key.
+ * user_id: integer.
+ * title varchar (50).
+ * description varchar(50).
+ * source varchar(10000).
+ * point integer.
+ * owner_solution_id integer.
+ * class_name varchar (30).
+ * @author Brusati Formento, Matias
+ * @author Cuesta, Alvaro
  */
 public class Challenge extends Model {
 
@@ -37,6 +43,22 @@ public class Challenge extends Model {
      */
     public void setUserId(final int userId) {
         set("user_id", userId);
+    }
+
+    /**
+     *  method that returns the id of a user.
+     * @return class name.
+     */
+    public String getClassName() {
+        return getString("class_name");
+    }
+
+    /**
+     *  method to modify the class name.
+     * @param className class name of a challenge.
+     */
+    public void setClassName(final String className) {
+        set("class_name", className);
     }
 
     /**
@@ -123,6 +145,7 @@ public class Challenge extends Model {
      * This method allows to create a challenge.
      * @param userId user id that created it.
      * @param title title that will have the challenge.
+     * @param className title for class and name file.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
@@ -132,6 +155,7 @@ public class Challenge extends Model {
     public static Challenge addChallenge(
         final int userId,
         final String title,
+        final String className,
         final String description,
         final String source,
         final int point,
@@ -139,6 +163,7 @@ public class Challenge extends Model {
         Challenge c = new Challenge();
         c.setUserId(userId);
         c.setTitle(title);
+        c.setClassName(className);
         c.setDescription(description);
         c.setSource(source);
         c.setPoint(point);
@@ -151,6 +176,7 @@ public class Challenge extends Model {
      * This method allows you to create a test challenge and validate it.
      * @param userId user id that created it.
      * @param title title that will have the challenge.
+     * @param className title for class and name file.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
@@ -161,6 +187,7 @@ public class Challenge extends Model {
     public static boolean addTestChallenge(
         final int userId,
         final String title,
+        final String className,
         final String description,
         final String source,
         final int point,
@@ -169,6 +196,7 @@ public class Challenge extends Model {
         Challenge c = addChallenge(
             userId,
             title,
+            className,
             description,
             source,
             point,
@@ -183,6 +211,7 @@ public class Challenge extends Model {
      * This method allows you to create a compilation challenge and validate it.
      * @param userId user id that created it.
      * @param title title that will have the challenge.
+     * @param className title for class and name file.
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
@@ -192,6 +221,7 @@ public class Challenge extends Model {
     public static boolean addCompilationChallenge(
         final int userId,
         final String title,
+        final String className,
         final String description,
         final String source,
         final int point,
@@ -199,6 +229,7 @@ public class Challenge extends Model {
         Challenge c = addChallenge(
             userId,
             title,
+            className,
             description,
             source,
             point,
@@ -216,21 +247,84 @@ public class Challenge extends Model {
     }
 
     /**
+     * method that returns a list of all compilation challenges.
+     * @return list of all compilation challange.
+     */
+    public static List<Challenge> viewAllCompilationChallange() {
+        return CompilationChallenge.viewAllCompilationChallange();
+    }
+
+    /**
+     * method that returns a list of all test challenges.
+     * @return list of all test challange.
+     */
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewAllTestChallange() {
+        return TestChallenge.viewAllTestChallange();
+    }
+
+    /**
+     * method that returns a list of resolved compilation challenges.
+     * @return list of compilacion challanges resolved.
+     */
+    public static List<Challenge> viewResolvedCompilationChallange() {
+        return CompilationChallenge.viewResolvedCompilationChallange();
+    }
+
+    /**
+     * method that returns a list of resolved test challenges.
+     * @return list of test challanges resolved.
+     */
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewResolvedTestChallange() {
+        return TestChallenge.viewResolvedTestChallange();
+    }
+
+    /**
+     * method that returns a list of unsolved compilation challenges.
+     * @return list of compilation challanges unresolved.
+     */
+    public static List<Challenge> viewUnsolvedCompilationChallange() {
+        return CompilationChallenge.viewUnsolvedCompilationChallange();
+    }
+
+    /**
+     * method that returns a list of unsolved test challenges.
+     * @return list of test challanges unresolved.
+     */
+    public static List<Tuple<Challenge, TestChallenge>>
+        viewUnsolvedTestChallange() {
+        return TestChallenge.viewUnsolvedTestChallange();
+    }
+
+    /**
+     * method that returns a list of the challenges associated with the user.
+     * @param userId user id to be treated.
+     * @return list of challenges associated with the user.
+     */
+    public static LazyList<Challenge> viewUserAssociatedChallange(
+        final int userId) {
+        return Challenge.where("user_id = ?", userId);
+    }
+
+    /**
      * method to generate the java file of the challenge.
      * @param name file name.
      * @param source source file.
-     * @return file name.
+     * @return true generate correct.
      */
-    public static String generateFileJava(
+    public static boolean generateFileJava(
         final String name,
         final String source) {
         try {
-            String nameFile = "/tmp/" + name + ".java";
+            String nameFile = "/../tmp/" + name + ".java";
             File file = new File(nameFile);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("public class " + name + " {\n");
             bw.write(source);
+            bw.write("}");
             bw.close();
-            return nameFile;
+            return true;
         } catch (IOException e) {
             throw new IllegalArgumentException("Error the read file");
         }
@@ -239,17 +333,57 @@ public class Challenge extends Model {
     /**
      * method for execute the command (javac and java).
      * @param command command to execute
-     * @return 0 if run otherwise 1.
+     * @return true if run otherwise false.
      */
-    public static int runProcess(final String command) {
+    public static boolean runProcess(final String command) {
         try {
             Process pro = Runtime.getRuntime().exec(command);
             pro.waitFor();
-            return pro.exitValue();
+            return (pro.exitValue() == 0);
         } catch (Exception e) {
             e.printStackTrace();
-            return 1;
+            return false;
         }
+    }
+
+    /**
+     * This method will allow you to compile a java program.
+     * @param nameFile name of the file to compile.
+     * @return true if run otherwise false.
+     */
+    public static boolean runCompilation(final String nameFile) {
+        return runProcess("javac /../tmp/" + nameFile + ".java");
+    }
+
+    /**
+     * This method will allow you to run a java program.
+     * @param nameFile name of the file to execute.
+     * @return true if run otherwise false.
+     */
+    public static boolean runJava(final String nameFile) {
+        return runProcess("java -cp .:/tmp/ " + nameFile);
+    }
+
+    /**
+     * hashCode redefined.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.getInteger("id").hashCode();
+        return result;
+    }
+
+    /**
+     * this method to compare two challenges according to id.
+     * @param c challenge as a parameter.
+     * @return true if the id of challenges are equal.
+     */
+    @Override
+    public boolean equals(final Object c) {
+        Challenge tc = (Challenge) c;
+        return getInteger("id").equals(tc.getInteger("id"));
     }
 
 }
