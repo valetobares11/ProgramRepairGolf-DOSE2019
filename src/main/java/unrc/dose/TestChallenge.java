@@ -149,7 +149,9 @@ public class TestChallenge extends Model {
             if (!resolved.isEmpty()) {
                 for (Tuple<Challenge, TestChallenge> challResolv: resolved) {
                     if (!(TestChallenge.exists(
-                        challResolv.getFirst().get("challenge_id")))) {
+                        challResolv.getFirst().get("challenge_id"))) && !(
+                            unsolved.contains(challResolv.getFirst().
+                            get("challenge_id")))) {
                         unsolved.add(challResolv);
                     }
                 }
