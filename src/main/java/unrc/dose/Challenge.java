@@ -1,12 +1,13 @@
 package unrc.dose;
 
-import java.util.List;
-import java.io.File;
 import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.File;
 import java.io.FileWriter;
-import org.javalite.activejdbc.Model;
+import java.io.IOException;
+import java.util.List;
+
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 /**
  * Table challenges - Attributes.
@@ -361,6 +362,17 @@ public class Challenge extends Model {
      */
     public static boolean runJava(final String nameFile) {
         return runProcess("java -cp .:/tmp/ " + nameFile);
+    }
+
+    /**
+     * hashCode redefined.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.getInteger("id").hashCode();
+        return result;
     }
 
     /**
