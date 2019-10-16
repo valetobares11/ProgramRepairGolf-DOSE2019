@@ -107,7 +107,7 @@ public class CompilationChallenge extends Model {
      */
     public static List<Challenge> viewUnsolvedCompilationChallange() {
         List<Challenge> resolved = viewResolvedCompilationChallange();
-        List<Challenge> all = viewResolvedCompilationChallange();
+        List<Challenge> all = viewAllCompilationChallange();
         List<Challenge> unsolved = new LinkedList<Challenge>();
         if (!(all.isEmpty())) {
             for (Challenge c: all) {
