@@ -26,23 +26,23 @@ public class User extends Model {
     /**
     * The value of ID is {@value}.
     */
-    static final String ID = "id";
+    private static final String ID = "id";
     /**
     * The value of USERNAME is {@value}.
     */
-    static final String USERNAME = "username";
+    private static final String USERNAME = "username";
     /**
     * The value of PASSWORD is {@value}.
     */
-    static final String PASSWORD = "password";
+    private static final String PASSWORD = "password";
     /**
     * The value of EMAIL is {@value}.
     */
-    static final String EMAIL = "email_address";
+    private static final String EMAIL = "email_address";
     /**
     * The value of ADMIN is {@value}.
     */
-    static final String ADMIN = "admin";
+    private static final String ADMIN = "admin";
 
     /**
     * @param name : username that user wants: String
@@ -143,35 +143,38 @@ public class User extends Model {
         u.set(ADMIN, admin);
     }
 
-	 /**
-     * this method remove logically a user.
-     * @param usernameUser this username is for delete logicaly,
+     /**
+     * this method remove logically a user, set the user as inactive.
+     * @param usernameUser this username is for delete logically,
      * his account associate
      * @param passwordUser this param is used for confirm the operation
      * @return a boolean with this exit of remove or no remove the user
      */
-	public static boolean deleteUser(final String usernameUser,
-		final String passwordUser) {
-		User user = User.findFirst("username = ? and password = ?",
-			usernameUser, passwordUser);
+    public static boolean disableUser(final String name,
+        final String pass) {
+        User user = User.findFirst("username = ? and password = ?",
+            name, pass);
         if (user != null) {
-			user.set("active_account", false);
-			return true;
-		}
-		return false;
-	}
+            user.set("active_account", false);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-     * this method is for login the user.
-     * @param usernameUser this username is for login
+    /**
+     * this method is for User's credential validation, 
+     * given a particular user's credential,
+     * this method will validate if they are valid.
+     * @param usernameUser this username is for validate data
      * @param passwordUser this param is used for finally operation
-     * @return a boolean for see if coincide username and pass
+     * @return {@code true} iff the user's credential are valid and the
+     * user was successfully logged in
      */
-	public static boolean login(final String usernameUser,
-		final String passwordUser) {
-		User user = User.findFirst("username = ? and password = ?",
-			usernameUser, passwordUser);
-		return (user != null);
-	}
+    public static boolean validateCredentials(final String name,
+        final String pass) {
+        User user = User.findFirst("username = ? and password = ?",
+            name, pass);
+        return (user != null);
+    }
 
 }

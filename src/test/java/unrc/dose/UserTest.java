@@ -97,7 +97,7 @@ public class UserTest {
 	 * @result delete logically a user logged
 	 */
 	@Test
-	public void deleteUserSuccessfully(){
+	public void deleteUserSuccessful(){
 		String username = "JohnConnor";
 		String password = "VeryHardPass";
 
@@ -109,7 +109,7 @@ public class UserTest {
 	 * @result user not found
 	 */
 	@Test
-	public void deleteUserUnsuccessfully(){
+	public void deleteUserUnsuccessful(){
 		String username = "Pity";
 		String password = "Martinez";
 
@@ -117,50 +117,50 @@ public class UserTest {
 	}
 
 	/**
-	 * Unsuccessfully basic login the user
+	 * Unsuccessfully validate Credentials the user
 	 * @result user not found
 	 */
 	@Test
-	public void userLoginBasicUnsuccessfully(){
+	public void userValidateUnsuccessful(){
 		String username = "Pity";
 		String password = "Martinez";
 
-		assertEquals(false, User.login(username, password));
+		assertEquals(false, User.validateCredentials(username, password));
 	}
 
 	/**
-	 * Successfully basic login the user with data correct
+	 * Successfully validate Credentials the user with data correct
 	 * @result user found whit data get into
 	 */
 	@Test
-	public void userLoginBasicSuccessfully(){
+	public void userValidateSuccessful(){
 		String username = "JohnConnor";
 		String password = "VeryHardPass";
 
-		assertEquals(true, User.login(username, password));
+		assertEquals(true, User.validateCredentials(username, password));
 	}
 
 	/**
-	 * Successfully basic login the user with password incorrect
+	 * Successfully validate Credentials the user with password incorrect
 	 * @result user not found
 	 */
 	@Test
-	public void userLoginBasicUnsuccessfullyWithoutPassCorrect(){
+	public void userValidateUnsuccessfulWithoutPassCorrect(){
 		String username = "JohnConnor";
 		String password = "VeryH";
 
-		assertEquals(false, User.login(username, password));
+		assertEquals(false, User.validateCredentials(username, password));
 	}
 
 	/**
-	 * Successfully basic login the user with password or username incorrect
-	 * @result user not found
+	 * Successfully validate Credentials the user with password or username incorrect
+	 * @result user found with correct data 
 	 */
 	@Test
-	public void userLoginBasicUnsuccessfullyWithoutDataCorrect(){
+	public void userValidateUnsuccessfulWithoutDataCorrect(){
 		String username = "JohnConnor";
 		String password = "VeryHardPass";
 
-		assertEquals(false, User.login(username, password));
+		assertEquals(false, User.validateCredentials(username, password));
 	}
 }
