@@ -184,7 +184,7 @@ public class PropositionTest {
 	}
 
 	
-	//------test para isue --> get compromised solution #101
+	
 	@Test 
 	public void solutionsForUserInChallengeTest() {
 		Challenge challenger = new Challenge();
@@ -229,7 +229,7 @@ public class PropositionTest {
 		User.deleteAll();
 	}
 
-	// ----test para issue --> save a proposed solutipon as definitive #104
+	
 		@Test
 		public void saveSolutionTest() {
 			Challenge challenger = new Challenge();
@@ -426,5 +426,37 @@ public class PropositionTest {
   		Proposition.deleteAll();
   		Challenge.deleteAll();
   		User.deleteAll();
+	  }
+
+	  @Test
+	  public void compilePropositionTest() {
+		
+		Challenge challenger = new Challenge();
+  		User usr = new User();
+  		challenger.set("title", "Challenger 1");
+  		challenger.set("source", "hello");
+  		usr.set("username", "Gaston");
+  		usr.set("password", "abc123");
+  		usr.set("email_address", "pepe@gmail.com");
+  		challenger.saveIt(); 
+  		usr.saveIt();
+  		
+  		Integer usrId = usr.getInteger("id");
+  		Integer challId = challenger.getInteger("id");
+		
+		Proposition p = new Proposition();
+		p.set("challenge_id", challId);
+		p.set("user_id", usrId);
+		p.set("source", "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}");
+		p.set("isSubmit", 0);
+		p.set("distance", 0);
+		p.set("cantTestPassed", 0);
+		p.saveIt();
+
+		assertTrue(p.compileProposition());
+		Proposition.deleteAll();
+		Challenge.deleteAll();
+		User.deleteAll();
+
 	  }
 }

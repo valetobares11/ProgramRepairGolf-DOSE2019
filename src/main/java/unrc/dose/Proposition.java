@@ -4,6 +4,9 @@ package unrc.dose;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
+import java.io.*;
+import java.util.*;
+
 /**
  * == Schema Info.
  *
@@ -155,11 +158,18 @@ public class Proposition extends Model {
      * @param sourceCurrent reference the new code of the proposed solution
      * @param distanceObtained reference the new distance obtained
      */
-    public void saveSolution(final String sourceCurrent,
-            final Integer distanceObtained) {
+    public void saveSolution(final String sourceCurrent, final Integer distanceObtained) {
         this.set("source", sourceCurrent);
         this.set("distance", distanceObtained);
         this.set("isSubmit", 1);
+    }
+
+    /**
+     * save proposed solution in a challenge
+     * @param sourceCurrent reference the new code of the proposed solution
+     */
+    public void saveProposedSolution(final String sourceCurrent) {
+        this.set("source", sourceCurrent);
     }
 
     /**
@@ -255,4 +265,88 @@ public class Proposition extends Model {
         }
         return distance[str1.length][str2.length];
     }
+
+    /**
+	 * Generate a .java file with the code of a challenge
+	 * @param source text whith code java
+	 */
+	public static void generateFileJava(final String source) {
+
+		File f;
+		f = new File("Source.java");
+
+		try {
+			FileWriter w = new FileWriter(f);
+			BufferedWriter bw = new BufferedWriter(w);
+			PrintWriter wr = new PrintWriter(bw);
+
+			wr.write(source);
+			wr.close();
+			bw.close();
+
+		} catch (IOException e) {};
+    }
+    
+    /**
+	 * Compile a file .java
+	 * @param source file .java
+	 * @return 0 if the compilation is successful, 1 opposite case
+	 * @throws Exception
+	 */
+	private static int compilar(final String archivoSourceJava) throws Exception { 
+        
+        int k = runProcess("javac " +  archivoSourceJava); 
+		return k;
+    }
+    
+    /**
+	 * The code to be compiled into the buffer
+	 * @param name param javac Nombre.java
+	 * @param ins
+	 * @throws Exception
+	 */
+	private static void printLines(final String name, final InputStream ins) throws Exception { 
+        
+        String line = null;
+		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
+		while ((line = in.readLine()) != null) {
+			System.out.println(name + " " + line);
+		}
+    }
+    
+    /**
+	 * run the compilation process
+	 * @param command param javac Nombre.java
+	 * @return 0 if the compilation is successful, 1 opposite case
+	 * @throws Exception
+	 */
+	private static int runProcess(String command) throws Exception { 
+        
+        Process pro = Runtime.getRuntime().exec(command);
+		printLines(command + " stdout:", pro.getInputStream());
+		printLines(command + " stderr:", pro.getErrorStream());
+		pro.waitFor();
+		return pro.exitValue(); 
+	}
+
+    /**
+     * Compile a proposal
+     * @return True if compiled, false otherwise
+     */
+    public boolean compileProposition() {
+       
+        generateFileJava(this.getSource());
+        try {
+			int k = compilar("Source.java");
+			if (k == 0) {
+                return true;
+            } else {
+                return false;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return false;
+    }
+
 }
