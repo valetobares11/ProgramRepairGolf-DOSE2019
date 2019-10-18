@@ -1,25 +1,14 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-
-import java.awt.List;
-
-import org.junit.BeforeClass;
-import org.junit.AfterClass;
 
 import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.LazyList;
-
-import spark.Spark;
-
-import unrc.dose.Proposition;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.javalite.activejdbc.LazyList;
 
 public class PropositionTest {
 
@@ -39,8 +28,27 @@ public class PropositionTest {
   			Base.rollbackTransaction();
   			Base.close();
   		}
-  	}
+	}
+	
+	/*@BeforeClass
+	public static void beforeAll() {
+		Base.open();
+	}
 
+	@Before
+	public void beforeTest() {
+		Base.openTransaction();
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		Base.close();
+	}
+
+	@After
+	public void afterTest() {
+		Base.rollbackTransaction();
+	}*/
 
 	@Test
 	public void getUserIdTest() {
@@ -130,6 +138,13 @@ public class PropositionTest {
 
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void setSourceNullTest() {
+		Proposition proposition = new Proposition();
+		String code = null;
+		proposition.setSource(code);
+	}
+
 	
 	@Test
 	public void setIsSubmitTest() {
@@ -182,8 +197,6 @@ public class PropositionTest {
   		Challenge.deleteAll();
   		User.deleteAll();
 	}
-
-	
 	
 	@Test 
 	public void solutionsForUserInChallengeTest() {
@@ -220,7 +233,7 @@ public class PropositionTest {
 
 		Proposition proposition = new Proposition();
 
-		LazyList<Proposition> propositions = proposition.solutionsUserChallenge(usrId, challId);
+		LazyList<Proposition> propositions = proposition.getChallengeSolutionsByUser(usrId, challId);
 
 		assertEquals(2, propositions.size());
 
@@ -228,49 +241,46 @@ public class PropositionTest {
 		Challenge.deleteAll();
 		User.deleteAll();
 	}
-
 	
-		@Test
-		public void saveSolutionTest() {
-			Challenge challenger = new Challenge();
+	@Test
+	public void saveSolutionTest() {
+		Challenge challenger = new Challenge();
 
-			User usr = new User();
-			challenger.set("title", "Challenger 1");
-			usr.set("username", "Gaston");
-			usr.set("password", "abc123");
-			usr.set("email_address", "pepe@gmail.com");
-			challenger.saveIt();
-			usr.saveIt();
+		User usr = new User();
+		challenger.set("title", "Challenger 1");
+		usr.set("username", "Gaston");
+		usr.set("password", "abc123");
+		usr.set("email_address", "pepe@gmail.com");
+		challenger.saveIt();
+		usr.saveIt();
 
-			Integer usrId = usr.getInteger("id");
-			Integer challId = challenger.getInteger("id");
+		Integer usrId = usr.getInteger("id");
+		Integer challId = challenger.getInteger("id");
 
-			Proposition p1 = new Proposition();
-			p1.set("challenge_id", challId);
-			p1.set("user_id", usrId);
-			p1.set("source", "System.out.println('Hello World');");
-			p1.set("isSubmit", 0);
-			p1.set("distance", Integer.MAX_VALUE);
-			p1.set("cantTestPassed", 0);
-			p1.saveIt();
+		Proposition p1 = new Proposition();
+		p1.set("challenge_id", challId);
+		p1.set("user_id", usrId);
+		p1.set("source", "System.out.println('Hello World');");
+		p1.set("isSubmit", 0);
+		p1.set("distance", Integer.MAX_VALUE);
+		p1.set("cantTestPassed", 0);
+		p1.saveIt();
 
-			p1.saveSolution("hola mundo;", 10);
+		p1.saveSolution("hola mundo;", 10);
 
-			int isSubmit = p1.getIsSubmit();
+		int isSubmit = p1.getIsSubmit();
 
-			assertEquals(1, isSubmit);
+		assertEquals(1, isSubmit);
 
-			Proposition.deleteAll();
-			Challenge.deleteAll();
-			User.deleteAll();
-		}
-
-	
+		Proposition.deleteAll();
+		Challenge.deleteAll();
+		User.deleteAll();
+	}
 	
 	@Test
   	public void nullGetPropositionNoSubmitTest() {
   		
-  		assertTrue(Proposition.getPropositionNoSubmit(0, 0).isEmpty());
+  		assertTrue(Proposition.getUnsubmittedChallengePropositionsByUser(0, 0).isEmpty());
   	
   	}
   	
@@ -300,20 +310,18 @@ public class PropositionTest {
 		p.saveIt();
   		
 		
-		LazyList<Proposition> proposition = Proposition.getPropositionNoSubmit(usrId, challId);
+		LazyList<Proposition> proposition = Proposition.getUnsubmittedChallengePropositionsByUser(usrId, challId);
   		
   		
   		assertEquals(1, proposition.size());
   		Proposition.deleteAll();
   		Challenge.deleteAll();
-  		User.deleteAll();
-
-  			
+  		User.deleteAll();  			
   	}
   	
   	@Test
   	public void nullAllSolutionChallengeTest() {
-  		assertTrue(Proposition.allSolChall(0).isEmpty());
+  		assertTrue(Proposition.getAllSolutionsForChallenge(0).isEmpty());
   	}
   	
   	@Test
@@ -344,7 +352,7 @@ public class PropositionTest {
   		solution1.saveIt();
   		solution2.saveIt();
   		
-  		LazyList<Proposition> allSolution = Proposition.allSolChall(challenge.getInteger("id"));
+  		LazyList<Proposition> allSolution = Proposition.getAllSolutionsForChallenge(challenge.getInteger("id"));
   		
   		assertEquals(2,allSolution.size());
   		Proposition.deleteAll();
@@ -447,16 +455,81 @@ public class PropositionTest {
 		Proposition p = new Proposition();
 		p.set("challenge_id", challId);
 		p.set("user_id", usrId);
-		p.set("source", "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}");
+		//p.set("source", "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}");
 		p.set("isSubmit", 0);
 		p.set("distance", 0);
 		p.set("cantTestPassed", 0);
 		p.saveIt();
+		String newCode = "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}";
 
-		assertTrue(p.compileProposition());
+		assertTrue(p.compileProposition(newCode));
 		Proposition.deleteAll();
 		Challenge.deleteAll();
 		User.deleteAll();
-
+	  
+	  }
+	  
+	  @Test
+	  public void notSubmitPropositionTest() {
+	      Challenge challenger = new Challenge();
+	      User usr = new User();
+	      challenger.set("title", "Challenger 1");
+	      challenger.set("source", "hello");
+	      usr.set("username", "Gaston");
+	      usr.set("password", "abc123");
+	      usr.set("email_address", "pepe@gmail.com");
+	      challenger.saveIt(); 
+	      usr.saveIt();
+	      
+	      Integer usrId = usr.getInteger("id");
+	      Integer challId = challenger.getInteger("id");
+	      
+	      Proposition p = new Proposition();
+	      p.set("challenge_id", challId);
+	      p.set("user_id", usrId);
+	      p.set("isSubmit", 0);
+	      p.set("distance", 0);
+	      p.set("cantTestPassed", 0);
+		  p.saveIt();
+		  String newCode = "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b System.out.println(c);}}";
+	      
+	      assertFalse(p.submitProposition(newCode));
+	      assertTrue(p.getInteger("isSubmit") == 0);
+	      
+	      Proposition.deleteAll();
+	      Challenge.deleteAll();
+	      User.deleteAll();	      
+	  }
+	  
+	  @Test
+	  public void submitPropositionTest() {
+          Challenge challenger = new Challenge();
+          User usr = new User();
+          challenger.set("title", "Challenger 1");
+          challenger.set("source", "hello");
+          usr.set("username", "Gaston");
+          usr.set("password", "abc123");
+          usr.set("email_address", "pepe@gmail.com");
+          challenger.saveIt(); 
+          usr.saveIt();
+          
+          Integer usrId = usr.getInteger("id");
+          Integer challId = challenger.getInteger("id");
+          
+          Proposition p = new Proposition();
+          p.set("challenge_id", challId);
+          p.set("user_id", usrId);
+          p.set("isSubmit", 0);
+          p.set("distance", 0);
+          p.set("cantTestPassed", 0);
+		  p.saveIt();
+		  String newCode = "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}";
+          
+          assertTrue(p.submitProposition(newCode));
+          assertTrue(p.getInteger("isSubmit") == 1);
+          
+          Proposition.deleteAll();
+          Challenge.deleteAll();
+          User.deleteAll(); 	      
 	  }
 }

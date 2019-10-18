@@ -1,11 +1,17 @@
 package unrc.dose;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
-
-import java.io.*;
-import java.util.*;
 
 /**
  * == Schema Info.
@@ -28,7 +34,7 @@ public class Proposition extends Model {
      *
      * @return id of user
      */
-    public Integer getUserId() {
+    public int getUserId() {
         return this.getInteger("user_id");
     }
 
@@ -36,7 +42,7 @@ public class Proposition extends Model {
      *
      * @return id of challenge
      */
-    public Integer getChallengeId() {
+    public int getChallengeId() {
         return this.getInteger("challenge_id");
     }
 
@@ -52,7 +58,7 @@ public class Proposition extends Model {
      *
      * @return status of the proposed solution
      */
-    public Integer getIsSubmit() {
+    public int getIsSubmit() {
         return this.getInteger("isSubmit");
     }
 
@@ -60,7 +66,7 @@ public class Proposition extends Model {
      *
      * @return distance obtained from the proposed solution
      */
-    public Integer getDistance() {
+    public int getDistance() {
         return this.getInteger("distance");
     }
 
@@ -68,7 +74,7 @@ public class Proposition extends Model {
      *
      * @return amount of tests passed by the proposed solution
      */
-    public Integer getCantTestPassed() {
+    public int getCantTestPassed() {
         return this.getInteger("cantTestPassed");
     }
 
@@ -76,7 +82,7 @@ public class Proposition extends Model {
      * Sets a user id.
      * @param userId reference new user id for the proposition
      */
-    public void setUserId(final Integer userId) {
+    public void setUserId(final int userId) {
         this.set("user_id", userId);
     }
 
@@ -84,7 +90,7 @@ public class Proposition extends Model {
      * Sets a challenge id.
      * @param challengeId reference new id challenge for the proposition
      */
-    public void setChallengeId(final Integer challengeId) {
+    public void setChallengeId(final int challengeId) {
         this.set("challenge_id", challengeId);
     }
 
@@ -93,6 +99,9 @@ public class Proposition extends Model {
      * @param source reference new source for the proposition
      */
     public void setSource(final String source) {
+        if (source == null) {
+            throw new IllegalArgumentException();
+        }
         this.set("source", source);
     }
 
@@ -100,15 +109,15 @@ public class Proposition extends Model {
      * Set isSubmit value.
      * @param isSubmit reference new value for the isSubmit in the proposition
      */
-    public void setIsSubmit(final Integer isSubmit) {
+    public void setIsSubmit(final int isSubmit) {
         this.set("isSubmit", isSubmit);
     }
 
     /**
-     * Set distance value.
+     * Set distance value calculated previus.
      * @param distance reference new distance in the proposition.
      */
-    public void setDistance(final Integer distance) {
+    public void setDistance(final int distance) {
         this.set("distance", distance);
     }
 
@@ -116,7 +125,7 @@ public class Proposition extends Model {
      * Set cantTestPassed value.
      * @param testPassed reference the new amount of tests passed
      */
-    public void setCantTestPassed(final Integer testPassed) {
+    public void setCantTestPassed(final int testPassed) {
         this.set("cantTestPassed", testPassed);
     }
 
@@ -126,28 +135,35 @@ public class Proposition extends Model {
      * @param challengeId reference the challenge for the new proposition.
      * @return the proposition created in the database.
      */
-    public static Proposition newProposition(final int userId,
-            final int challengeId) {
+    public static Proposition newProposition(
+        final int userId,
+        final int challengeId) {
+
+        Challenge currentChallenge = Challenge.findById(challengeId);
+        User currentUser = User.findById(userId);
+
+        if (currentChallenge == null || currentUser == null) {
+            throw new IllegalArgumentException();
+        }
 
         Proposition newProposition = new Proposition();
-        Challenge currentChallenge = Challenge.findById(challengeId);
-        newProposition.set("user_id", userId);
-        newProposition.set("challenge_id", challengeId);
+        newProposition.set("user_id", currentUser.getInteger("id"));
+        newProposition.set("challenge_id", currentChallenge.getInteger("id"));
         newProposition.set("source", currentChallenge.get("source"));
         newProposition.set("isSubmit", 0);
-        newProposition.set("distance", Integer.MAX_VALUE);
+        newProposition.set("distance", 0);
         newProposition.set("cantTestPassed", 0);
         newProposition.saveIt();
         return newProposition;
     }
 
     /**
-     * Get the solutions for a challenge by a user.
+     * Get the solutions for a challenge by a specific user..
      * @param userId reference the id of a user
      * @param challengeId reference the id of a challenge
      * @return List of proposition for user in challenge
      */
-    public static LazyList<Proposition> solutionsUserChallenge(
+    public static LazyList<Proposition> getChallengeSolutionsByUser(
             final Integer userId, final Integer challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? "
                 + "and isSubmit = ?", userId, challengeId, 1);
@@ -155,17 +171,17 @@ public class Proposition extends Model {
 
     /**
      * Save a user's solution in a challenge.
-     * @param sourceCurrent reference the new code of the proposed solution
+     * @param proposedCode reference the new code of the proposed solution
      * @param distanceObtained reference the new distance obtained
      */
-    public void saveSolution(final String sourceCurrent, final Integer distanceObtained) {
-        this.set("source", sourceCurrent);
+    public void saveSolution(final String proposedCode, final int distanceObtained) {
+        this.setSource(proposedCode);
         this.set("distance", distanceObtained);
         this.set("isSubmit", 1);
     }
 
     /**
-     * save proposed solution in a challenge
+     * save proposed solution in a challenge.
      * @param sourceCurrent reference the new code of the proposed solution
      */
     public void saveProposedSolution(final String sourceCurrent) {
@@ -179,8 +195,9 @@ public class Proposition extends Model {
      * @return null if there is no proposition or the proposition,
      *  or the proposition found.
      */
-    public static LazyList<Proposition> getPropositionNoSubmit(final int userId,
-            final int challengeId) {
+    public static LazyList<Proposition> getUnsubmittedChallengePropositionsByUser(
+        final int userId,
+        final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? and "
                 + "isSubmit = ?", userId, challengeId, 0);
     }
@@ -189,10 +206,10 @@ public class Proposition extends Model {
      * This method find the proposition that is solution
      * for one specific challenge.
      * @param challengerId represent the challenge.
-     * @return null if there is no solution for the challenge,
-     * else one list with all solutions.
+     * @return list the solution for one challenge.
      */
-    public static LazyList<Proposition> allSolChall(final int challengerId) {
+    public static LazyList<Proposition> getAllSolutionsForChallenge(
+        final int challengerId) {
         return Proposition.where("challenge_id = ? and isSubmit = ?",
                 challengerId, 1);
     }
@@ -203,11 +220,11 @@ public class Proposition extends Model {
      * @return the editing distance of both string
      */
     public static int getDistanceProposition(final Proposition p) {
-        String str1 = p.getSource();
+        String proposedCode = p.getSource();
         Challenge challenge = Challenge.findById(p.get("challenge_id"));
-        String str2 = challenge.getString("source");
+        String challengerCode = challenge.getString("source");
 
-        return computeLevenshteinDistance(str1, str2);
+        return computeLevenshteinDistance(proposedCode, challengerCode);
     }
 
     /**
@@ -216,10 +233,13 @@ public class Proposition extends Model {
      * @param str2 represents the modified string
      * @return the editing distance of both string
      */
-    public static int computeLevenshteinDistance(final String str1,
-            final String str2) {
-        return computeLevenshteinDistance(str1.toCharArray(),
-                str2.toCharArray());
+    public static int computeLevenshteinDistance(
+        final String str1,
+        final String str2) {
+        return computeLevenshteinDistance(
+            str1.toCharArray(),
+            str2.toCharArray()
+            );
     }
 
     /**
@@ -246,8 +266,9 @@ public class Proposition extends Model {
      * @param str2 represents the modified arrangement
      * @return the editing distance of both arrangements
      */
-    private static int computeLevenshteinDistance(final char[] str1,
-            final char[] str2) {
+    private static int computeLevenshteinDistance(
+        final char[] str1,
+        final char[] str2) {
         int[][] distance = new int[str1.length + 1][str2.length + 1];
 
         for (int i = 0; i <= str1.length; i++) {
@@ -267,86 +288,105 @@ public class Proposition extends Model {
     }
 
     /**
-	 * Generate a .java file with the code of a challenge
-	 * @param source text whith code java
-	 */
-	public static void generateFileJava(final String source) {
+     * Generate a .java file with the code of a challenge.
+     * @param source text with code java
+     */
+    public static void generateFileJava(final String source) {
 
-		File f;
-		f = new File("Source.java");
+        File f;
+        f = new File("Source.java");
 
-		try {
-			FileWriter w = new FileWriter(f);
-			BufferedWriter bw = new BufferedWriter(w);
-			PrintWriter wr = new PrintWriter(bw);
+        try {
+            FileWriter w = new FileWriter(f);
+            BufferedWriter bw = new BufferedWriter(w);
+            PrintWriter wr = new PrintWriter(bw);
 
-			wr.write(source);
-			wr.close();
-			bw.close();
+            wr.write(source);
+            wr.close();
+            bw.close();
 
-		} catch (IOException e) {};
+        } catch (IOException e) { };
     }
-    
+
     /**
-	 * Compile a file .java
-	 * @param source file .java
-	 * @return 0 if the compilation is successful, 1 opposite case
-	 * @throws Exception
-	 */
-	private static int compilar(final String archivoSourceJava) throws Exception { 
-        
-        int k = runProcess("javac " +  archivoSourceJava); 
-		return k;
+     * Compile a file .java.
+     * @param archivoSourceJava file .java
+     * @return 0 if the compilation is successful, 1 opposite case
+     * @throws Exception
+     */
+    private static int compilar(final String archivoSourceJava) throws Exception {
+
+        int k = runProcess("javac " +  archivoSourceJava);
+        return k;
     }
-    
+
     /**
-	 * The code to be compiled into the buffer
-	 * @param name param javac Nombre.java
-	 * @param ins
-	 * @throws Exception
-	 */
-	private static void printLines(final String name, final InputStream ins) throws Exception { 
-        
+     * The code to be compiled into the buffer.
+     * @param name param javac Nombre.java
+     * @param ins
+     * @throws Exception
+     */
+    private static void printLines(final String name, final InputStream ins) throws Exception {
+
         String line = null;
-		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
-		while ((line = in.readLine()) != null) {
-			System.out.println(name + " " + line);
-		}
+        BufferedReader in = new BufferedReader(new InputStreamReader(ins));
+        while ((line = in.readLine()) != null) {
+            System.out.println(name + " " + line);
+        }
     }
-    
-    /**
-	 * run the compilation process
-	 * @param command param javac Nombre.java
-	 * @return 0 if the compilation is successful, 1 opposite case
-	 * @throws Exception
-	 */
-	private static int runProcess(String command) throws Exception { 
-        
-        Process pro = Runtime.getRuntime().exec(command);
-		printLines(command + " stdout:", pro.getInputStream());
-		printLines(command + " stderr:", pro.getErrorStream());
-		pro.waitFor();
-		return pro.exitValue(); 
-	}
 
     /**
-     * Compile a proposal
+     * run the compilation process.
+     * @param command javac Nombre.java
+     * @return 0 if the compilation is successful, 1 opposite case
+     * @throws Exception
+     */
+    private static int runProcess(final String command) throws Exception {
+
+        Process pro = Runtime.getRuntime().exec(command);
+        printLines(command + " stdout:", pro.getInputStream());
+        printLines(command + " stderr:", pro.getErrorStream());
+        pro.waitFor();
+        return pro.exitValue();
+    }
+
+    /**
+     * Compile a proposal.
+     * @param proposedCode represents the code for the possible solution.
      * @return True if compiled, false otherwise
      */
-    public boolean compileProposition() {
-       
+    public boolean compileProposition(final String proposedCode) {
+        this.setSource(proposedCode);
+        this.saveIt();
         generateFileJava(this.getSource());
         try {
-			int k = compilar("Source.java");
-			if (k == 0) {
+            int k = compilar("Source.java");
+            if (k == 0) {
                 return true;
-            } else {
-                return false;
             }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
+    }
+
+    /**
+     * This method saves the proposition committed,
+     * change distance and isSubmit 1.
+     * @param proposedCode represents the possible
+     * solution provided by a user
+     * @return false if the source not compile, true otherwise.
+     */
+    public boolean submitProposition(final String proposedCode) {
+        if (!(this.compileProposition(proposedCode))) {
+            return false;
+        }
+        Integer newDistance = getDistanceProposition(this);
+        this.set("distance", newDistance);
+        this.set("isSubmit", 1);
+        this.saveIt();
+        return true;
     }
 
 }
