@@ -1,7 +1,9 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.List;
+
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -100,8 +102,17 @@ public class TestChallengeTest {
 	@Test
 	public void validateTestChallengeTest() {
 		Challenge challenge = new Challenge();
+		challenge.setUserId(1); 
+		challenge.setTitle("Hello Word");
+		challenge.setClassName("HelloWord");
+		challenge.setSource("public String hello(){ return "+"HelloWord"+"; }");
+		challenge.setPoint(100);
+		challenge.setOwnerSolutionId(9);
 		challenge.saveIt();
 		TestChallenge testChallenge = new TestChallenge();
+		testChallenge.set("id",challenge.getInteger("id"));
+		testChallenge.setTest("--");
+		testChallenge.saveIt();
 		boolean validate = TestChallenge.validateTestChallenge(challenge,testChallenge);
 		assertEquals(true,validate);
 	}
@@ -112,6 +123,12 @@ public class TestChallengeTest {
 	@Test
 	public void addTestChallengeTest() {
 		Challenge challenge = new Challenge();
+		challenge.setUserId(1); 
+		challenge.setTitle("Hello Word");
+		challenge.setClassName("HelloWord");
+		challenge.setSource("public String hello(){ return "+"HelloWord"+"; }");
+		challenge.setPoint(100);
+		challenge.setOwnerSolutionId(9);
 		challenge.saveIt();
 		int challengeId = challenge.getInteger("id");
 		String test = "this is a challenge test";

@@ -100,9 +100,12 @@ public class CompilationChallengeTest {
 	@Test
 	public void validateCompilationChallengeTest() {
 		Challenge challenge = new Challenge();
-		challenge.setTitle("Not found");
-		challenge.setClassName("NotFound");
-		challenge.setSource("Not found");
+		challenge.setUserId(1); 
+		challenge.setTitle("Hello Word");
+		challenge.setClassName("HelloWordx2");
+		challenge.setSource("public String hello(){ return "+"HelloWord"+" }");
+		challenge.setPoint(100);
+		challenge.setOwnerSolutionId(9);
 		challenge.saveIt();
 		boolean validate = CompilationChallenge.validateCompilationChallenge(challenge);
 		assertEquals(true ,validate);
@@ -114,6 +117,12 @@ public class CompilationChallengeTest {
 	@Test
 	public void addCompilationChallengeTest() {
 		Challenge challenge = new Challenge();
+		challenge.setUserId(1); 
+		challenge.setTitle("Hello Word");
+		challenge.setClassName("HelloWord");
+		challenge.setSource("public String hello(){ return "+"HelloWord"+"; }");
+		challenge.setPoint(100);
+		challenge.setOwnerSolutionId(9);
 		challenge.saveIt();
 		int challengeId = challenge.getInteger("id");
 		CompilationChallenge compChallenge = CompilationChallenge.addCompilationChallenge(challengeId);
