@@ -25,6 +25,12 @@ import org.javalite.activejdbc.Model;
 public class Challenge extends Model {
 
     /**
+     * message that will throw the exception if you want to
+     * modify a resolved challenge.
+     */
+    public static final String CHALLENGE_RESOLVED = "The challenge is solved";
+
+    /**
      * the class constructor.
      */
     public Challenge() { }
@@ -362,6 +368,17 @@ public class Challenge extends Model {
      */
     public static boolean runJava(final String nameFile) {
         return runProcess("java -cp .:/tmp/ " + nameFile);
+    }
+
+    /**
+     * this method checks if a challenge was solved.
+     * @param idChallege id of the challenge to check.
+     */
+    public static void checkUnsolvedChallenge(final int idChallege) {
+        if (Proposition.where("challenge_id = ? and isSubmit = 1",
+        idChallege).size() != 0) {
+            throw new RuntimeException(CHALLENGE_RESOLVED);
+        }
     }
 
     /**
