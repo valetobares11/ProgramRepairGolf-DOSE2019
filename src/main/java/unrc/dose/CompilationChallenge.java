@@ -2,8 +2,9 @@ package unrc.dose;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.javalite.activejdbc.Model;
+
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 /**
  * Table compilation_challenges - Attributes.
@@ -117,6 +118,32 @@ public class CompilationChallenge extends Model {
             }
         }
         return unsolved;
+    }
+
+    /**
+     * This method will allow you to modify a challenge if it has
+     * not been resolved.
+     * @param challengeId id of the challenge to check.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     */
+    public static void modifyUnsolvedCompilationChallenge(
+        final int challengeId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point) {
+        Challenge.checkUnsolvedChallenge(challengeId);
+        Challenge c = Challenge.findFirst("id", challengeId);
+        c.setTitle(title);
+        c.setClassName(className);
+        c.setDescription(description);
+        c.setSource(source);
+        c.saveIt();
     }
 
 }
