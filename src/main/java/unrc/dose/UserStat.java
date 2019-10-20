@@ -15,6 +15,7 @@ import org.javalite.activejdbc.DBException;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
+
 /**
  * Class for UserStat.
  * @author Nahuel Alvarez, Borda Agustin, Castillo Conrado
@@ -91,12 +92,22 @@ static {
     }
 
     /**
-     * This method return the statics of the user.
+     * This method return the statics of a user.
      * @param user The user from who wants to get the statistics
      * @return Statistics of the user
      */
     public static UserStat getUserStat(final User user) {
         return UserStat.findFirst("user_id = ?", user.getId());
+    }
+
+    /**
+     * This method return the x users with the best scores.
+     * @param x The number of users.
+     * @return A LazyList of the userStats with the higest scores.
+     */
+    public static LazyList<UserStat> showBestScores(final int x){
+      LazyList<UserStat> userStats = UserStat.findAll().orderBy("current_points").limit(x);
+      return userStats;
     }
 
 }

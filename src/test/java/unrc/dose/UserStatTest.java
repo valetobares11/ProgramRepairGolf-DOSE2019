@@ -161,4 +161,44 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
     u.delete();
     u2.delete();
 	}
+
+	/**
+	 * Test the method showBestScores
+	 * UserStat class.
+	 */
+	 @Test
+	 public void showBestScores() {
+		 LazyList<User> users= User.findAll();
+		 System.out.println("---------------------------------------------------");
+		 System.out.println(users.get(0).getName());
+		 System.out.println("---------------------------------------------------");
+		 User u = new User();
+		 u.set("password", "ElMejor");
+		 u.set("username", "LaMosca");
+		 u.set("email_address", "LaMosca@gmail.com");
+		 u.save();
+		 UserStat us1 = new UserStat();
+		 us1.set("current_points", 10);
+		 us1.set("user_id", u.getId());
+		 us1.saveIt();
+		 User u2 = new User();
+		 u2.set("password", "NotJohnConnor");
+		 u2.set("username", "Themosque");
+		 u2.set("email_address", "LaMosquita@gmail.com");
+		 u2.save();
+		 UserStat us2 = new UserStat();
+		 us2.set("current_points", 20);
+		 us2.set("user_id", u2.getId());
+		 us2.saveIt();
+		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
+		 assertTrue(userStats.get(0).getUserId()==u2.getId());
+		 System.out.println("---------------------------------------------------");
+		 System.out.println(userStats.get(0).getCurrentPoints());
+	 	 System.out.println("---------------------------------------------------");
+		 u.delete();
+		 u2.delete();
+		 us1.delete();
+		 us2.delete();
+	 }
+
 }
