@@ -62,7 +62,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 * UserStat class.
 	 */
 	@Test
-	public void getSolvedChallengesTest() {
+     public void getSolvedChallengesTest() {
 		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
