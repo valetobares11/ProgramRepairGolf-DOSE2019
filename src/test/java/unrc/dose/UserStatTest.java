@@ -158,8 +158,8 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 			UserStat stat = userStats.get(i);
 			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
-    u.delete();
-    u2.delete();
+    		u.delete();
+    		u2.delete();
 	}
 
 	/**
@@ -168,10 +168,6 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	 @Test
 	 public void showBestScores() {
-		 LazyList<User> users= User.findAll();
-		 System.out.println("---------------------------------------------------");
-		 System.out.println(users.get(0).getName());
-		 System.out.println("---------------------------------------------------");
 		 User u = new User();
 		 u.set("password", "ElMejor");
 		 u.set("username", "LaMosca");
@@ -179,6 +175,8 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 u.save();
 		 UserStat us1 = new UserStat();
 		 us1.set("current_points", 10);
+		 us1.set("solved_challenges", 0);
+		 us1.set("created_challenges", 0);
 		 us1.set("user_id", u.getId());
 		 us1.saveIt();
 		 User u2 = new User();
@@ -188,17 +186,14 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 u2.save();
 		 UserStat us2 = new UserStat();
 		 us2.set("current_points", 20);
+		 us2.set("solved_challenges", 0);
+		 us2.set("created_challenges", 0);
 		 us2.set("user_id", u2.getId());
 		 us2.saveIt();
 		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
 		 assertTrue(userStats.get(0).getUserId()==u2.getId());
-		 System.out.println("---------------------------------------------------");
-		 System.out.println(userStats.get(0).getCurrentPoints());
-	 	 System.out.println("---------------------------------------------------");
 		 u.delete();
 		 u2.delete();
-		 us1.delete();
-		 us2.delete();
 	 }
 
 }

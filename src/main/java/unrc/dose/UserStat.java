@@ -106,7 +106,8 @@ static {
      * @return A LazyList of the userStats with the higest scores.
      */
     public static LazyList<UserStat> showBestScores(final int x){
-      LazyList<UserStat> userStats = UserStat.findAll().orderBy("current_points").limit(x);
+      LazyList<UserStat> userStats = UserStat.findAll().orderBy("current_points desc").limit(x);
+      
       return userStats;
     }
 
