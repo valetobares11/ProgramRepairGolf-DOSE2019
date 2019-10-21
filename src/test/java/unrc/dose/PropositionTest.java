@@ -29,26 +29,6 @@ public class PropositionTest {
   			Base.close();
   		}
 	}
-	
-	/*@BeforeClass
-	public static void beforeAll() {
-		Base.open();
-	}
-
-	@Before
-	public void beforeTest() {
-		Base.openTransaction();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		Base.close();
-	}
-
-	@After
-	public void afterTest() {
-		Base.rollbackTransaction();
-	}*/
 
 	@Test
 	public void getUserIdTest() {
@@ -81,12 +61,12 @@ public class PropositionTest {
 	}
 
 	@Test
-	public void getIsSubmitTest() {
+	public void getisSolutionTest() {
 
 		Proposition proposition = new Proposition();
-		proposition.set("isSubmit", 1);
-		int isSubmit = proposition.getIsSubmit();
-		assertEquals(isSubmit, 1);
+		proposition.set("isSolution", true);
+		boolean isSolution = proposition.getIsSolution();
+		assertEquals(isSolution, true);
 
 	}
 
@@ -147,11 +127,11 @@ public class PropositionTest {
 
 	
 	@Test
-	public void setIsSubmitTest() {
+	public void setisSolutionTest() {
 
 		Proposition proposition = new Proposition();
-		proposition.setIsSubmit(1);
-		assertEquals(proposition.get("isSubmit"), 1);
+		proposition.setIsSolution(true);
+		assertEquals(proposition.get("isSolution"), true);
 
 	}
 
@@ -217,7 +197,7 @@ public class PropositionTest {
 		p1.set("challenge_id", challId);
 		p1.set("user_id", usrId);
 		p1.set("source", "System.out.println('Hello World');");
-		p1.set("isSubmit", 1);
+		p1.set("isSolution", true);
 		p1.set("distance", Integer.MAX_VALUE);
 		p1.set("cantTestPassed", 0);
 		p1.saveIt();
@@ -226,7 +206,7 @@ public class PropositionTest {
 		p2.set("challenge_id", challId);
 		p2.set("user_id", usrId);
 		p2.set("source", "System.out.println('Hello World');");
-		p2.set("isSubmit", 1);
+		p2.set("isSolution", true);
 		p2.set("distance", Integer.MAX_VALUE);
 		p2.set("cantTestPassed", 0);
 		p2.saveIt();
@@ -261,16 +241,16 @@ public class PropositionTest {
 		p1.set("challenge_id", challId);
 		p1.set("user_id", usrId);
 		p1.set("source", "System.out.println('Hello World');");
-		p1.set("isSubmit", 0);
+		p1.set("isSolution", false);
 		p1.set("distance", Integer.MAX_VALUE);
 		p1.set("cantTestPassed", 0);
 		p1.saveIt();
 
 		p1.saveSolution("hola mundo;", 10);
 
-		int isSubmit = p1.getIsSubmit();
+		boolean isSolution = p1.getIsSolution();
 
-		assertEquals(1, isSubmit);
+		assertEquals(true, isSolution);
 
 		Proposition.deleteAll();
 		Challenge.deleteAll();
@@ -304,7 +284,7 @@ public class PropositionTest {
 		p.set("challenge_id", challId);
 		p.set("user_id", usrId);
 		p.set("source", "System.out.println('Hello World');");
-		p.set("isSubmit", 0);
+		p.set("isSolution", false);
 		p.set("distance", Integer.MAX_VALUE);
 		p.set("cantTestPassed", 0);
 		p.saveIt();
@@ -344,11 +324,11 @@ public class PropositionTest {
   		solution1.set("user_id", usr1.getInteger("id"));
   		solution1.set("challenge_id", challenge.getInteger("id"));
   		solution1.set("source", "Hola mundo!!;");
-  		solution1.set("isSubmit", 1);
+  		solution1.set("isSolution", true);
   		solution2.set("user_id", usr2.getInteger("id"));
   		solution2.set("challenge_id", challenge.getInteger("id"));
   		solution2.set("source", "Hola mundo!!;");
-  		solution2.set("isSubmit", 1);
+  		solution2.set("isSolution", true);
   		solution1.saveIt();
   		solution2.saveIt();
   		
@@ -395,7 +375,7 @@ public class PropositionTest {
 		p.set("challenge_id", challId);
 		p.set("user_id", usrId);
 		p.set("source", "");
-		p.set("isSubmit", 0);
+		p.set("isSolution", false);
 		p.set("distance", 5);
 		p.set("cantTestPassed", 0);
 		p.saveIt();
@@ -425,7 +405,7 @@ public class PropositionTest {
 		p.set("challenge_id", challId);
 		p.set("user_id", usrId);
 		p.set("source", "hello");
-		p.set("isSubmit", 0);
+		p.set("isSolution", false);
 		p.set("distance", 0);
 		p.set("cantTestPassed", 0);
 		p.saveIt();
@@ -455,8 +435,7 @@ public class PropositionTest {
 		Proposition p = new Proposition();
 		p.set("challenge_id", challId);
 		p.set("user_id", usrId);
-		//p.set("source", "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}");
-		p.set("isSubmit", 0);
+		p.set("isSolution", false);
 		p.set("distance", 0);
 		p.set("cantTestPassed", 0);
 		p.saveIt();
@@ -487,14 +466,14 @@ public class PropositionTest {
 	      Proposition p = new Proposition();
 	      p.set("challenge_id", challId);
 	      p.set("user_id", usrId);
-	      p.set("isSubmit", 0);
+	      p.set("isSolution", false);
 	      p.set("distance", 0);
 	      p.set("cantTestPassed", 0);
 		  p.saveIt();
 		  String newCode = "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b System.out.println(c);}}";
 	      
 	      assertFalse(p.submitProposition(newCode));
-	      assertTrue(p.getInteger("isSubmit") == 0);
+	      assertTrue(p.getBoolean("isSolution") == false);
 	      
 	      Proposition.deleteAll();
 	      Challenge.deleteAll();
@@ -519,14 +498,14 @@ public class PropositionTest {
           Proposition p = new Proposition();
           p.set("challenge_id", challId);
           p.set("user_id", usrId);
-          p.set("isSubmit", 0);
+          p.set("isSolution", false);
           p.set("distance", 0);
           p.set("cantTestPassed", 0);
 		  p.saveIt();
 		  String newCode = "public class Source {public static void main(String[] args) {int a = 2; int b = 2; int c = a + b; System.out.println(c);}}";
           
           assertTrue(p.submitProposition(newCode));
-          assertTrue(p.getInteger("isSubmit") == 1);
+          assertTrue(p.getBoolean("isSolution") == true);
           
           Proposition.deleteAll();
           Challenge.deleteAll();

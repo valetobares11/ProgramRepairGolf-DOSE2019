@@ -22,7 +22,7 @@ import org.javalite.activejdbc.Model;
  * user_id         :integer(11)    not null,
  * challenge_id    :integer(11)    not null,
  * source          :text
- * isSubmit        :integer(11)
+ * isSolution      :boolean
  * distance        :integer(11)
  * cantTestPassed  :integer(11)
  *
@@ -58,8 +58,8 @@ public class Proposition extends Model {
      *
      * @return status of the proposed solution
      */
-    public int getIsSubmit() {
-        return this.getInteger("isSubmit");
+    public Boolean getIsSolution() {
+        return this.getBoolean("isSolution");
     }
 
     /**
@@ -106,11 +106,12 @@ public class Proposition extends Model {
     }
 
     /**
-     * Set isSubmit value.
-     * @param isSubmit reference new value for the isSubmit in the proposition
+     * Set isSolution value.
+     * @param isSolution reference new value
+     * for the isSolution in the proposition
      */
-    public void setIsSubmit(final int isSubmit) {
-        this.set("isSubmit", isSubmit);
+    public void setIsSolution(final boolean isSolution) {
+        this.set("isSolution", isSolution);
     }
 
     /**
@@ -150,7 +151,7 @@ public class Proposition extends Model {
         newProposition.set("user_id", currentUser.getInteger("id"));
         newProposition.set("challenge_id", currentChallenge.getInteger("id"));
         newProposition.set("source", currentChallenge.get("source"));
-        newProposition.set("isSubmit", 0);
+        newProposition.set("isSolution", false);
         newProposition.set("distance", 0);
         newProposition.set("cantTestPassed", 0);
         newProposition.saveIt();
@@ -166,7 +167,7 @@ public class Proposition extends Model {
     public static LazyList<Proposition> getChallengeSolutionsByUser(
             final Integer userId, final Integer challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? "
-                + "and isSubmit = ?", userId, challengeId, 1);
+                + "and isSolution = ?", userId, challengeId, true);
     }
 
     /**
@@ -174,10 +175,12 @@ public class Proposition extends Model {
      * @param proposedCode reference the new code of the proposed solution
      * @param distanceObtained reference the new distance obtained
      */
-    public void saveSolution(final String proposedCode, final int distanceObtained) {
+    public void saveSolution(
+        final String proposedCode,
+        final int distanceObtained) {
         this.setSource(proposedCode);
         this.set("distance", distanceObtained);
-        this.set("isSubmit", 1);
+        this.set("isSolution", true);
     }
 
     /**
@@ -199,7 +202,7 @@ public class Proposition extends Model {
         final int userId,
         final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? and "
-                + "isSubmit = ?", userId, challengeId, 0);
+                + "isSolution = ?", userId, challengeId, false);
     }
 
     /**
@@ -210,8 +213,8 @@ public class Proposition extends Model {
      */
     public static LazyList<Proposition> getAllSolutionsForChallenge(
         final int challengerId) {
-        return Proposition.where("challenge_id = ? and isSubmit = ?",
-                challengerId, 1);
+        return Proposition.where("challenge_id = ? and isSolution = ?",
+                challengerId, true);
     }
 
     /**
@@ -373,7 +376,7 @@ public class Proposition extends Model {
 
     /**
      * This method saves the proposition committed,
-     * change distance and isSubmit 1.
+     * change distance and isSolution 1.
      * @param proposedCode represents the possible
      * solution provided by a user
      * @return false if the source not compile, true otherwise.
@@ -384,7 +387,7 @@ public class Proposition extends Model {
         }
         Integer newDistance = getDistanceProposition(this);
         this.set("distance", newDistance);
-        this.set("isSubmit", 1);
+        this.set("isSolution", true);
         this.saveIt();
         return true;
     }
