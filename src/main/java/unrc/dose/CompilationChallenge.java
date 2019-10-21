@@ -129,8 +129,9 @@ public class CompilationChallenge extends Model {
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
+     * @return True in case the validation passes (source does not compile).
      */
-    public static void modifyUnsolvedCompilationChallenge(
+    public static boolean modifyUnsolvedCompilationChallenge(
         final int challengeId,
         final String title,
         final String className,
@@ -138,12 +139,14 @@ public class CompilationChallenge extends Model {
         final String source,
         final int point) {
         Challenge.checkUnsolvedChallenge(challengeId);
-        Challenge c = Challenge.findFirst("id", challengeId);
+        Challenge c = Challenge.findFirst("id = ?", challengeId);
         c.setTitle(title);
         c.setClassName(className);
         c.setDescription(description);
         c.setSource(source);
+        c.setPoint(point);
         c.saveIt();
+        return validateCompilationChallenge(c);
     }
 
 }
