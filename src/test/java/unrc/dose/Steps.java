@@ -19,7 +19,7 @@ public class Steps extends StepUtils {
 
   @Given("^(?:I have|the user has) (\\d+) cukes in my belly$")
   public void i_have_cukes_in_my_belly(int cukes) throws Exception {
-    belly = new Belly();
+    belly = new Belly(1, "pedro");
     belly.eat(cukes);
   }
 
