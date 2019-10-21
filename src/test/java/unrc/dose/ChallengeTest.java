@@ -2,6 +2,7 @@ package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -35,6 +36,14 @@ public class ChallengeTest {
 		Challenge.addChallenge(u.getInteger("id"), "Test1", "Test1", "description", "source", 100, 0);
 		Challenge.addChallenge(u.getInteger("id"), "Test2", "Test2", "description", "source", 100, 0);
 		Challenge.addChallenge(u.getInteger("id"),"Test3", "Test3", "description", "source", 100, 0);
+		Challenge c = Challenge.findFirst("title = ?", "Test");
+
+		Proposition p = new Proposition();
+		p.set("user_id", u.getId());
+		p.set("challenge_id", c.getId());
+		p.set("source","//");
+		p.set("isSubmit", 1);
+		p.saveIt();
 	}
 
 
@@ -199,6 +208,20 @@ public class ChallengeTest {
 		Challenge.runCompilation(nameFile);
 		boolean obtained = Challenge.runJava(nameFile);
 		assertEquals(true, obtained);
+	}
+
+	/**
+	 * Test method for checkUnsolvedChallenge.
+	 */
+	@Test
+	public void checkUnsolvedChallengeTest() {
+		Challenge c = Challenge.findFirst("title = ?", "Test");
+		try{
+			Challenge.checkUnsolvedChallenge(c.getInteger("id"));
+			fail();
+		} catch (RuntimeException ex) {
+			assertEquals(Challenge.CHALLENGE_RESOLVED, ex.getMessage());
+		}
 	}
 
 }

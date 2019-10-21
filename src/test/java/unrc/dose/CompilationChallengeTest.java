@@ -1,6 +1,8 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -170,6 +172,54 @@ public class CompilationChallengeTest {
 		assertEquals(2, unsolved.size());
 		assertEquals("Test", resul);
 		assertEquals("Test3", resul1);
+	}
+
+	/**
+	 * Test method for modifyUnsolvedCompilationChallenge
+	 * In case the challenge is solved.
+	 */
+	@Test
+	public void modifyUnsolvedCompilationChallengeTest() {
+		Challenge c = Challenge.findFirst("title = ?", "Test1");
+		String title = "Change1";
+		String className = "NotFound";
+		String description = "";
+		String source = "//";
+		int point = 0;
+		try{
+			CompilationChallenge.modifyUnsolvedCompilationChallenge(
+				c.getInteger("id"),
+				title,
+				className,
+				description,
+				source,
+				point);
+			fail();
+		} catch (RuntimeException ex) {
+			assertEquals(Challenge.CHALLENGE_RESOLVED, ex.getMessage());
+		}
+	}
+
+	/**
+	 * Test method for modifyUnsolvedCompilationChallenge
+	 * In case the challenge is unsolved.
+	 */
+	@Test
+	public void modifyUnsolvedCompilationChallengeTest1() {
+		Challenge c = Challenge.findFirst("title = ?", "Test3");
+		String title = "Change1";
+		String className = "NotFound";
+		String description = "";
+		String source = "//";
+		int point = 0;
+		boolean obtained = CompilationChallenge.modifyUnsolvedCompilationChallenge(
+			c.getInteger("id"),
+			title,
+			className,
+			description,
+			source,
+			point);
+		assertTrue(obtained);
 	}
 
 } 
