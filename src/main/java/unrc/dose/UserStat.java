@@ -62,7 +62,39 @@ static {
     public int getCurrentPoints() {
         return this.getInteger("current_points");
     }
-
+    
+    /**
+     * Sets the user_id of the user who wants to set this statistics.
+     * @param id The id of the user who statistics we will set.
+     */
+    public void setUserId(int id){
+    	   this.set("user_id", id);
+    }
+    
+    /**
+     * Sets the chreated_challenges of the statistics.
+     * @param challengesCreated The number of challenges created.
+     */
+    public void setCreatedChallenges(int challengesCreated){
+    	   this.set("created_challenges", challengesCreated);
+    }
+    
+    /**
+     * Sets the solved_challenges of the statistics.
+     * @param solvedChallenges The number of solved challenges.
+     */
+    public void setSolvedChallenges(int solvedChallenges){
+        this.set("solved_challenges", solvedChallenges);
+    }
+    
+    /**
+     * Sets the current_points of the statistics.
+     * @param currentPoints The number of curret points.
+     */
+    public void setCurrentPoints(int currentPoints){
+        this.set("current_points", currentPoints);
+    }
+    
     /**
      * Show all UserStat registered in the system.
      * @return LazyList with all the UserStat.
@@ -75,8 +107,9 @@ static {
     /**
      * Create the statistics for a given user.
      * @param id The id of the user who statistics we will create.
+     * @returm the created user statistics.
      */
-    public static void createUserStat(final int id) {
+    public static UserStat createUserStat(final int id) {
         UserStat stat = new UserStat();
         stat.set("user_id", id);
         stat.set("created_challenges", 0);
@@ -89,6 +122,7 @@ static {
         } catch (DBException e) {
             Base.rollbackTransaction();
         }
+        return stat;
     }
 
     /**
