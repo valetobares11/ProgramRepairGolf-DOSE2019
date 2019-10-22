@@ -27,6 +27,9 @@ public class Comment extends Model {
   **/
   public static Comment createComment(final String title,
   final String description, final int challengeId, final int userId) {
+    if (description == null || title == null) {
+    throw new IllegalArgumentException("Comment and title can't be empty");
+    }
     Comment c = new Comment();
     c.set("title", title);
     c.set("description", description);
@@ -55,7 +58,10 @@ public class Comment extends Model {
   *@throws NullPointerException when doesn't exits the comment which this id
   **/
   public static Comment createResponse(final String description,
-  final int userId, final int commentId) throws NullPointerException {
+  final int userId, final int commentId) {
+    if (description == null) {
+    throw new IllegalArgumentException("The response can't be empty");
+  }
     Comment comment = new Comment();
     if (!isResponse(commentId)) {
       Comment c = Comment.findById(commentId);
