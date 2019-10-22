@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.test.DBSpec;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +17,8 @@ import org.junit.Test;
  * @author Brusati Formento, Matias
  * @author Cuesta, Alvaro
  */
-public class CompilationChallengeTest {
+public class CompilationChallengeTest //extends DBSpec 
+{
 
 	@BeforeClass
 	public static void before(){
@@ -26,25 +28,31 @@ public class CompilationChallengeTest {
 			Base.openTransaction();
 		}
 		
+		//User u = User.set("test", "1234", "test@example.com", true);
 		User u = new User();
 		u.set("username", "test");
 		u.set("password", "1234");
 		u.set("email_address", "test@example.com");
+		u.set("admin", true);
 		u.saveIt();
-
+		//User u1 = User.set("test1", "1234", "test1@example.com", false);
 		User u1 = new User();
 		u1.set("username", "test1");
 		u1.set("password", "1234");
 		u1.set("email_address", "test1@example.com");
 		u1.saveIt();
 
-		Challenge.addCompilationChallenge(1, "Test", "Test", "description", "source", 100, 0);
+		Challenge.addCompilationChallenge(u.getInteger("id"), "Test", "Test", "description",
+		"source", 100, 0);
 		Challenge c = Challenge.findFirst("title = ?", "Test");
-		Challenge.addCompilationChallenge(1, "Test1", "Test1", "description", "source", 100, 0);
+		Challenge.addCompilationChallenge(u.getInteger("id"), "Test1", "Test1", "description",
+		"source", 100, 0);
 		Challenge c1 = Challenge.findFirst("title = ?", "Test1");
-		Challenge.addCompilationChallenge(1, "Test2", "Test2", "description", "source", 100, 0);
+		Challenge.addCompilationChallenge(u.getInteger("id"), "Test2", "Test2", "description",
+		"source", 100, 0);
 		Challenge c2 = Challenge.findFirst("title = ?", "Test2");
-		Challenge.addCompilationChallenge(1, "Test3", "Test3", "description", "source", 100, 0);
+		Challenge.addCompilationChallenge(u.getInteger("id"), "Test3", "Test3", "description",
+		"source", 100, 0);
 		
 		Proposition p = new Proposition();
 		p.set("user_id", u.getId());
@@ -137,15 +145,11 @@ public class CompilationChallengeTest {
 	@Test
 	public void viewAllCompilationChallangeTest() {
 		List<Challenge> all = CompilationChallenge.viewAllCompilationChallange();
-		String resul = all.get(0).getString("title");
-		String resul1 = all.get(1).getString("title");
-		String resul2 = all.get(2).getString("title");
-		String resul3 = all.get(3).getString("title");
 		assertEquals(4, all.size());
-		assertEquals("Test", resul);
-		assertEquals("Test1", resul1);
-		assertEquals("Test2", resul2);
-		assertEquals("Test3", resul3);
+		assertEquals("Test", all.get(0).getString("title"));
+		assertEquals("Test1", all.get(1).getString("title"));
+		assertEquals("Test2", all.get(2).getString("title"));
+		assertEquals("Test3", all.get(3).getString("title"));
 	}
 
 	/**
@@ -154,11 +158,9 @@ public class CompilationChallengeTest {
 	@Test
 	public void viewResolvedCompilationChallangeTest() {
 		List<Challenge> resolved = CompilationChallenge.viewResolvedCompilationChallange();
-		String resul = resolved.get(0).getString("title");
-		String resul1 = resolved.get(1).getString("title");
 		assertEquals(2, resolved.size());
-		assertEquals("Test1", resul);
-		assertEquals("Test2", resul1);
+		assertEquals("Test1", resolved.get(0).getString("title"));
+		assertEquals("Test2", resolved.get(1).getString("title"));
 	}
 
 	/**
@@ -167,11 +169,9 @@ public class CompilationChallengeTest {
 	@Test
 	public void viewUnsolvedCompilationChallangeTest() {
 		List<Challenge> unsolved = CompilationChallenge.viewUnsolvedCompilationChallange();
-		String resul = unsolved.get(0).getString("title");
-		String resul1 = unsolved.get(1).getString("title");
 		assertEquals(2, unsolved.size());
-		assertEquals("Test", resul);
-		assertEquals("Test3", resul1);
+		assertEquals("Test", unsolved.get(0).getString("title"));
+		assertEquals("Test3", unsolved.get(1).getString("title"));
 	}
 
 	/**
