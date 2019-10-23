@@ -15,18 +15,14 @@ public class ChallengeStatTest {
         if (!Base.hasConnection()) {
             Base.open();
             Base.openTransaction();
-            System.out.println("ChallengeStatTest");
-
         }
     }
 
     @AfterClass
 	public static void after(){
         if (Base.hasConnection()) {
-            System.out.println("ChallengeStatTest finished");
             Base.rollbackTransaction();
             Base.close();
-
         }
 	}
 
@@ -44,31 +40,14 @@ public class ChallengeStatTest {
         assertEquals(1, c.get("challenge_id"));
         assertEquals((float) 0.0, c.get("average_score"));
         assertEquals(0, c.get("solved_count"));
-
+        
     }
-
-    /**
-    * Increments the attribute "solved_count" (initial value = 0) of a ChallengeStat record .
-    * @result solved_count = 1
-    */
-    /*@Test
-    public void incrementSolvedCountTest() {
-        ChallengeStat.newChallengeStat(1);
-        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
-
-        assertEquals(0, c.get("solved_count"));
-        ChallengeStat.incrementSolvedCount(c);
-        assertEquals(1, c.get("solved_count"));
-    }*/
-
 
     /**
     * Updates the attribute "average_score" of a ChallengeStat record, and increments the "solved_count".
     * @result "average_score" = 6.0, "solved_count" = 2
     */
-
-    /*
-    @Test
+    /*@Test
     public void updateAverageScoreTest() {
         //Challenge.addCompilationTest();
         User testUser = User.set("testName", "testPass", "testMail", false);
@@ -76,29 +55,26 @@ public class ChallengeStatTest {
         Challenge testChallenge = Challenge.addChallenge(userId, "testChallenge",
         "testClass", "testDesc", "testSrc", 20, 1);
         int challengeId = testChallenge.getInteger("id");
-
         Proposition p = Proposition.newProposition(userId, challengeId);
         p.setDistance(5);
         ChallengeStat cs = ChallengeStat.newChallengeStat(challengeId);
-
         assertEquals((float) 0.0, cs.get("average_score"));
         assertEquals(0, cs.get("solved_count"));
         ChallengeStat.updateAverageScore(p.getInteger("id"));
         assertEquals((float) 15.0, cs.get("average_score"));
         assertEquals(1, cs.get("solved_count"));
-
     }*/
 
     @Test
     public void getChallengeStatTest() {
-       ChallengeStat.newChallengeStat(1);
-       Base.commitTransaction();1
-       ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
-       ChallengeStat result = ChallengeStat.getChallengeStat(1);
-       boolean comparison = result.equals(c);
-       System.out.println(comparison);
-       assertTrue(comparison);
+        ChallengeStat.newChallengeStat(1);
+        Base.commitTransaction();
 
+        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
+        ChallengeStat result = ChallengeStat.getChallengeStat(1);
+
+        boolean comparison = result.equals(c);
+        assertTrue(comparison);
     }
 
 

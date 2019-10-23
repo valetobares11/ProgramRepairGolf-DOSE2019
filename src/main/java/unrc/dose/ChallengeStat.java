@@ -22,7 +22,7 @@ import org.javalite.activejdbc.Model;
 * ChallengeStat class represents a person into the system.
 */
 public class ChallengeStat extends Model {
-
+    
 
     /**
      * Updates the number of times that a challenge has been solved.
@@ -44,7 +44,6 @@ public class ChallengeStat extends Model {
      */
     public static void updateAverageScore(final int propositionId) {
         //getting the info about the proposition
-
         Proposition solution = Proposition.findById(propositionId);
         int distance = (int) solution.get("distance");
         int challengeId = (int) solution.get("challenge_id");
@@ -73,14 +72,10 @@ public class ChallengeStat extends Model {
     /**
      *Generates a new ChallengeStat table for a incoming new challenge.
      *@param challengeId The id of the new challenge.
-     *@return the challenge stat created in the database.
      */
-    public static ChallengeStat newChallengeStat(final int challengeId) {
-        validatePresenceOf("challenge_id");
-        ChallengeStat c = ChallengeStat.createIt(
-        "challenge_id", challengeId, "average_score", 0, "solved_count", 0);
-
-        return c;
+    public static void newChallengeStat(final int challengeId) {
+        ChallengeStat.createIt("challenge_id", challengeId,
+        "average_score", 0, "solved_count", 0);
     }
 
     public static ChallengeStat getChallengeStat(final int challengeId) {
@@ -90,7 +85,8 @@ public class ChallengeStat extends Model {
     /**
      *Compares ChallengeStat objects.
      *@param cs the ChallengeStat Object to compare.
-     *@return the boolean result of comparing each field of the ChallengeStat Objects.
+     *@return the boolean result of comparing each field of the ChallengeStat
+     Objects.
      */
     @Override
     public boolean equals (Object cs) {
