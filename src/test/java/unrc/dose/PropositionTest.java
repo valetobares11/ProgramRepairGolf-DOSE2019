@@ -3,7 +3,6 @@ package unrc.dose;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import org.junit.AfterClass;
@@ -260,7 +259,7 @@ public class PropositionTest {
 	@Test
   	public void nullGetPropositionNoSubmitTest() {
   		
-  		assertTrue(Proposition.getUnsubmittedChallengePropositionsByUser(0, 0).isEmpty());
+  		assertTrue(Proposition.getUnsubmittedChallengePropByUser(0, 0).isEmpty());
   	
   	}
   	
@@ -290,7 +289,7 @@ public class PropositionTest {
 		p.saveIt();
   		
 		
-		LazyList<Proposition> proposition = Proposition.getUnsubmittedChallengePropositionsByUser(usrId, challId);
+		LazyList<Proposition> proposition = Proposition.getUnsubmittedChallengePropByUser(usrId, challId);
   		
   		
   		assertEquals(1, proposition.size());
@@ -510,5 +509,45 @@ public class PropositionTest {
           Proposition.deleteAll();
           Challenge.deleteAll();
           User.deleteAll(); 	      
+	  }
+	  
+	  @Test
+	  public void minDistance() {
+          Challenge challenger = new Challenge();
+	      User usr = new User();
+	  		
+	      challenger.set("title", "Challenger 1");
+	  	  challenger.set("source", "hello");
+	  	  usr.set("username", "Gaston");
+	  	  usr.set("password", "abc123");
+	  	  usr.set("email_address", "pepe@gmail.com");
+	  	  challenger.saveIt(); 
+	  	  usr.saveIt();
+	  		
+	  	  Integer usrId = usr.getInteger("id");
+	      Integer challId = challenger.getInteger("id");
+	      
+	  	  Proposition p = new Proposition();
+          p.set("challenge_id", challId);
+	      p.set("user_id", usrId);
+	      p.set("source", "hello");
+	      p.set("isSubmit", 1);
+	      p.set("distance", 0);
+          p.set("cantTestPassed", 0);
+	      p.saveIt();
+	      
+	      Proposition p2 = new Proposition();
+	      p2.set("challenge_id", challId);
+	      p2.set("user_id", usrId);
+	      p2.set("source", "");
+	      p2.set("isSubmit", 1);
+	      p2.set("distance", 4);
+	      p2.set("cantTestPassed", 0);
+	      p2.saveIt();
+	      
+	      assertEquals(p.getInteger("id"), (Proposition.bestPropDistance(challId, usrId)).getInteger("id"));
+	      Proposition.deleteAll();
+	      Challenge.deleteAll();
+	      User.deleteAll();
 	  }
 }
