@@ -50,16 +50,36 @@ public class CompilationChallenge extends Model {
     }
 
     /**
-     * This method allows you to create a test challenge.
-     * @param challengeId challenge id.
-     * @return compilation challenge already created.
+     * This method allows you to create a compilation challenge and validate it.
+     * @param userId user id that created it.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param ownerSolutionId id of the solution proposed by a user.
+     * @return true in case the validation is successful, otherwise false.
      */
-    public static CompilationChallenge addCompilationChallenge(
-        final int challengeId) {
+    public static boolean addCompilationChallenge(
+        final int userId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point,
+        final int ownerSolutionId) {
+        Challenge c = Challenge.addChallenge(
+            userId,
+            title,
+            className,
+            description,
+            source,
+            point,
+            ownerSolutionId);
         CompilationChallenge t = new CompilationChallenge();
-        t.setChallengeId(challengeId);
+        t.setChallengeId(c.getInteger("id"));
         t.saveIt();
-        return t;
+        return (CompilationChallenge.validateCompilationChallenge(c));
     }
 
     /**
