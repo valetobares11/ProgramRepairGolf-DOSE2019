@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -179,128 +178,11 @@ public class Challenge extends Model {
     }
 
     /**
-     * This method allows you to create a test challenge and validate it.
-     * @param userId user id that created it.
-     * @param title title that will have the challenge.
-     * @param className title for class and name file.
-     * @param description a brief description of what the challenge is about.
-     * @param source source code that will have the challenge.
-     * @param point points given by the admin that for the challenge.
-     * @param ownerSolutionId id of the solution proposed by a user.
-     * @param test test corresponding to the challenge.
-     * @return true in case the validation is successful, otherwise false.
-     */
-    public static boolean addTestChallenge(
-        final int userId,
-        final String title,
-        final String className,
-        final String description,
-        final String source,
-        final int point,
-        final int ownerSolutionId,
-        final String test) {
-        Challenge c = addChallenge(
-            userId,
-            title,
-            className,
-            description,
-            source,
-            point,
-            ownerSolutionId);
-        TestChallenge t = TestChallenge.addTestChallenge(
-            c.getInteger("id"),
-            test);
-        return (TestChallenge.validateTestChallenge(c, t));
-    }
-
-    /**
-     * This method allows you to create a compilation challenge and validate it.
-     * @param userId user id that created it.
-     * @param title title that will have the challenge.
-     * @param className title for class and name file.
-     * @param description a brief description of what the challenge is about.
-     * @param source source code that will have the challenge.
-     * @param point points given by the admin that for the challenge.
-     * @param ownerSolutionId id of the solution proposed by a user.
-     * @return true in case the validation is successful, otherwise false.
-     */
-    public static boolean addCompilationChallenge(
-        final int userId,
-        final String title,
-        final String className,
-        final String description,
-        final String source,
-        final int point,
-        final int ownerSolutionId) {
-        Challenge c = addChallenge(
-            userId,
-            title,
-            className,
-            description,
-            source,
-            point,
-            ownerSolutionId);
-        CompilationChallenge.addCompilationChallenge(c.getInteger("id"));
-        return (CompilationChallenge.validateCompilationChallenge(c));
-    }
-
-    /**
      * This method allows you to delete a challenge created.
      * @param c challenge to eliminate.
      */
     public static void deleteChallenge(final Challenge c) {
         c.deleteCascade();
-    }
-
-    /**
-     * method that returns a list of all compilation challenges.
-     * @return list of all compilation challange.
-     */
-    public static List<Challenge> viewAllCompilationChallange() {
-        return CompilationChallenge.viewAllCompilationChallange();
-    }
-
-    /**
-     * method that returns a list of all test challenges.
-     * @return list of all test challange.
-     */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewAllTestChallange() {
-        return TestChallenge.viewAllTestChallange();
-    }
-
-    /**
-     * method that returns a list of resolved compilation challenges.
-     * @return list of compilacion challanges resolved.
-     */
-    public static List<Challenge> viewResolvedCompilationChallange() {
-        return CompilationChallenge.viewResolvedCompilationChallange();
-    }
-
-    /**
-     * method that returns a list of resolved test challenges.
-     * @return list of test challanges resolved.
-     */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewResolvedTestChallange() {
-        return TestChallenge.viewResolvedTestChallange();
-    }
-
-    /**
-     * method that returns a list of unsolved compilation challenges.
-     * @return list of compilation challanges unresolved.
-     */
-    public static List<Challenge> viewUnsolvedCompilationChallange() {
-        return CompilationChallenge.viewUnsolvedCompilationChallange();
-    }
-
-    /**
-     * method that returns a list of unsolved test challenges.
-     * @return list of test challanges unresolved.
-     */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewUnsolvedTestChallange() {
-        return TestChallenge.viewUnsolvedTestChallange();
     }
 
     /**
@@ -379,54 +261,6 @@ public class Challenge extends Model {
         idChallege).size() != 0) {
             throw new RuntimeException(CHALLENGE_RESOLVED);
         }
-    }
-
-    /**
-     * This method will allow you to modify a challenge if it has
-     * not been resolved.
-     * @param challengeId id of the challenge to check.
-     * @param title title that will have the challenge.
-     * @param className title for class and name file.
-     * @param description a brief description of what the challenge is about.
-     * @param source source code that will have the challenge.
-     * @param point points given by the admin that for the challenge.
-     * @return True in case the validation passes (source code does not
-     * compile).
-     */
-    public static boolean modifyUnsolvedCompilationChallenge(
-        final int challengeId,
-        final String title,
-        final String className,
-        final String description,
-        final String source,
-        final int point) {
-            return CompilationChallenge.modifyUnsolvedCompilationChallenge(
-                challengeId, title, className, description, source, point);
-        }
-
-    /**
-     * This method will allow you to modify a challenge if it has
-     * not been resolved.
-     * @param challengeId id of the challenge to check.
-     * @param title title that will have the challenge.
-     * @param className title for class and name file.
-     * @param description a brief description of what the challenge is about.
-     * @param source source code that will have the challenge.
-     * @param point points given by the admin that for the challenge.
-     * @param test test code that will have the challenge.
-     * @return True in case the validation passes (source code compile and
-     * the tests run).
-     */
-    public static boolean modifyUnsolvedTestChallenge(
-    final int challengeId,
-    final String title,
-    final String className,
-    final String description,
-    final String source,
-    final int point,
-    final String test) {
-        return TestChallenge.modifyUnsolvedTestChallenge(
-            challengeId, title, className, description, source, point, test);
     }
 
     /**
