@@ -93,7 +93,7 @@ public class User extends Model {
     */
     
     public Integer getId() {
-        return this.get("",ID);
+        return this.getInteger(ID);
 
     }
 
