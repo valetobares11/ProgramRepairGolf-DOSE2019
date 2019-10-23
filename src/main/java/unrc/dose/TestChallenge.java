@@ -158,6 +158,42 @@ public class TestChallenge extends Model {
     }
 
     /**
+     * This method will allow you to modify a challenge if it has
+     * not been resolved.
+     * @param challengeId id of the challenge to check.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param test test code that will have the challenge.
+     * @return True in case the validation passes (source code compile and
+     * the tests run).
+     */
+    public static boolean modifyUnsolvedTestChallenge(
+        final int challengeId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point,
+        final String test) {
+        Challenge.checkUnsolvedChallenge(challengeId);
+        Challenge c = Challenge.findFirst("id = ?", challengeId);
+        c.setTitle(title);
+        c.setClassName(className);
+        c.setDescription(description);
+        c.setSource(source);
+        c.setPoint(point);
+        c.saveIt();
+        TestChallenge t = TestChallenge.findFirst("challenge_id = ?",
+        challengeId);
+        t.setTest(test);
+        t.saveIt();
+        return validateTestChallenge(c, t);
+    }
+
+    /**
      * hashCode redefined.
      */
     @Override
