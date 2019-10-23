@@ -43,6 +43,15 @@ public class User extends Model {
     */
     static final String ADMIN = "admin";
 
+    /*
+     The value max of password
+    */
+    static final Integer MAX_VALUE = 40;
+    /*
+     The value min of password
+    */
+    static final Integer MIN_VALUE = 6;
+
     /**
     * @param name : username that user wants: String
     * @return value that represents if username already exits: Boolean
