@@ -2,8 +2,9 @@ package unrc.dose;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.javalite.activejdbc.Model;
+
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 /**
  * Table compilation_challenges - Attributes.
@@ -49,16 +50,36 @@ public class CompilationChallenge extends Model {
     }
 
     /**
-     * This method allows you to create a test challenge.
-     * @param challengeId challenge id.
-     * @return compilation challenge already created.
+     * This method allows you to create a compilation challenge and validate it.
+     * @param userId user id that created it.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param ownerSolutionId id of the solution proposed by a user.
+     * @return true in case the validation is successful, otherwise false.
      */
-    public static CompilationChallenge addCompilationChallenge(
-        final int challengeId) {
+    public static boolean addCompilationChallenge(
+        final int userId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point,
+        final int ownerSolutionId) {
+        Challenge c = Challenge.addChallenge(
+            userId,
+            title,
+            className,
+            description,
+            source,
+            point,
+            ownerSolutionId);
         CompilationChallenge t = new CompilationChallenge();
-        t.setChallengeId(challengeId);
+        t.setChallengeId(c.getInteger("id"));
         t.saveIt();
-        return t;
+        return (CompilationChallenge.validateCompilationChallenge(c));
     }
 
     /**
@@ -86,7 +107,7 @@ public class CompilationChallenge extends Model {
      */
     public static List<Challenge> viewResolvedCompilationChallange() {
         LazyList<Proposition> allResolved =
-        Proposition.where("isSubmit = ?", 1);
+        Proposition.where("isSolution = ?", 1);
         List<Challenge> resolved = new LinkedList<Challenge>();
         if (!allResolved.isEmpty()) {
             for (Proposition challengeResolved : allResolved) {
@@ -117,6 +138,36 @@ public class CompilationChallenge extends Model {
             }
         }
         return unsolved;
+    }
+
+    /**
+     * This method will allow you to modify a challenge if it has
+     * not been resolved.
+     * @param challengeId id of the challenge to check.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @return True in case the validation passes (source code does not
+     * compile).
+     */
+    public static boolean modifyUnsolvedCompilationChallenge(
+        final int challengeId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point) {
+        Challenge.checkUnsolvedChallenge(challengeId);
+        Challenge c = Challenge.findFirst("id = ?", challengeId);
+        c.setTitle(title);
+        c.setClassName(className);
+        c.setDescription(description);
+        c.setSource(source);
+        c.setPoint(point);
+        c.saveIt();
+        return validateCompilationChallenge(c);
     }
 
 }

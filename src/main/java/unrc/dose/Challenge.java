@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -12,17 +11,23 @@ import org.javalite.activejdbc.Model;
 /**
  * Table challenges - Attributes.
  * id integer auto_increment primary key.
- * user_id: integer.
- * title varchar (50).
+ * user_id: integer not null.
+ * title varchar (50) not null.
  * description varchar(50).
- * source varchar(10000).
- * point integer.
- * owner_solution_id integer.
- * class_name varchar (30).
+ * source varchar(10000) not null.
+ * point integer not null.
+ * owner_solution_id integer not null.
+ * class_name varchar (30) not null.
  * @author Brusati Formento, Matias
  * @author Cuesta, Alvaro
  */
 public class Challenge extends Model {
+
+    /**
+     * message that will throw the exception if you want to
+     * modify a resolved challenge.
+     */
+    public static final String CHALLENGE_RESOLVED = "The challenge is solved";
 
     /**
      * the class constructor.
@@ -173,128 +178,11 @@ public class Challenge extends Model {
     }
 
     /**
-     * This method allows you to create a test challenge and validate it.
-     * @param userId user id that created it.
-     * @param title title that will have the challenge.
-     * @param className title for class and name file.
-     * @param description a brief description of what the challenge is about.
-     * @param source source code that will have the challenge.
-     * @param point points given by the admin that for the challenge.
-     * @param ownerSolutionId id of the solution proposed by a user.
-     * @param test test corresponding to the challenge.
-     * @return true in case the validation is successful, otherwise false.
-     */
-    public static boolean addTestChallenge(
-        final int userId,
-        final String title,
-        final String className,
-        final String description,
-        final String source,
-        final int point,
-        final int ownerSolutionId,
-        final String test) {
-        Challenge c = addChallenge(
-            userId,
-            title,
-            className,
-            description,
-            source,
-            point,
-            ownerSolutionId);
-        TestChallenge t = TestChallenge.addTestChallenge(
-            c.getInteger("id"),
-            test);
-        return (TestChallenge.validateTestChallenge(c, t));
-    }
-
-    /**
-     * This method allows you to create a compilation challenge and validate it.
-     * @param userId user id that created it.
-     * @param title title that will have the challenge.
-     * @param className title for class and name file.
-     * @param description a brief description of what the challenge is about.
-     * @param source source code that will have the challenge.
-     * @param point points given by the admin that for the challenge.
-     * @param ownerSolutionId id of the solution proposed by a user.
-     * @return true in case the validation is successful, otherwise false.
-     */
-    public static boolean addCompilationChallenge(
-        final int userId,
-        final String title,
-        final String className,
-        final String description,
-        final String source,
-        final int point,
-        final int ownerSolutionId) {
-        Challenge c = addChallenge(
-            userId,
-            title,
-            className,
-            description,
-            source,
-            point,
-            ownerSolutionId);
-        CompilationChallenge.addCompilationChallenge(c.getInteger("id"));
-        return (CompilationChallenge.validateCompilationChallenge(c));
-    }
-
-    /**
      * This method allows you to delete a challenge created.
      * @param c challenge to eliminate.
      */
     public static void deleteChallenge(final Challenge c) {
         c.deleteCascade();
-    }
-
-    /**
-     * method that returns a list of all compilation challenges.
-     * @return list of all compilation challange.
-     */
-    public static List<Challenge> viewAllCompilationChallange() {
-        return CompilationChallenge.viewAllCompilationChallange();
-    }
-
-    /**
-     * method that returns a list of all test challenges.
-     * @return list of all test challange.
-     */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewAllTestChallange() {
-        return TestChallenge.viewAllTestChallange();
-    }
-
-    /**
-     * method that returns a list of resolved compilation challenges.
-     * @return list of compilacion challanges resolved.
-     */
-    public static List<Challenge> viewResolvedCompilationChallange() {
-        return CompilationChallenge.viewResolvedCompilationChallange();
-    }
-
-    /**
-     * method that returns a list of resolved test challenges.
-     * @return list of test challanges resolved.
-     */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewResolvedTestChallange() {
-        return TestChallenge.viewResolvedTestChallange();
-    }
-
-    /**
-     * method that returns a list of unsolved compilation challenges.
-     * @return list of compilation challanges unresolved.
-     */
-    public static List<Challenge> viewUnsolvedCompilationChallange() {
-        return CompilationChallenge.viewUnsolvedCompilationChallange();
-    }
-
-    /**
-     * method that returns a list of unsolved test challenges.
-     * @return list of test challanges unresolved.
-     */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewUnsolvedTestChallange() {
-        return TestChallenge.viewUnsolvedTestChallange();
     }
 
     /**
@@ -362,6 +250,17 @@ public class Challenge extends Model {
      */
     public static boolean runJava(final String nameFile) {
         return runProcess("java -cp .:/tmp/ " + nameFile);
+    }
+
+    /**
+     * this method checks if a challenge was solved.
+     * @param idChallege id of the challenge to check.
+     */
+    public static void checkUnsolvedChallenge(final int idChallege) {
+        if (Proposition.where("challenge_id = ? and isSolution = 1",
+        idChallege).size() != 0) {
+            throw new RuntimeException(CHALLENGE_RESOLVED);
+        }
     }
 
     /**

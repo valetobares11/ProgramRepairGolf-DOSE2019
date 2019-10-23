@@ -67,23 +67,43 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * This method allows you to create a test challenge.
-     * @param challengeId challenge id.
-     * @param test test code.
-     * @return test challenge already created.
+     * This method allows you to create a test challenge and validate it.
+     * @param userId user id that created it.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param ownerSolutionId id of the solution proposed by a user.
+     * @param test test corresponding to the challenge.
+     * @return true in case the validation is successful, otherwise false.
      */
-    public static TestChallenge addTestChallenge(
-        final int challengeId,
+    public static boolean addTestChallenge(
+        final int userId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point,
+        final int ownerSolutionId,
         final String test) {
-        TestChallenge t = new TestChallenge();
-        t.setChallengeId(challengeId);
-        t.setTest(test);
-        t.saveIt();
-        return t;
+        Challenge c = Challenge.addChallenge(
+            userId,
+            title,
+            className,
+            description,
+            source,
+            point,
+            ownerSolutionId);
+            TestChallenge t = new TestChallenge();
+            t.setChallengeId(c.getInteger("id"));
+            t.setTest(test);
+            t.saveIt();
+        return (TestChallenge.validateTestChallenge(c, t));
     }
 
     /**
-     * method that returns a list of all test challenges.
+     * method that resturns a list of all test challenges.
      * @return list of all test challange.
      */
     public static List<Tuple<Challenge, TestChallenge>>
@@ -114,7 +134,7 @@ public class TestChallenge extends Model {
     public static List<Tuple<Challenge, TestChallenge>>
         viewResolvedTestChallange() {
         LazyList<Proposition> allResolved =
-        Proposition.where("isSubmit = ?", 1);
+        Proposition.where("isSolution = ?", 1);
         LinkedList<Tuple<Challenge, TestChallenge>> resolved
         = new LinkedList<Tuple<Challenge, TestChallenge>>();
         if (!allResolved.isEmpty()) {
@@ -155,6 +175,42 @@ public class TestChallenge extends Model {
             }
         }
         return unsolved;
+    }
+
+    /**
+     * This method will allow you to modify a challenge if it has
+     * not been resolved.
+     * @param challengeId id of the challenge to check.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param test test code that will have the challenge.
+     * @return True in case the validation passes (source code compile and
+     * the tests run).
+     */
+    public static boolean modifyUnsolvedTestChallenge(
+        final int challengeId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point,
+        final String test) {
+        Challenge.checkUnsolvedChallenge(challengeId);
+        Challenge c = Challenge.findFirst("id = ?", challengeId);
+        c.setTitle(title);
+        c.setClassName(className);
+        c.setDescription(description);
+        c.setSource(source);
+        c.setPoint(point);
+        c.saveIt();
+        TestChallenge t = TestChallenge.findFirst("challenge_id = ?",
+        challengeId);
+        t.setTest(test);
+        t.saveIt();
+        return validateTestChallenge(c, t);
     }
 
     /**

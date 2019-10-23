@@ -2,6 +2,7 @@ package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -25,16 +26,24 @@ public class ChallengeTest {
 			Base.openTransaction();
 		}
 		
-		User u = new User();
-		u.set("username", "test");
-		u.set("password", "1234");
-		u.set("email_address", "test@example.com");
-		u.saveIt();
+		User u = User.set("test", "1234", "test@example.com", true);
 
-		Challenge.addChallenge(u.getInteger("id"), "Test", "Test", "description", "source", 100, 0);
-		Challenge.addChallenge(u.getInteger("id"), "Test1", "Test1", "description", "source", 100, 0);
-		Challenge.addChallenge(u.getInteger("id"), "Test2", "Test2", "description", "source", 100, 0);
-		Challenge.addChallenge(u.getInteger("id"),"Test3", "Test3", "description", "source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"), "Test", "Test", "description",
+		"source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"), "Test1", "Test1", "description",
+		"source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"), "Test2", "Test2", "description",
+		"source", 100, 0);
+		Challenge.addChallenge(u.getInteger("id"),"Test3", "Test3", "description",
+		"source", 100, 0);
+		Challenge c = Challenge.findFirst("title = ?", "Test");
+
+		Proposition p = new Proposition();
+		p.set("user_id", u.getId());
+		p.set("challenge_id", c.getId());
+		p.set("source","//");
+		p.set("isSolution", 1);
+		p.saveIt();
 	}
 
 
@@ -83,42 +92,10 @@ public class ChallengeTest {
 		String source = "System.out.println('Hello Word')";
 		int point = 100;
 		int ownerSolutionId = 9;
-		challenge = Challenge.addChallenge(userId,nameClass,title,description,source,point,ownerSolutionId);
+		challenge = Challenge.addChallenge(userId,nameClass,title,description,
+		source,point,ownerSolutionId);
 		challenge.saveIt();
 		assertEquals(1,challenge.getUserId());
-	}
-
-	/**
-	 * Test method for addTestChallenge.
-	 */
-	@Test
-	public void addTestChallengeTest() {
-		int userId = 32; 
-		String title= "Hello Word";
-		String nameClass = "HelloWord2";
-		String description = "Test Hellos Word";
-		String source = "System.out.println('Hello Word')";
-		int point = 52;
-		int ownerSolutionId = 3;
-		String test = "this is a challenge test";
-		boolean validation = Challenge.addTestChallenge(userId,title,nameClass,description,source,point,ownerSolutionId,test);
-		assertEquals(true,validation);
-	}
-
-	/**
-	 * Test method for addCompilationChallenge.
-	 */
-	@Test
-	public void addCompilationChallengeTest() {
-		int userId = 32; 
-		String title= "Hello Word";
-		String nameClass = "HelloWord3";
-		String description = "Test Hellos Word";
-		String source = "System.out.println('Hello Word')";
-		int point = 52;
-		int ownerSolutionId = 3;
-		boolean validate = Challenge.addCompilationChallenge(userId,title,nameClass,description,source,point,ownerSolutionId);
-		assertEquals(true,validate);
 	}
 
 	/**
@@ -134,7 +111,8 @@ public class ChallengeTest {
 		String source = "System.out.println('Hello Word')";
 		int point = 300;
 		int ownerSolutionId = 10;
-		challenge = Challenge.addChallenge(userId,title,nameClass,description,source,point,ownerSolutionId);
+		challenge = Challenge.addChallenge(userId,title,nameClass,description,
+		source,point,ownerSolutionId);
 		challenge.saveIt();
 		Challenge.deleteChallenge(challenge);
 		assertEquals(null,Challenge.findFirst("title = ?",title));   
@@ -148,15 +126,11 @@ public class ChallengeTest {
 		User username  = User.findFirst("username = ?", "test");
 		int id = username.getInteger("id");
 		List<Challenge> all = Challenge.viewUserAssociatedChallange(id);
-		String resul = all.get(0).getString("title");
-		String resul1 = all.get(1).getString("title");
-		String resul2 = all.get(2).getString("title");
-		String resul3 = all.get(3).getString("title");
 		assertEquals(4, all.size());
-		assertEquals("Test", resul);
-		assertEquals("Test1", resul1);
-		assertEquals("Test2", resul2);
-		assertEquals("Test3", resul3);
+		assertEquals("Test", all.get(0).getString("title"));
+		assertEquals("Test1", all.get(1).getString("title"));
+		assertEquals("Test2", all.get(2).getString("title"));
+		assertEquals("Test3", all.get(3).getString("title"));
 	}
 
 	/**
@@ -199,6 +173,20 @@ public class ChallengeTest {
 		Challenge.runCompilation(nameFile);
 		boolean obtained = Challenge.runJava(nameFile);
 		assertEquals(true, obtained);
+	}
+
+	/**
+	 * Test method for checkUnsolvedChallenge.
+	 */
+	@Test
+	public void checkUnsolvedChallengeTest() {
+		Challenge c = Challenge.findFirst("title = ?", "Test");
+		try{
+			Challenge.checkUnsolvedChallenge(c.getInteger("id"));
+			fail();
+		} catch (RuntimeException ex) {
+			assertEquals(Challenge.CHALLENGE_RESOLVED, ex.getMessage());
+		}
 	}
 
 }
