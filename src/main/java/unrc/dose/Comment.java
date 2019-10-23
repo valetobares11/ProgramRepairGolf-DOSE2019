@@ -89,6 +89,8 @@ public class Comment extends Model {
      lista = Comment.where("challenge_id=?", id);
     } else if (obj instanceof Comment) {
       lista = Comment.where("comment_id=?", id);
+    } else {
+      throw new IllegalArgumentException("invalid type");
     }
     return lista;
   }
