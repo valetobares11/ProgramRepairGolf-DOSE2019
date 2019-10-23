@@ -19,16 +19,18 @@ public class UserTest {
 	@BeforeClass
   	public static void beforeAll() {
     	App.main(null);
-
 		Spark.awaitInitialization();
       	Base.open();
+      	Base.openTransaction();
   	}
 
 
   	@AfterClass
   	public static void tearDown() {
     	Spark.stop();
+    	Base.rollbackTransaction();
     	Base.close();
+    	}
   	}
 
     /**
