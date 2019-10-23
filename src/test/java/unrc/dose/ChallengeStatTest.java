@@ -14,19 +14,14 @@ public class ChallengeStatTest {
         if (!Base.hasConnection()) {
             Base.open();
             Base.openTransaction();
-            System.out.println("ChallengeStatTest");
-
         }
     }
 
     @AfterClass
 	public static void after(){
         if (Base.hasConnection()) {
-            System.out.println("ChallengeStatTest finished");
-            //Base.commitTransaction();
             Base.rollbackTransaction();
             Base.close();
-
         }
 	}
 
@@ -38,6 +33,7 @@ public class ChallengeStatTest {
     public void newChallengeStatTest() {
 
         ChallengeStat.newChallengeStat(1);
+        Base.commitTransaction();
         ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
 
         assertEquals(1, c.get("challenge_id"));
@@ -45,21 +41,6 @@ public class ChallengeStatTest {
         assertEquals(0, c.get("solved_count"));
         
     }
-
-    /**
-    * Increments the attribute "solved_count" (initial value = 0) of a ChallengeStat record .
-    * @result solved_count = 1
-    */
-    /*@Test
-    public void incrementSolvedCountTest() {
-        ChallengeStat.newChallengeStat(1);
-        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
-
-        assertEquals(0, c.get("solved_count"));
-        ChallengeStat.incrementSolvedCount(c);
-        assertEquals(1, c.get("solved_count"));
-    }*/
-    
 
     /**
     * Updates the attribute "average_score" of a ChallengeStat record, and increments the "solved_count".
@@ -85,15 +66,21 @@ public class ChallengeStatTest {
         assertEquals(1, cs.get("solved_count"));
         
 
-    }
+    }*/
 
-    /*@Test
+    @Test
     public void getChallengeStatTest() {
         ChallengeStat.newChallengeStat(1);
+        Base.commitTransaction();
+
         ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
         ChallengeStat result = ChallengeStat.getChallengeStat(1);
-        assertEquals(c, result);
-    }*/
+
+        assertEquals(c.getInteger("id"), result.getInteger("id"));
+        assertEquals(c.get("challenge_id"), result.get("challenge_id"));
+        assertEquals(c.get("average_score"), result.get("average_score"));
+        assertEquals(c.get("solved_count"), result.get("solved_count"));
+    }
 
 
 }

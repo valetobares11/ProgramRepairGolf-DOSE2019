@@ -4,6 +4,19 @@ import java.util.List;
 
 import org.javalite.activejdbc.Model;
 
+/**
+* == Schema Info
+*
+* Table name: challenge_stats
+*
+*  id              :int(11)    not null, primary key,
+*  challenge_id    :int(11)    not null,
+*  created_at      :datetime,
+*  updated_at      :datetime,
+*  average_score   :float,
+*  solved_count    :int(11)
+*
+**/
 
 /**
 * ChallengeStat class represents a person into the system.
@@ -61,7 +74,6 @@ public class ChallengeStat extends Model {
      *@param challengeId The id of the new challenge.
      */
     public static void newChallengeStat(final int challengeId) {
-        validatePresenceOf("challenge_id");
         ChallengeStat c = ChallengeStat.createIt(
         "challenge_id", challengeId, "average_score", 0, "solved_count", 0);
     }
