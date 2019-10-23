@@ -129,7 +129,8 @@ public class CompilationChallenge extends Model {
      * @param description a brief description of what the challenge is about.
      * @param source source code that will have the challenge.
      * @param point points given by the admin that for the challenge.
-     * @return True in case the validation passes (source does not compile).
+     * @return True in case the validation passes (source code does not
+     * compile).
      */
     public static boolean modifyUnsolvedCompilationChallenge(
         final int challengeId,
