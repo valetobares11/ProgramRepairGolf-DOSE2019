@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.test.DBSpec;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,8 +16,7 @@ import org.junit.Test;
  * @author Brusati Formento, Matias
  * @author Cuesta, Alvaro
  */
-public class ChallengeTest //extends DBSpec 
-{
+public class ChallengeTest {
 
 	@BeforeClass
 	public static void before(){
@@ -28,13 +26,7 @@ public class ChallengeTest //extends DBSpec
 			Base.openTransaction();
 		}
 		
-		//User u = User.set("test", "1234", "test@example.com", true);
-		User u = new User();
-		u.set("username", "test");
-		u.set("password", "1234");
-		u.set("email_address", "test@example.com");
-		u.set("admin", true);
-		u.saveIt();
+		User u = User.set("test", "1234", "test@example.com", true);
 
 		Challenge.addChallenge(u.getInteger("id"), "Test", "Test", "description",
 		"source", 100, 0);
@@ -50,7 +42,7 @@ public class ChallengeTest //extends DBSpec
 		p.set("user_id", u.getId());
 		p.set("challenge_id", c.getId());
 		p.set("source","//");
-		p.set("isSubmit", 1);
+		p.set("isSolution", 1);
 		p.saveIt();
 	}
 
@@ -104,41 +96,6 @@ public class ChallengeTest //extends DBSpec
 		source,point,ownerSolutionId);
 		challenge.saveIt();
 		assertEquals(1,challenge.getUserId());
-	}
-
-	/**
-	 * Test method for addTestChallenge.
-	 */
-	@Test
-	public void addTestChallengeTest() {
-		int userId = 32; 
-		String title= "Hello Word";
-		String nameClass = "HelloWord2";
-		String description = "Test Hellos Word";
-		String source = "System.out.println('Hello Word')";
-		int point = 52;
-		int ownerSolutionId = 3;
-		String test = "this is a challenge test";
-		boolean validation = Challenge.addTestChallenge(userId,title,nameClass,description,
-		source,point,ownerSolutionId,test);
-		assertEquals(true,validation);
-	}
-
-	/**
-	 * Test method for addCompilationChallenge.
-	 */
-	@Test
-	public void addCompilationChallengeTest() {
-		int userId = 32; 
-		String title= "Hello Word";
-		String nameClass = "HelloWord3";
-		String description = "Test Hellos Word";
-		String source = "System.out.println('Hello Word')";
-		int point = 52;
-		int ownerSolutionId = 3;
-		boolean validate = Challenge.addCompilationChallenge(userId,title,nameClass,description,
-		source,point,ownerSolutionId);
-		assertEquals(true,validate);
 	}
 
 	/**
