@@ -10,8 +10,6 @@
 
 package unrc.dose;
 
-import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.DBException;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
@@ -115,14 +113,7 @@ static {
         stat.set("created_challenges", 0);
         stat.set("solved_challenges", 0);
         stat.set("current_points", 0);
-        Base.openTransaction();
-        try {
-            stat.saveIt();
-            Base.commitTransaction();
-        } catch (DBException e) {
-            Base.rollbackTransaction();
-        }
-        return stat;
+        stat.saveIt();
     }
 
     /**
