@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import unrc.dose.Comment;
 import unrc.dose.User;
+import unrc.dose.Belly;
 import unrc.dose.Challenge;
 import org.javalite.activejdbc.Base;
-import org.junit.Before;
-import org.junit.After;
+import org.javalite.activejdbc.LazyList;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,5 +77,16 @@ public class CommentTest {
 		Comment aux = Comment.findById(rta.getInteger("id"));
 		assertNotNull(aux);
 	}
+
+  @Test (expected = IllegalArgumentException.class)
+  public void testViewComment(){
+    Belly b= new Belly(2, "Erika");
+	  LazyList<Comment> list= Comment.viewComment(4, b);
+  }
+
+  @Test (expected = IllegalArgumentException.class)
+  public void negativeTestViewComment(){
+    LazyList<Comment> list= Comment.viewComment(2, null);
+  }
 
 }
