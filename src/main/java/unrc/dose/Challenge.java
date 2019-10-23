@@ -382,6 +382,54 @@ public class Challenge extends Model {
     }
 
     /**
+     * This method will allow you to modify a challenge if it has
+     * not been resolved.
+     * @param challengeId id of the challenge to check.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @return True in case the validation passes (source code does not
+     * compile).
+     */
+    public static boolean modifyUnsolvedCompilationChallenge(
+        final int challengeId,
+        final String title,
+        final String className,
+        final String description,
+        final String source,
+        final int point) {
+            return CompilationChallenge.modifyUnsolvedCompilationChallenge(
+                challengeId, title, className, description, source, point);
+        }
+
+    /**
+     * This method will allow you to modify a challenge if it has
+     * not been resolved.
+     * @param challengeId id of the challenge to check.
+     * @param title title that will have the challenge.
+     * @param className title for class and name file.
+     * @param description a brief description of what the challenge is about.
+     * @param source source code that will have the challenge.
+     * @param point points given by the admin that for the challenge.
+     * @param test test code that will have the challenge.
+     * @return True in case the validation passes (source code compile and
+     * the tests run).
+     */
+    public static boolean modifyUnsolvedTestChallenge(
+    final int challengeId,
+    final String title,
+    final String className,
+    final String description,
+    final String source,
+    final int point,
+    final String test) {
+        return TestChallenge.modifyUnsolvedTestChallenge(
+            challengeId, title, className, description, source, point, test);
+    }
+
+    /**
      * hashCode redefined.
      */
     @Override
