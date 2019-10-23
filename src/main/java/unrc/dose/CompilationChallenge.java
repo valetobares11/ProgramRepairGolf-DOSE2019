@@ -107,7 +107,7 @@ public class CompilationChallenge extends Model {
      */
     public static List<Challenge> viewResolvedCompilationChallange() {
         LazyList<Proposition> allResolved =
-        Proposition.where("isSubmit = ?", 1);
+        Proposition.where("isSolution = ?", 1);
         List<Challenge> resolved = new LinkedList<Challenge>();
         if (!allResolved.isEmpty()) {
             for (Proposition challengeResolved : allResolved) {

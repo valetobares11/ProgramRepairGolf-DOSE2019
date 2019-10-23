@@ -134,7 +134,7 @@ public class TestChallenge extends Model {
     public static List<Tuple<Challenge, TestChallenge>>
         viewResolvedTestChallange() {
         LazyList<Proposition> allResolved =
-        Proposition.where("isSubmit = ?", 1);
+        Proposition.where("isSolution = ?", 1);
         LinkedList<Tuple<Challenge, TestChallenge>> resolved
         = new LinkedList<Tuple<Challenge, TestChallenge>>();
         if (!allResolved.isEmpty()) {

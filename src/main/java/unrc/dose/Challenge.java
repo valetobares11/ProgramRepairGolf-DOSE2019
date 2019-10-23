@@ -11,13 +11,13 @@ import org.javalite.activejdbc.Model;
 /**
  * Table challenges - Attributes.
  * id integer auto_increment primary key.
- * user_id: integer.
- * title varchar (50).
+ * user_id: integer not null.
+ * title varchar (50) not null.
  * description varchar(50).
- * source varchar(10000).
- * point integer.
- * owner_solution_id integer.
- * class_name varchar (30).
+ * source varchar(10000) not null.
+ * point integer not null.
+ * owner_solution_id integer not null.
+ * class_name varchar (30) not null.
  * @author Brusati Formento, Matias
  * @author Cuesta, Alvaro
  */
@@ -257,7 +257,7 @@ public class Challenge extends Model {
      * @param idChallege id of the challenge to check.
      */
     public static void checkUnsolvedChallenge(final int idChallege) {
-        if (Proposition.where("challenge_id = ? and isSubmit = 1",
+        if (Proposition.where("challenge_id = ? and isSolution = 1",
         idChallege).size() != 0) {
             throw new RuntimeException(CHALLENGE_RESOLVED);
         }
