@@ -114,6 +114,7 @@ static {
         stat.set("solved_challenges", 0);
         stat.set("current_points", 0);
         stat.saveIt();
+        return stat;
     }
 
     /**

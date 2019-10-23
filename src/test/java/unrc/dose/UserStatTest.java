@@ -5,11 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.test.DBSpec;
-import org.javalite.activejdbc.Base;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +17,12 @@ public class UserStatTest extends DBSpecAlternative{
 
 private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 
+	/**
+	 * This perform the 'arrange' phase
+	 * of all the tests below
+	 */
 	@Before
-	public void beforeAll() {
+	public void before() {
 		log.info("UserStatTest SetUp");
 		User u = new User();
 		u.set("username","Hackerman");
@@ -35,9 +35,6 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		u2.set("email_address", "LaMosquita@gmail.com");
 		u2.saveIt();
 	}
-
-
-
 
 	/**
 	 * Test the method getUserId from
@@ -58,8 +55,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Test
 	public void getCreatedChallengesTest() {
 		User u = User.findFirst("username = ?","Hackerman");
-		UserStat.createUserStat(u.getInteger("id"));
-		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		UserStat stat = UserStat.createUserStat(u.getId());
 		assertEquals(stat.getCreatedChallenges(),stat.get("created_challenges"));
 	}
 	/**
@@ -69,8 +65,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Test
 	public void getSolvedChallengesTest() {
 		User u = User.findFirst("username = ?","Hackerman");
-		UserStat.createUserStat(u.getInteger("id"));
-		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		UserStat stat = UserStat.createUserStat(u.getId());
 		assertEquals(stat.getSolvedChallenges(),stat.get("solved_challenges"));
 	}
 	/**
@@ -80,8 +75,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Test
 	public void getCurrentPointsTest() {
 		User u = User.findFirst("username = ?","Hackerman");
-		UserStat.createUserStat(u.getInteger("id"));
-		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		UserStat stat = UserStat.createUserStat(u.getId());
 		assertEquals(stat.getCurrentPoints(),stat.get("current_points"));
 	}
 
@@ -92,8 +86,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Test
 	public void createUserStat() {
 		User u = User.findFirst("username = ?","Hackerman");
-		UserStat.createUserStat(u.getInteger("id"));
-		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
+		UserStat stat = UserStat.createUserStat(u.getId());
 		assertNotNull(stat);
 		assertEquals(stat.getCreatedChallenges(),0);
 		assertEquals(stat.getSolvedChallenges(),0);
@@ -107,8 +100,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Test
 	public void getUserStat() {
 		User u = User.findFirst("username = ?","Hackerman");
-		UserStat.createUserStat(u.getInteger("id"));
-		UserStat us = UserStat.findFirst("user_id = ?", u.get("id"));
+		UserStat us = UserStat.createUserStat(u.getId());
 		UserStat us2 = UserStat.getUserStat(u);
 		assertEquals(us.getId().toString(), us2.getId().toString());
 		assertEquals(us.get("user_id").toString(), us2.get("user_id").toString());
@@ -137,21 +129,12 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	 @Test
 	 public void showBestScores() {
-		 User u = User.set("LaMosca", "ElMejor", "LaMosca@gmail.com", false);  
-		 u.saveIt();
-		 UserStat us1 = new UserStat();
+		 User u = User.findFirst("username = ?","Hackerman");
+		 UserStat us1= UserStat.createUserStat(u.getId());
 		 us1.setCurrentPoints(10);
-		 us1.setSolvedChallenges(0);
-		 us1.setCreatedChallenges(0);
-		 us1.setUserId(u.getId());
-		 us1.saveIt();
-		 User u2 = User.set("TheMosque", "NotJhonConnor", "LaMosquita@gmail.com", false);  
-		 u2.saveIt();
-		 UserStat us2 = new UserStat();
+		 User u2 = User.findFirst("username = ?","TheMosque");
+		 UserStat us2 = UserStat.createUserStat(u2.getId());
 		 us2.setCurrentPoints(20);
-		 us2.setSolvedChallenges(0);
-		 us2.setCreatedChallenges(0);
-		 us2.setUserId(u2.getId());
 		 us2.saveIt();
 		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
 		 assertTrue(userStats.get(0).getUserId()==u2.getId());
