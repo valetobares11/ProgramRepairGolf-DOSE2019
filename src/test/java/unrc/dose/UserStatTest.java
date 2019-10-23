@@ -37,10 +37,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void getUserIdTest() {
-		User u = new User();
-		u.set("username","Hackerman");
-		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsa@gmail.com");
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
@@ -53,10 +50,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void getCreatedChallengesTest() {
-		User u = new User();
-		u.set("username","Hackerman");
-		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsa@gmail.com");
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
@@ -68,11 +62,8 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 * UserStat class.
 	 */
 	@Test
-	public void getSolvedChallengesTest() {
-		User u = new User();
-		u.set("username","Hackerman");
-		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsa@gmail.com");
+     public void getSolvedChallengesTest() {
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
@@ -85,10 +76,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void getCurrentPointsTest() {
-		User u = new User();
-		u.set("username","Hackerman");
-		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsa@gmail.com");
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
@@ -102,10 +90,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void createUserStat() {
-		User u = new User();
-		u.set("username","Hackerman-san");
-		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsrl@gmail.com");
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
 		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat stat = UserStat.findFirst("user_id = ?", u.get("id"));
@@ -122,11 +107,8 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void getUserStat() {
-		User u = new User();
-		u.set("password", "JohnDoe");
-		u.set("username", "JohnDoe");
-		u.set("email_address", "JohnDoe@gmail.com");
-		u.save();
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);  
+		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
 		UserStat us = UserStat.findFirst("user_id = ?", u.get("id"));
 		UserStat us2 = UserStat.getUserStat(u);
@@ -141,24 +123,47 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	 */
 	@Test
 	public void showAllUserStat() {
-		User u = new User();
-		u.set("password", "ElMejor");
-		u.set("username", "LaMosca");
-		u.set("email_address", "LaMosca@gmail.com");
-		u.save();
+		User u = User.set("LaMosca", "ElMejor", "LaMosca@gmail.com", false);  
+		u.saveIt();
 		UserStat.createUserStat(u.getInteger("id"));
-		User u2 = new User();
-		u2.set("password", "NotJohnConnor");
-		u2.set("username", "Themosque");
-		u2.set("email_address", "LaMosquita@gmail.com");
-		u2.save();
+		User u2 = User.set("TheMosque", "NotJhonConnor", "LaMosquita@gmail.com", false);  
+		u2.saveIt();
 		UserStat.createUserStat(u2.getInteger("id"));
 		LazyList<UserStat> userStats = UserStat.showAllUserStat();
 		for (int i = 0; i < userStats.size(); i++){
 			UserStat stat = userStats.get(i);
 			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
-    u.delete();
-    u2.delete();
+    		u.delete();
+    		u2.delete();
 	}
+
+	/**
+	 * Test the method showBestScores
+	 * UserStat class.
+	 */
+	 @Test
+	 public void showBestScores() {
+		 User u = User.set("LaMosca", "ElMejor", "LaMosca@gmail.com", false);  
+		 u.saveIt();
+		 UserStat us1 = new UserStat();
+		 us1.setCurrentPoints(10);
+		 us1.setSolvedChallenges(0);
+		 us1.setCreatedChallenges(0);
+		 us1.setUserId(u.getId());
+		 us1.saveIt();
+		 User u2 = User.set("TheMosque", "NotJhonConnor", "LaMosquita@gmail.com", false);  
+		 u2.saveIt();
+		 UserStat us2 = new UserStat();
+		 us2.setCurrentPoints(20);
+		 us2.setSolvedChallenges(0);
+		 us2.setCreatedChallenges(0);
+		 us2.setUserId(u2.getId());
+		 us2.saveIt();
+		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
+		 assertTrue(userStats.get(0).getUserId()==u2.getId());
+		 u.delete();
+		 u2.delete();
+	 }
+
 }
