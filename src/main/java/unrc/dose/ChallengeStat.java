@@ -1,27 +1,15 @@
 package unrc.dose;
 
-import org.javalite.activejdbc.Model;
-
 import java.util.List;
 
-/*
-* == Schema Info
-*
-* Table name: challenge_stats
-*
-*  id INTEGER auto_increment primary key,
-*  challenge_id INTEGER not null,
-*  solved_count INTEGER, //alter table
-*  average_score INTEGER, //alter table
-*  created_at DATETIME,
-*  updated_at DATETIME
-*
-**/
+import org.javalite.activejdbc.Model;
+
 
 /**
 * ChallengeStat class represents a person into the system.
 */
 public class ChallengeStat extends Model {
+    
 
     /**
      * Updates the number of times that a challenge has been solved.
@@ -29,7 +17,7 @@ public class ChallengeStat extends Model {
      number of solutions.
      *@return Returns the updated solved count.
      */
-private static int incrementSolvedCount(
+    private static int incrementSolvedCount(
         final ChallengeStat challengeSToupdate) {
         int currentSolvedCount = (int) challengeSToupdate.get("solved_count");
         currentSolvedCount++;
@@ -53,7 +41,7 @@ private static int incrementSolvedCount(
         int userScore = challengePoints - distance;
 
         List<ChallengeStat> challengeSingleList = ChallengeStat.where(
-        "challenge_id == ?", challengeId);
+        "challenge_id = ?", challengeId);
         ChallengeStat challengeSToupdate = challengeSingleList.get(0);
 
         //getting the current average score and the current solved count
@@ -63,7 +51,7 @@ private static int incrementSolvedCount(
         float updatedAverageScore = currentAverage
         + ((userScore - currentAverage) / currentSolvedCount);
 
-        challengeSToupdate.set("average_score", "updatedAverageScore");
+        challengeSToupdate.set("average_score", updatedAverageScore);
         challengeSToupdate.saveIt();
 
     }
@@ -73,7 +61,12 @@ private static int incrementSolvedCount(
      *@param challengeId The id of the new challenge.
      */
     public static void newChallengeStat(final int challengeId) {
+        validatePresenceOf("challenge_id");
         ChallengeStat c = ChallengeStat.createIt(
         "challenge_id", challengeId, "average_score", 0, "solved_count", 0);
+    }
+
+    public static ChallengeStat getChallengeStat(final int challengeId) {
+        return (ChallengeStat.findFirst("challenge_id = ? ", challengeId));
     }
 }
