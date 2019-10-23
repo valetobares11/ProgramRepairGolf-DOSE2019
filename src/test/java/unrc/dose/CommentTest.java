@@ -23,19 +23,13 @@ public class CommentTest {
 
   @BeforeClass
   public static void beforeClass() {
-    Base.open("com.mysql.jdbc.Driver", 
+    Base.open("com.mysql.jdbc.Driver",
         "jdbc:mysql://localhost:3306/repair_game_test", "root", "root");
     Base.openTransaction();
     user = User.set("Pepe", "root", "pepe@gmail.com", false);
     admin = User.set("Juana", "root", "juana@gmail.com", true);
-    ch = new Challenge();
-    ch.set("title", "Test");
-    ch.set("description", "descripcion de prueba");
-    ch.set("source", "codigo");
-    ch.set("point", 20);
-    ch.set("owner_id", admin.getInteger("id"));
-    ch.set("owner_solution_id", user.getInteger("id"));
-    ch.saveIt();
+    ch = Challenge.addChallenge(admin.getInteger("id"), "Test", 
+        "challenge1", "descripcion de prueba", "codigo", 20, user.getInteger("id"));
   }
 
   @AfterClass
