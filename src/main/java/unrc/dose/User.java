@@ -83,14 +83,16 @@ public class User extends Model {
 
         byte[] passw = Password.hash(pass.toCharArray(), salt);
         user.load(user, name, passw, email, admin);
+        user.saveIt();
         p.saveIt();
 
         return user;
     }
-
+    
     /**
     * @return id of a user: Integer
     */
+    
     public Integer getId() {
         return this.getInteger(ID);
 
