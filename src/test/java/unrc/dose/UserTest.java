@@ -18,10 +18,12 @@ public class UserTest {
 	
 	@BeforeClass
   	public static void beforeAll() {
-    	App.main(null);
-		Spark.awaitInitialization();
-      	Base.open();
-      	Base.openTransaction();
+  		if (!Base.hasConnection()) {
+	    	App.main(null);
+			Spark.awaitInitialization();
+	      	Base.open();
+	      	Base.openTransaction();
+	    }
   	}
 
 
@@ -31,7 +33,6 @@ public class UserTest {
     	Base.rollbackTransaction();
     	Base.close();
     	}
-  	}
 
     /**
     * found a user by his username succesfully
@@ -103,7 +104,7 @@ public class UserTest {
 		String username = "JohnConnor";
 		String password = "VeryHardPass";
 
-		assertEquals(true, User.deleteUser(username, password));
+		assertEquals(true, User.disableUser(username, password));
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class UserTest {
 		String username = "Pity";
 		String password = "Martinez";
 
-		assertEquals(false, User.deleteUser(username, password));
+		assertEquals(false, User.disableUser(username, password));
 	}
 
 	/**
