@@ -127,6 +127,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 User u = User.findFirst("username = ?","Hackerman");
 		 UserStat us1= UserStat.createUserStat(u.getId());
 		 us1.setCurrentPoints(10);
+		 us1.saveIt();
 		 User u2 = User.findFirst("username = ?","TheMosque");
 		 UserStat us2 = UserStat.createUserStat(u2.getId());
 		 us2.setCurrentPoints(20);
@@ -191,19 +192,4 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		assertFalse(stat.isValid());
 	}
 	
-	/**
-	 * Test the validator of
-	 * uniqueness for user_id 
-	 */
-	@Test
-	public void validateUniquenessOfUserId() {
-		User u = User.findFirst("username = ?","Hackerman");
-		UserStat.createUserStat(u.getId());
-		UserStat stat = new UserStat();
-		stat.set("user_id", u.getId());
-		stat.set("created_challenges", 0);
-		stat.set("solved_challenges", 0);
-		stat.set("current_points", 0);
-		assertFalse(stat.isValid());
-	}
 }
