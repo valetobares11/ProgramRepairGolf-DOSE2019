@@ -1,6 +1,7 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -117,7 +118,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
 	}
-
+	
 	/**
 	 * Test the method showBestScores
 	 * UserStat class.
@@ -128,5 +129,62 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
 		 assertTrue(userStats.get(0).getUserId()==u2.getId());
 	 }
+	
+	/*Test for validators*/
 
+	/**
+	 * Test the validator of
+	 * presence of user_id 
+	 */
+	@Test
+	public void validatePresenceOfUserId() {
+		UserStat stat = new UserStat();
+		stat.set("created_challenges", 0);
+		stat.set("solved_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+	}
+	
+	/**
+	 * Test the validator of
+	 * presence of created_challenges 
+	 */
+	@Test
+	public void validatePresenceOfCreatedChallenges() {
+		User u = User.findFirst("username = ?","Hackerman");
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("solved_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+	}
+	
+	/**
+	 * Test the validator of
+	 * presence of solved_challenges 
+	 */
+	@Test
+	public void validatePresenceOfSolvedChallenges() {
+		User u = User.findFirst("username = ?","Hackerman");
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("created_challenges", 0);
+		stat.set("current_points", 0);
+		assertFalse(stat.isValid());
+	}
+	
+	/**
+	 * Test the validator of
+	 * presence of current_points 
+	 */
+	@Test
+	public void validatePresenceOfCurrentPoints() {
+		User u = User.findFirst("username = ?","Hackerman");
+		UserStat stat = new UserStat();
+		stat.set("user_id", u.getId());
+		stat.set("created_challenges", 0);
+		stat.set("solved_challenges", 0);
+		assertFalse(stat.isValid());
+	}
+	
 }
