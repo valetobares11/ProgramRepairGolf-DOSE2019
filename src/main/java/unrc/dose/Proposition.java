@@ -305,8 +305,9 @@ public class Proposition extends Model {
             wr.write(source);
             wr.close();
             bw.close();
-        } 
-        catch (IOException e) { };
+        }
+        catch (IOException e) {
+        };
     }
 
     /**
@@ -316,7 +317,7 @@ public class Proposition extends Model {
      * @throws Exception
      */
     private static int compilar(
-    		final String archivoSourceJava) throws Exception {
+            final String archivoSourceJava) throws Exception {
         int k = runProcess("javac " +  archivoSourceJava);
         return k;
     }
@@ -328,7 +329,7 @@ public class Proposition extends Model {
      * @throws Exception
      */
     private static void printLines(
-    		final String name, final InputStream ins) throws Exception {
+            final String name, final InputStream ins) throws Exception {
         String line = null;
         BufferedReader in = new BufferedReader(new InputStreamReader(ins));
         while ((line = in.readLine()) != null) {
@@ -390,26 +391,27 @@ public class Proposition extends Model {
     }
 
     /**
- 	 * This method return the best solution of a user
- 	 * in a specific challenge.
- 	 * @param challengeId represent the challenge
- 	 * @param userId represents the user
- 	 * @return the proposition that have the best distance of a user
- 	 * in a specific challenge
- 	 */
- 	public static Proposition bestPropDistance(
- 			final int userId, final int challengeId) {
- 		LazyList<Proposition> list = getChallengeSolutionsByUser(
- 				userId, challengeId);
- 		int min = Integer.MAX_VALUE;
- 		Proposition result = new Proposition();
- 		for (Proposition i : list) {
- 			if (i.getDistance() <= min) {
- 				min = i.getDistance();
- 	 			result = i;
- 			}
- 		}
- 		return result;
- 	}
+     * This method return the best solution of a user
+     * in a specific challenge.
+     * @param challengeId represent the challenge
+     * @param userId represents the user
+     * @return the proposition that have the best distance of a user
+     * in a specific challenge
+     */
+    public static Proposition bestPropDistance(
+        final int userId, final int challengeId) {
+
+        LazyList<Proposition> list = getChallengeSolutionsByUser(
+            userId, challengeId);
+        int min = Integer.MAX_VALUE;
+        Proposition result = new Proposition();
+        for (Proposition i : list) {
+            if (i.getDistance() <= min) {
+                min = i.getDistance();
+                result = i;
+            }
+        }
+        return result;
+    }
 
 }

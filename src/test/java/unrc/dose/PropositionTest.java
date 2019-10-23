@@ -531,7 +531,7 @@ public class PropositionTest {
           p.set("challenge_id", challId);
 	      p.set("user_id", usrId);
 	      p.set("source", "hello");
-	      p.set("isSubmit", 1);
+	      p.set("isSolution", true);
 	      p.set("distance", 0);
           p.set("cantTestPassed", 0);
 	      p.saveIt();
@@ -540,12 +540,12 @@ public class PropositionTest {
 	      p2.set("challenge_id", challId);
 	      p2.set("user_id", usrId);
 	      p2.set("source", "");
-	      p2.set("isSubmit", 1);
+	      p2.set("isSolution", true);
 	      p2.set("distance", 4);
 	      p2.set("cantTestPassed", 0);
 	      p2.saveIt();
 	      
-	      assertEquals(p.getInteger("id"), (Proposition.bestPropDistance(challId, usrId)).getInteger("id"));
+	      assertEquals(p.getInteger("id"), (Proposition.bestPropDistance(usrId, challId)).getInteger("id"));
 	      Proposition.deleteAll();
 	      Challenge.deleteAll();
 	      User.deleteAll();
