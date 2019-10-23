@@ -138,8 +138,6 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 us2.saveIt();
 		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
 		 assertTrue(userStats.get(0).getUserId()==u2.getId());
-		 u.delete();
-		 u2.delete();
 	 }
 
 }
