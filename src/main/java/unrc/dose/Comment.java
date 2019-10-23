@@ -1,13 +1,11 @@
 package unrc.dose;
 
-import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 
 /** == Schema Info.
-*
 * Table name: comments
-*
 * id              :integer    not null, primary key
 * title           :varchar(50)    not null
 * description     :varchar(300)    not null
@@ -19,16 +17,19 @@ public class Comment extends Model {
 
   /**
   *Create a new comment.
-  *@param title this is the comment's title
-  *@param description this the comment's body
-  *@param challengeId this is the challenge's id which is commented
-  *@param userId this is the user's id who commented
+  *@param title the comment's title
+  *@param description the comment's body
+  *@param challengeId the challenge's id which is commented
+  *@param userId this the user's id who commented
   *@return the comment created
   **/
   public static Comment createComment(final String title,
-  final String description, final int challengeId, final int userId) {
-    if (description == null || title == null) {
-    throw new IllegalArgumentException("Comment and title can't be empty");
+      final String description, 
+      final int challengeId, 
+      final int userId) {
+    if (description == null || title == null 
+        || description == "" || title == "") {
+      throw new IllegalArgumentException("Comment and title can't be empty");
     }
     Comment c = new Comment();
     c.set("title", title);
@@ -46,7 +47,7 @@ public class Comment extends Model {
   **/
   public static boolean isResponse(final int commentId) {
     Comment c = Comment.findById(commentId);
-    return ((c.getInteger("comment_id")) != (null));
+    return c.getInteger("comment_id") != (null);
   }
 
   /**
@@ -58,10 +59,10 @@ public class Comment extends Model {
   *@throws NullPointerException when doesn't exits the comment which this id
   **/
   public static Comment createResponse(final String description,
-  final int userId, final int commentId) {
+      final int userId, final int commentId) {
     if (description == null) {
-    throw new IllegalArgumentException("The response can't be empty");
-  }
+      throw new IllegalArgumentException("The response can't be empty");
+    }
     Comment comment = new Comment();
     if (!isResponse(commentId)) {
       Comment c = Comment.findById(commentId);
@@ -71,38 +72,39 @@ public class Comment extends Model {
       comment.set("comment_id", commentId);
       comment.set("challenge_id", c.getInteger("challenge_id"));
       comment.saveIt();
+    } else {
+      throw new IllegalArgumentException("Can't respond to a response comment");
     }
     return comment;
   }
 
   /**
-  *create a list of comments.
+  *create a list of comments associated to the id.
   *@param id the object's id
-  *@param obj the object which the id is searched
-  *@return a list of comments
+  *@param obj can be a User, Comment or Challenge
+  *@return a list of comments 
   */
   public static LazyList<Comment> viewComment(final int id, final Object obj) {
-    LazyList<Comment> lista = null;
+    LazyList<Comment> list = null;
     if (obj instanceof User) {
-      lista = Comment.where("user_id=?", id);
+      list = Comment.where("user_id=?", id);
     } else if (obj instanceof Challenge) {
-     lista = Comment.where("challenge_id=?", id);
+      list = Comment.where("challenge_id=?", id);
     } else if (obj instanceof Comment) {
-      lista = Comment.where("comment_id=?", id);
+      list = Comment.where("comment_id=?", id);
     } else {
       throw new IllegalArgumentException("invalid type");
     }
-    return lista;
+    return list;
   }
 
   /**
   *creation of equal method.
-  *@param c a comment
-  *@param aux another comment
+  *@param aux the object to compare
   *@return true if two comments are equals
   */
-  public static boolean equalsComment(final Comment c, final Comment aux) {
-    return (aux.getInteger("id").equals(c.getInteger("id")));
+  public boolean equals(Object aux) {
+    return (this.getId().equals(((Comment) aux).getId()));
   }
 
 }
