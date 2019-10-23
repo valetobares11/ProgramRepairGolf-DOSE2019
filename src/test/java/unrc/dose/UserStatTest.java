@@ -130,4 +130,33 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
 	}
+
+	/**
+	 * Test the method showBestScores
+	 * UserStat class.
+	 */
+	 @Test
+	 public void showBestScores() {
+		 User u = User.set("LaMosca", "ElMejor", "LaMosca@gmail.com", false);  
+		 u.saveIt();
+		 UserStat us1 = new UserStat();
+		 us1.setCurrentPoints(10);
+		 us1.setSolvedChallenges(0);
+		 us1.setCreatedChallenges(0);
+		 us1.setUserId(u.getId());
+		 us1.saveIt();
+		 User u2 = User.set("TheMosque", "NotJhonConnor", "LaMosquita@gmail.com", false);  
+		 u2.saveIt();
+		 UserStat us2 = new UserStat();
+		 us2.setCurrentPoints(20);
+		 us2.setSolvedChallenges(0);
+		 us2.setCreatedChallenges(0);
+		 us2.setUserId(u2.getId());
+		 us2.saveIt();
+		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
+		 assertTrue(userStats.get(0).getUserId()==u2.getId());
+		 u.delete();
+		 u2.delete();
+	 }
+
 }
