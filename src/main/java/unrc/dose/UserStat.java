@@ -66,7 +66,7 @@ static {
      * @param id The id of the user who statistics we will set.
      */
     public void setUserId(final int id) {
-        this.set("user_id", id);
+        this.set("user_id", id).saveIt();
     }
 
     /**
@@ -74,7 +74,7 @@ static {
      * @param challengesCreated The number of challenges created.
      */
     public void setCreatedChallenges(final int challengesCreated) {
-        this.set("created_challenges", challengesCreated);
+        this.set("created_challenges", challengesCreated).saveIt();
     }
 
     /**
@@ -82,7 +82,7 @@ static {
      * @param solvedChallenges The number of solved challenges.
      */
     public void setSolvedChallenges(final int solvedChallenges) {
-        this.set("solved_challenges", solvedChallenges);
+        this.set("solved_challenges", solvedChallenges).saveIt();
     }
 
     /**
@@ -90,7 +90,7 @@ static {
      * @param currentPoints The number of curret points.
      */
     public void setCurrentPoints(final int currentPoints) {
-        this.set("current_points", currentPoints);
+        this.set("current_points", currentPoints).saveIt();
     }
 
     /**

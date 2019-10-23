@@ -24,15 +24,9 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Before
 	public void before() {
 		log.info("UserStatTest SetUp");
-		User u = new User();
-		u.set("username","Hackerman");
-		u.set("password", "T3H4ck303lC0r4z0n");
-		u.set("email_address", "hackingnsa@gmail.com");
+		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);
 		u.saveIt();
-		User u2 = new User();
-		u2.set("password", "NotJohnConnor");
-		u2.set("username", "Themosque");
-		u2.set("email_address", "LaMosquita@gmail.com");
+		User u2 = User.set("Themosque", "NotJohnConnor", "LaMosquita@gmail.com", false);
 		u2.saveIt();
 	}
 
@@ -135,7 +129,6 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 User u2 = User.findFirst("username = ?","TheMosque");
 		 UserStat us2 = UserStat.createUserStat(u2.getId());
 		 us2.setCurrentPoints(20);
-		 us2.saveIt();
 		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
 		 assertTrue(userStats.get(0).getUserId()==u2.getId());
 	 }
