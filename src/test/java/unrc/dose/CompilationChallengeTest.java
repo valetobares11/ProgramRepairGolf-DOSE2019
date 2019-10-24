@@ -179,7 +179,9 @@ public class CompilationChallengeTest {
 		String title = "Change1";
 		String className = "NotFound";
 		String description = "";
-		String source = "//";
+		String source = "public class " + className + " {\n";
+			   source+= " ///";
+			   source+= "}\n";
 		int point = 0;
 		boolean obtained = CompilationChallenge.modifyUnsolvedCompilationChallenge(
 			c.getInteger("id"),

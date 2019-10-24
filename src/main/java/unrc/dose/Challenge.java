@@ -208,9 +208,7 @@ public class Challenge extends Model {
             String nameFile = "/../tmp/" + name + ".java";
             File file = new File(nameFile);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-            bw.write("public class " + name + " {\n");
             bw.write(source);
-            bw.write("}");
             bw.close();
             return true;
         } catch (IOException e) {

@@ -136,9 +136,11 @@ public class ChallengeTest {
 	@Test
 	public void generateFileJavaTest() {
 		String name = "TestGenerateFile";
-		String source = "    public static void main(String[] args) {\n";
+		String source = "public class " + name + " {\n";
+			   source = "    public static void main(String[] args) {\n";
 			   source+= "        System.out.println("+"\"TestGenerateFile\""+");\n";
 			   source+= "    }\n";
+			   source+= "}\n";
 		boolean obtained = Challenge.generateFileJava(name, source);
 		assertTrue(obtained);
 	}
@@ -149,9 +151,11 @@ public class ChallengeTest {
 	@Test
 	public void runCompilationTest() {
 		String nameFile = "TestCompilation";
-		String source = "    public static void main(String[] args) {\n";
-			   source+= "        System.out.println("+"\"Test Compilation\""+");\n";
+		String source = "public class " + nameFile + " {\n";
+			   source+= "   public static void main(String[] args) {\n";
+			   source+= "    	System.out.println("+"\"Test Compilation\""+");\n";
 			   source+= "    }\n";
+			   source+= "}\n";
 		Challenge.generateFileJava(nameFile, source);
 		boolean obtained = Challenge.runCompilation(nameFile);
 		assertEquals(true, obtained);
@@ -163,9 +167,11 @@ public class ChallengeTest {
 	@Test
 	public void runJavaTest() {
 		String nameFile = "TestRunJava";
-		String source = "    public static void main(String[] args) {\n";
+		String source = "public class " + nameFile + " {\n";
+			   source = "    public static void main(String[] args) {\n";
 			   source+= "        System.out.println("+"\"Test RunJava\""+");\n";
 			   source+= "    }\n";
+			   source+= "}\n";
 		Challenge.generateFileJava(nameFile, source);
 		Challenge.runCompilation(nameFile);
 		boolean obtained = Challenge.runJava(nameFile);
