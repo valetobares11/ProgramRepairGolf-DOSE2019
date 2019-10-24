@@ -164,7 +164,7 @@ public class Proposition extends Model {
      * @return List of proposition for user in challenge
      */
     public static LazyList<Proposition> getChallengeSolutionsByUser(
-            final Integer userId, final Integer challengeId) {
+            final int userId, final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? "
                 + "and isSolution = ?", userId, challengeId, true);
     }
