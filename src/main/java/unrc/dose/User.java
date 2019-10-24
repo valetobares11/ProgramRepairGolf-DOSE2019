@@ -88,11 +88,9 @@ public class User extends Model {
 
         return user;
     }
-    
     /**
     * @return id of a user: Integer
     */
-    
     public Integer getId() {
         return this.getInteger(ID);
 
@@ -110,7 +108,7 @@ public class User extends Model {
     * @return password of the user: String
     */
     public byte[] getPass() {
-        return (byte[])this.get(PASSWORD);
+        return (byte[]) this.get(PASSWORD);
 
     }
 
@@ -147,9 +145,9 @@ public class User extends Model {
 
      /**
      * this method remove logically a user, set the user as inactive.
-     * @param usernameUser this username is for delete logically,
+     * @param name this username is for delete logically,
      * his account associate
-     * @param passwordUser this param is used for confirm the operation
+     * @param pass this param is used for confirm the operation
      * @return a boolean with this exit of remove or no remove the user
      */
     public static boolean disableUser(final String name,
@@ -158,31 +156,33 @@ public class User extends Model {
         if (user != null) {
             byte[] passSaved = user.getPass();
             Password passUser = Password.findFirst("username = ?", name);
-            byte[] salt = (byte[])passUser.get("salt");
+            byte[] salt = (byte[]) passUser.get("salt");
             user.set("active_account", false);
-            return ((Password.isExpectedPassword(pass.toCharArray(), salt, passSaved)));
+            return ((Password.isExpectedPassword(pass.toCharArray(),
+            salt, passSaved)));
         }
         return false;
     }
 
-    /**
-     * this method is for User's credential validation, 
+     /**
+     * this method is for User's credential validation,
      * given a particular user's credential,
      * this method will validate if they are valid.
-     * @param usernameUser this username is for validate data
-     * @param passwordUser this param is used for finally operation
+     * @param name this username is for validate data
+     * @param pass this param is used for finally operation
      * @return {@code true} iff the user's credential are valid and the
      * user was successfully logged in
      */
     public static boolean validateCredentials(final String name,
         final String pass) {
         User user = User.findFirst("username = ? ", name);
-        if(user != null){
+        if (user != null) {
             byte[] passSaved = user.getPass();
             Password passUser = Password.findFirst("username = ?", name);
-            byte[] salt = (byte[])passUser.get("salt");
+            byte[] salt = (byte[]) passUser.get("salt");
 
-            return (Password.isExpectedPassword(pass.toCharArray(), salt, passSaved));
+            return (Password.isExpectedPassword(pass.toCharArray(),
+                salt, passSaved));
         } else {
             return false;
         }
