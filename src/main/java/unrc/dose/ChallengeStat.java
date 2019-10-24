@@ -83,6 +83,12 @@ public class ChallengeStat extends Model {
         return c;
     }
 
+    /**
+     * Given a challenge id, returns a single ChallengeStat record from the
+     * data base.
+     * @param challengeId
+     * @return the challenge stat in the database.
+     */
     public static ChallengeStat getChallengeStat(final int challengeId) {
         return (ChallengeStat.findFirst("challenge_id = ? ", challengeId));
     }

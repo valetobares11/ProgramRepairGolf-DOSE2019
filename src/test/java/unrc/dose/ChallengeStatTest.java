@@ -2,12 +2,18 @@ package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Class to test the ChallengeStat class methods.
+ * @author Fernandez, Camilo
+ * @author Manzetti, Mariano
+ */
 public class ChallengeStatTest {
 
     @BeforeClass
@@ -27,8 +33,7 @@ public class ChallengeStatTest {
 	}
 
     /**
-    * Creates a new ChallengeStat record on the data base.
-    * @result ChallengeStat c=("challenge_id"= 1, "average_score"= 0.0, "solved_count"= 0) record sucessfully created.
+     * Test for newChallengeStat() method.
     */
     @Test
     public void newChallengeStatTest() {
@@ -44,8 +49,7 @@ public class ChallengeStatTest {
     }
 
     /**
-    * Updates the attribute "average_score" of a ChallengeStat record, and increments the "solved_count".
-    * @result "average_score" = 6.0, "solved_count" = 2
+    * Test for updateAverageScore() method.
     */
     @Test
     public void updateAverageScoreTest() {
@@ -77,7 +81,7 @@ public class ChallengeStatTest {
     }
 
     /**
-     * 
+     * Test for getChallengeStat() method.
      */
     @Test
     public void getChallengeStatTest() {
@@ -88,6 +92,8 @@ public class ChallengeStatTest {
         ChallengeStat result = ChallengeStat.getChallengeStat(1);
 
         boolean comparison = result.equals(c);
+
+        assertNotNull(c);
         assertTrue(comparison);
     }
 }
