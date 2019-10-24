@@ -109,8 +109,8 @@ public class User extends Model {
     /**
     * @return password of the user: String
     */
-    public String getPass() {
-        return this.getString(PASSWORD);
+    public byte[] getPass() {
+        return (byte[])this.get(PASSWORD);
 
     }
 
@@ -154,11 +154,13 @@ public class User extends Model {
      */
     public static boolean disableUser(final String name,
         final String pass) {
-        User user = User.findFirst("username = ? and password = ?",
-            name, pass);
+        User user = User.findFirst("username = ? ", name);
         if (user != null) {
+            byte[] passSaved = user.getPass();
+            Password passUser = Password.findFirst("username = ?", name);
+            byte[] salt = (byte[])passUser.get("salt");
             user.set("active_account", false);
-            return true;
+            return ((Password.isExpectedPassword(pass.toCharArray(), salt, passSaved)));
         }
         return false;
     }
@@ -174,9 +176,16 @@ public class User extends Model {
      */
     public static boolean validateCredentials(final String name,
         final String pass) {
-        User user = User.findFirst("username = ? and password = ?",
-            name, pass);
-        return (user != null);
+        User user = User.findFirst("username = ? ", name);
+        if(user != null){
+            byte[] passSaved = user.getPass();
+            Password passUser = Password.findFirst("username = ?", name);
+            byte[] salt = (byte[])passUser.get("salt");
+
+            return (Password.isExpectedPassword(pass.toCharArray(), salt, passSaved));
+        } else {
+            return false;
+        }
     }
 
 }

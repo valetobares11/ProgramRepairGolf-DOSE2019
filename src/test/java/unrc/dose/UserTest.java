@@ -19,28 +19,25 @@ public class UserTest {
 	@BeforeClass
   	public static void beforeAll() {
   		if (!Base.hasConnection()) {
-	    	App.main(null);
-			Spark.awaitInitialization();
 	      	Base.open();
 	      	Base.openTransaction();
+	      	String name = "Enzo" ;
+	      	User pepe = User.set("Enzo" , "Ferrari" , "F40@gmail.com" , false);
 	    }
   	}
 
-
   	@AfterClass
   	public static void tearDown() {
-    	Spark.stop();
     	Base.rollbackTransaction();
     	Base.close();
-    	}
-
+    }
     /**
     * found a user by his username succesfully
     * @result user found 
     */
 	@Test
 	public void userFoundByName() {
-		String name = "JohnConnor";
+		String name = "Enzo";
 
 		assertEquals(false , User.searchUserByUsername(name));
 	}
@@ -62,7 +59,7 @@ public class UserTest {
     */
 	@Test
 	public void userFoundByEmail() {
-		String email = "JohnConnor@gmail.com";
+		String email = "F40@gmail.com";
 
 		assertEquals(false , User.searchUserByEmail(email));
 	}
@@ -84,14 +81,8 @@ public class UserTest {
     */
 	@Test
 	public void userSet() {
-		String name = "Enzo";
-		String password = "Ferrari";
-		String email = "F40@gmail.com";
-		Boolean admin = false;
-		User pepe = new User();
-
-		pepe = User.set(name, password, email, admin);	
-
+		String name = "Enzo" ;
+		User pepe = User.findFirst("username = ? " , name);
 		assertEquals(name , pepe.get("username"));
 	}
 
@@ -101,8 +92,8 @@ public class UserTest {
 	 */
 	@Test
 	public void deleteUserSuccessful(){
-		String username = "JohnConnor";
-		String password = "VeryHardPass";
+		String username = "Enzo";
+		String password = "Ferrari";
 
 		assertEquals(true, User.disableUser(username, password));
 	}
@@ -137,8 +128,8 @@ public class UserTest {
 	 */
 	@Test
 	public void userValidateSuccessful(){
-		String username = "JohnConnor";
-		String password = "VeryHardPass";
+		String username = "Enzo";
+		String password = "Ferrari";
 
 		assertEquals(true, User.validateCredentials(username, password));
 	}
@@ -149,8 +140,8 @@ public class UserTest {
 	 */
 	@Test
 	public void userValidateUnsuccessfulWithoutPassCorrect(){
-		String username = "JohnConnor";
-		String password = "VeryH";
+		String username = "Enzo";
+		String password = "Fer";
 
 		assertEquals(false, User.validateCredentials(username, password));
 	}
@@ -161,8 +152,8 @@ public class UserTest {
 	 */
 	@Test
 	public void userValidateUnsuccessfulWithoutDataCorrect(){
-		String username = "JohnConnor";
-		String password = "VeryHardPass";
+		String username = "Enzi";
+		String password = "Ferrari";
 
 		assertEquals(false, User.validateCredentials(username, password));
 	}
