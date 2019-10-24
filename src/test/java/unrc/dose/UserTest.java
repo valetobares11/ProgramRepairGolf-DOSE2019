@@ -18,28 +18,27 @@ public class UserTest {
 	
 	@BeforeClass
   	public static void beforeAll() {
-    	App.main(null);
-
-		Spark.awaitInitialization();
-      	Base.open();
+  		if (!Base.hasConnection()) {
+	      	Base.open();
+	      	Base.openTransaction();
+	       	User pepe = User.set("Enzo" , "Ferrari" , "F40@gmail.com" , false);
+	    }
   	}
-
 
   	@AfterClass
   	public static void tearDown() {
-    	Spark.stop();
+    	Base.rollbackTransaction();
     	Base.close();
-  	}
-
+    }
     /**
     * found a user by his username succesfully
     * @result user found 
     */
 	@Test
 	public void userFoundByName() {
-		String name = "JohnConnor";
+		String name = "Enzo";
 
-		assertEquals(false , User.searchUserByUsername(name));
+		assertEquals(true , User.userExistsByUsername(name));
 	}
 
     /**
@@ -50,7 +49,7 @@ public class UserTest {
 	public void userNotFoundByName() {
 		String name = "Pity";
 
-		assertEquals(true , User.searchUserByUsername(name));
+		assertEquals(false , User.userExistsByUsername(name));
 	}
 
     /**
@@ -59,9 +58,9 @@ public class UserTest {
     */
 	@Test
 	public void userFoundByEmail() {
-		String email = "JohnConnor@gmail.com";
+		String email = "F40@gmail.com";
 
-		assertEquals(false , User.searchUserByEmail(email));
+		assertEquals(true , User.userExistsByEmail(email));
 	}
 
     /**
@@ -72,7 +71,7 @@ public class UserTest {
 	public void userNotFoundByEmail() {
 		String email = "YvaelTercero@gmail.com";
 
-		assertEquals(true , User.searchUserByEmail(email));
+		assertEquals(false , User.userExistsByEmail(email));
 	}
 
     /**
@@ -81,15 +80,80 @@ public class UserTest {
     */
 	@Test
 	public void userSet() {
-		String name = "Enzo";
-		String password = "Ferrari";
-		String email = "F40@gmail.com";
-		Boolean admin = false;
-		User pepe = new User();
-
-		pepe = User.set(name, password, email, admin);	
-
+		String name = "Enzo" ;
+		User pepe = User.findFirst("username = ? " , name);
 		assertEquals(name , pepe.get("username"));
 	}
 
+	/**
+	 * delete an user
+	 * @result delete logically a user logged
+	 */
+	@Test
+	public void deleteUserSuccessful(){
+		String username = "Enzo";
+		String password = "Ferrari";
+
+		assertEquals(true, User.disableUser(username, password));
+	}
+
+	/**
+	 * delete Unsuccessfully user
+	 * @result user not found
+	 */
+	@Test
+	public void deleteUserUnsuccessful(){
+		String username = "Pity";
+		String password = "Martinez";
+
+		assertEquals(false, User.disableUser(username, password));
+	}
+
+	/**
+	 * Unsuccessfully validate Credentials the user
+	 * @result user not found
+	 */
+	@Test
+	public void userValidateUnsuccessful(){
+		String username = "Pity";
+		String password = "Martinez";
+
+		assertEquals(false, User.validateCredentials(username, password));
+	}
+
+	/**
+	 * Successfully validate Credentials the user with data correct
+	 * @result user found whit data get into
+	 */
+	@Test
+	public void userValidateSuccessful(){
+		String username = "Enzo";
+		String password = "Ferrari";
+
+		assertEquals(true, User.validateCredentials(username, password));
+	}
+
+	/**
+	 * Successfully validate Credentials the user with password incorrect
+	 * @result user not found
+	 */
+	@Test
+	public void userValidateUnsuccessfulWithoutPassCorrect(){
+		String username = "Enzo";
+		String password = "Fer";
+
+		assertEquals(false, User.validateCredentials(username, password));
+	}
+
+	/**
+	 * Successfully validate Credentials the user with password or username incorrect
+	 * @result user found with correct data 
+	 */
+	@Test
+	public void userValidateUnsuccessfulWithoutDataCorrect(){
+		String username = "Enzi";
+		String password = "Ferrari";
+
+		assertEquals(false, User.validateCredentials(username, password));
+	}
 }
