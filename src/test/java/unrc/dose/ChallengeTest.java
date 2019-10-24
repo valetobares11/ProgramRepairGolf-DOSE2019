@@ -38,10 +38,7 @@ public class ChallengeTest {
 		"source", 100, 0);
 		Challenge c = Challenge.findFirst("title = ?", "Test");
 
-		Proposition p = new Proposition();
-		p.set("user_id", u.getId());
-		p.set("challenge_id", c.getId());
-		p.set("source","//");
+		Proposition p = Proposition.newProposition(u.getInteger("id"), c.getInteger("id"));
 		p.set("isSolution", 1);
 		p.saveIt();
 	}

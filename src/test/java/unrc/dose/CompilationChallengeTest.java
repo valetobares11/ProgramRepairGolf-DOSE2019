@@ -41,31 +41,14 @@ public class CompilationChallengeTest {
 		CompilationChallenge.addCompilationChallenge(u.getInteger("id"), "Test3", "Test3", "description",
 		"source", 100, 0);
 
-		Proposition p = new Proposition();
-		p.set("user_id", u.getId());
-		p.set("challenge_id", c.getId());
-		p.set("source", "//");
-		p.set("isSolution", 0);
-		p.saveIt();
-
-		Proposition p1 = new Proposition();
-		p1.set("user_id", u.getId());
-		p1.set("challenge_id", c1.getId());
-		p1.set("source","//");
+		Proposition.newProposition(u.getInteger("id"), c.getInteger("id"));
+		Proposition p1 = Proposition.newProposition(u.getInteger("id"), c1.getInteger("id"));
 		p1.set("isSolution", 1);
 		p1.saveIt();
-
-		Proposition p2 = new Proposition();
-		p2.set("user_id", u.getId());
-		p2.set("challenge_id", c2.getId());
-		p2.set("source","//");
+		Proposition p2 = Proposition.newProposition(u.getInteger("id"), c2.getInteger("id"));
 		p2.set("isSolution", 1);
 		p2.saveIt();
-
-		Proposition p3 = new Proposition();
-		p3.set("user_id", u1.getId());
-		p3.set("challenge_id", c2.getId());
-		p3.set("source","//");
+		Proposition p3 = Proposition.newProposition(u1.getInteger("id"), c2.getInteger("id"));
 		p3.set("isSolution", 1);
 		p3.saveIt();
 	
