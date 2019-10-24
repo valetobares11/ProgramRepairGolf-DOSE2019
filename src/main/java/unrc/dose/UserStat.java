@@ -19,13 +19,13 @@ import org.javalite.activejdbc.Model;
  * @author Nahuel Alvarez, Borda Agustin, Castillo Conrado
  */
 public class UserStat extends Model {
-/* Validators for model */
-static {
-    validatePresenceOf("user_id");
-    validatePresenceOf("created_challenges");
-    validatePresenceOf("solved_challenges");
-    validatePresenceOf("current_points");
-}
+    /* Validators for model */
+    static {
+        validatePresenceOf("user_id");
+        validatePresenceOf("created_challenges");
+        validatePresenceOf("solved_challenges");
+        validatePresenceOf("current_points");
+    }
     /**
      * Gets the id of the user who has assigned this statistics.
      * in the database.
@@ -132,10 +132,9 @@ static {
      * @return A LazyList of the userStats with the higest scores.
      */
     public static LazyList<UserStat> showBestScores(final int x) {
-      LazyList<UserStat> userStats = UserStat.findAll().orderBy(
-      "current_points desc").limit(x);
+        LazyList<UserStat> userStats = UserStat.findAll().orderBy(
+                "current_points desc").limit(x);
 
-      return userStats;
+        return userStats;
     }
-
 }
