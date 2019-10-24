@@ -136,8 +136,8 @@ public class Proposition extends Model {
      * @return the proposition created in the database.
      */
     public static Proposition newProposition(
-        final int userId,
-        final int challengeId) {
+            final int userId,
+            final int challengeId) {
 
         Challenge currentChallenge = Challenge.findById(challengeId);
         User currentUser = User.findById(userId);
@@ -175,8 +175,8 @@ public class Proposition extends Model {
      * @param distanceObtained reference the new distance obtained
      */
     public void saveSolution(
-        final String proposedCode,
-        final int distanceObtained) {
+            final String proposedCode,
+            final int distanceObtained) {
         this.setSource(proposedCode);
         this.set("distance", distanceObtained);
         this.set("isSolution", true);
@@ -198,8 +198,8 @@ public class Proposition extends Model {
      *  or the proposition found.
      */
     public static LazyList<Proposition> getUnsubmittedChallengePropByUser(
-        final int userId,
-        final int challengeId) {
+            final int userId,
+            final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? and "
                 + "isSolution = ?", userId, challengeId, false);
     }
@@ -211,7 +211,7 @@ public class Proposition extends Model {
      * @return list the solution for one challenge.
      */
     public static LazyList<Proposition> getAllSolutionsForChallenge(
-        final int challengerId) {
+            final int challengerId) {
         return Proposition.where("challenge_id = ? and isSolution = ?",
                 challengerId, true);
     }
@@ -236,12 +236,12 @@ public class Proposition extends Model {
      * @return the editing distance of both string
      */
     public static int computeLevenshteinDistance(
-        final String str1,
-        final String str2) {
+            final String str1,
+            final String str2) {
         return computeLevenshteinDistance(
-            str1.toCharArray(),
-            str2.toCharArray()
-            );
+                str1.toCharArray(),
+                str2.toCharArray()
+                );
     }
 
     /**
@@ -269,8 +269,8 @@ public class Proposition extends Model {
      * @return the editing distance of both arrangements
      */
     private static int computeLevenshteinDistance(
-        final char[] str1,
-        final char[] str2) {
+            final char[] str1,
+            final char[] str2) {
         int[][] distance = new int[str1.length + 1][str2.length + 1];
 
         for (int i = 0; i <= str1.length; i++) {
@@ -298,7 +298,8 @@ public class Proposition extends Model {
         File f;
         f = new File("Source.java");
 
-        try {
+        try
+        {
             FileWriter w = new FileWriter(f);
             BufferedWriter bw = new BufferedWriter(w);
             PrintWriter wr = new PrintWriter(bw);
@@ -306,7 +307,10 @@ public class Proposition extends Model {
             wr.close();
             bw.close();
         }
-        catch (IOException e) {
+        catch (IOException e) 
+        {
+            System.out.println("File exception");
+            System.out.println(e.getMessage());
         };
     }
 
@@ -399,10 +403,10 @@ public class Proposition extends Model {
      * in a specific challenge
      */
     public static Proposition bestPropDistance(
-        final int userId, final int challengeId) {
+            final int userId, final int challengeId) {
 
         LazyList<Proposition> list = getChallengeSolutionsByUser(
-            userId, challengeId);
+                userId, challengeId);
         int min = Integer.MAX_VALUE;
         Proposition result = new Proposition();
         for (Proposition i : list) {
