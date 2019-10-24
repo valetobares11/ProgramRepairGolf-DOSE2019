@@ -48,20 +48,20 @@ public class User extends Model {
     * @param name : username that user wants: String
     * @return value that represents if username already exits: Boolean
     */
-    public static Boolean searchUserByUsername(final String name) {
+    public static Boolean userExistsByUsername(final String name) {
         User user = User.findFirst(USERNAME + " = ?", name);
 
-        return (user == null);
+        return (user != null);
     }
 
     /**
     * @param email : username that user wants: String
     * @return value that represents if username already exits: Boolean
     */
-    public static Boolean searchUserByEmail(final String email) {
+    public static Boolean userExistsByEmail(final String email) {
         User user = User.findFirst(EMAIL + " = ?", email);
 
-        return (user == null);
+        return (user != null);
     }
 
     /**

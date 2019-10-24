@@ -21,8 +21,7 @@ public class UserTest {
   		if (!Base.hasConnection()) {
 	      	Base.open();
 	      	Base.openTransaction();
-	      	String name = "Enzo" ;
-	      	User pepe = User.set("Enzo" , "Ferrari" , "F40@gmail.com" , false);
+	       	User pepe = User.set("Enzo" , "Ferrari" , "F40@gmail.com" , false);
 	    }
   	}
 
@@ -39,7 +38,7 @@ public class UserTest {
 	public void userFoundByName() {
 		String name = "Enzo";
 
-		assertEquals(false , User.searchUserByUsername(name));
+		assertEquals(true , User.userExistsByUsername(name));
 	}
 
     /**
@@ -50,7 +49,7 @@ public class UserTest {
 	public void userNotFoundByName() {
 		String name = "Pity";
 
-		assertEquals(true , User.searchUserByUsername(name));
+		assertEquals(false , User.userExistsByUsername(name));
 	}
 
     /**
@@ -61,7 +60,7 @@ public class UserTest {
 	public void userFoundByEmail() {
 		String email = "F40@gmail.com";
 
-		assertEquals(false , User.searchUserByEmail(email));
+		assertEquals(true , User.userExistsByEmail(email));
 	}
 
     /**
@@ -72,7 +71,7 @@ public class UserTest {
 	public void userNotFoundByEmail() {
 		String email = "YvaelTercero@gmail.com";
 
-		assertEquals(true , User.searchUserByEmail(email));
+		assertEquals(false , User.userExistsByEmail(email));
 	}
 
     /**
