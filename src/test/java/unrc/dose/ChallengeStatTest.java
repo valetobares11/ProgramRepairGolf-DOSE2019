@@ -27,7 +27,7 @@ public class ChallengeStatTest {
 	}
 
     /**
-    * creates a new ChallengeStat record on the data base.
+    * Creates a new ChallengeStat record on the data base.
     * @result ChallengeStat c=("challenge_id"= 1, "average_score"= 0.0, "solved_count"= 0) record sucessfully created.
     */
     @Test
@@ -47,24 +47,38 @@ public class ChallengeStatTest {
     * Updates the attribute "average_score" of a ChallengeStat record, and increments the "solved_count".
     * @result "average_score" = 6.0, "solved_count" = 2
     */
-    /*@Test
+    @Test
     public void updateAverageScoreTest() {
-        //Challenge.addCompilationTest();
+
         User testUser = User.set("testName", "testPass", "testMail", false);
         int userId = testUser.getInteger("id");
+        testUser.saveIt();
+
         Challenge testChallenge = Challenge.addChallenge(userId, "testChallenge",
         "testClass", "testDesc", "testSrc", 20, 1);
         int challengeId = testChallenge.getInteger("id");
+        testChallenge.saveIt();
+
         Proposition p = Proposition.newProposition(userId, challengeId);
         p.setDistance(5);
-        ChallengeStat cs = ChallengeStat.newChallengeStat(challengeId);
-        assertEquals((float) 0.0, cs.get("average_score"));
-        assertEquals(0, cs.get("solved_count"));
-        ChallengeStat.updateAverageScore(p.getInteger("id"));
-        assertEquals((float) 15.0, cs.get("average_score"));
-        assertEquals(1, cs.get("solved_count"));
-    }*/
+        p.saveIt();
 
+        ChallengeStat cs = (ChallengeStat) ChallengeStat.newChallengeStat(challengeId);
+        Float zero = Float.parseFloat("0");
+        assertEquals(zero, cs.getFloat("average_score"));
+        assertEquals((int) 0, cs.get("solved_count"));
+
+        ChallengeStat.updateAverageScore(p.getInteger("id"));
+
+        ChallengeStat cs2 = ChallengeStat.findFirst("challenge_id = ?", challengeId);
+
+        assertEquals((float) 15.0, cs2.get("average_score"));
+        assertEquals(1, cs2.get("solved_count"));
+    }
+
+    /**
+     * 
+     */
     @Test
     public void getChallengeStatTest() {
         ChallengeStat.newChallengeStat(1);
@@ -76,6 +90,4 @@ public class ChallengeStatTest {
         boolean comparison = result.equals(c);
         assertTrue(comparison);
     }
-
-
 }

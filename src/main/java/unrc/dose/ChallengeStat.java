@@ -1,7 +1,5 @@
 package unrc.dose;
 
-import java.util.List;
-
 import org.javalite.activejdbc.Model;
 
 /**
@@ -22,7 +20,7 @@ import org.javalite.activejdbc.Model;
 * ChallengeStat class represents a person into the system.
 */
 public class ChallengeStat extends Model {
-    
+
 
     /**
      * Updates the number of times that a challenge has been solved.
@@ -34,6 +32,10 @@ public class ChallengeStat extends Model {
         final ChallengeStat challengeSToupdate) {
         int currentSolvedCount = (int) challengeSToupdate.get("solved_count");
         currentSolvedCount++;
+
+        challengeSToupdate.set("solved_count", currentSolvedCount);
+        challengeSToupdate.saveIt();
+
         return currentSolvedCount;
     }
 
@@ -44,21 +46,21 @@ public class ChallengeStat extends Model {
      */
     public static void updateAverageScore(final int propositionId) {
         //getting the info about the proposition
+
         Proposition solution = Proposition.findById(propositionId);
-        int distance = (int) solution.get("distance");
-        int challengeId = (int) solution.get("challenge_id");
+        int distance = solution.getInteger("distance");
+        int challengeId = solution.getInteger("challenge_id");
 
         Challenge currentChallenge = Challenge.findById(challengeId);
-        int challengePoints = (int) currentChallenge.get("point");
+        int challengePoints = currentChallenge.getInteger("point");
 
         int userScore = challengePoints - distance;
 
-        List<ChallengeStat> challengeSingleList = ChallengeStat.where(
+        ChallengeStat challengeSToupdate = ChallengeStat.findFirst(
         "challenge_id = ?", challengeId);
-        ChallengeStat challengeSToupdate = challengeSingleList.get(0);
 
         //getting the current average score and the current solved count
-        float currentAverage = (float) challengeSToupdate.get("average_score");
+        float currentAverage = challengeSToupdate.getFloat("average_score");
         int currentSolvedCount = incrementSolvedCount(challengeSToupdate);
 
         float updatedAverageScore = currentAverage
@@ -72,14 +74,28 @@ public class ChallengeStat extends Model {
     /**
      *Generates a new ChallengeStat table for a incoming new challenge.
      *@param challengeId The id of the new challenge.
+     *@return the challenge stat created in the database.
      */
-    public static void newChallengeStat(final int challengeId) {
-        ChallengeStat.createIt("challenge_id", challengeId,
-        "average_score", 0, "solved_count", 0);
+    public static ChallengeStat newChallengeStat(final int challengeId) {
+        ChallengeStat c = ChallengeStat.createIt(
+        "challenge_id", challengeId, "average_score", 0.0, "solved_count", 0);
+
+        return c;
     }
 
     public static ChallengeStat getChallengeStat(final int challengeId) {
         return (ChallengeStat.findFirst("challenge_id = ? ", challengeId));
+    }
+
+    /**
+     * hashCode redefined.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.getInteger("id").hashCode();
+        return result;
     }
 
     /**
@@ -89,12 +105,13 @@ public class ChallengeStat extends Model {
      Objects.
      */
     @Override
-    public boolean equals (Object cs) {
+    public boolean equals(final Object cs) {
         ChallengeStat cs2 = (ChallengeStat) cs;
 
-        return ((this.getInteger("id") == cs2.getInteger("id")) &&
-        (this.get("challenge_id") == cs2.get("challenge_id")) &&
-        ((float) this.get("average_score") == (float) cs2.get("average_score")) &&
-        (this.get("solved_count") == cs2.get("solved_count")));
+        return ((this.getInteger("id") == cs2.getInteger("id"))
+        && (this.get("challenge_id") == cs2.get("challenge_id"))
+        && ((float) this.get("average_score") == (float) cs2.get(
+        "average_score")) && (this.get("solved_count") == cs2.get(
+        "solved_count")));
     }
 }
