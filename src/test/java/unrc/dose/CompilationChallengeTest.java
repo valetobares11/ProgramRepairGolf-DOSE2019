@@ -1,6 +1,7 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -79,14 +80,15 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void validateCompilationChallengeTest() {
-		Challenge challenge = new Challenge();
-		challenge.setUserId(1); 
-		challenge.setTitle("Hello Word");
-		challenge.setClassName("HelloWordx2");
-		challenge.setSource("public String hello(){ return "+"HelloWord"+" }");
-		challenge.setPoint(100);
-		challenge.setOwnerSolutionId(9);
-		challenge.saveIt();
+		int userId = 1; 
+		String title = "Hello Word";
+		String description = "---";
+		String className = "HelloWordx2";
+		String source = "public String hello(){ return "+"HelloWord"+" }";
+		int point= 100;
+		int ownerSolutionId= 9;
+		Challenge challenge = Challenge.addChallenge(userId, title, className, description,
+		source, point, ownerSolutionId);
 		boolean validate = CompilationChallenge.validateCompilationChallenge(challenge);
 		assertEquals(true ,validate);
 	}
@@ -191,6 +193,26 @@ public class CompilationChallengeTest {
 			source,
 			point);
 		assertTrue(obtained);
+	}
+
+	/**
+	 * Test method for deleteChallenge.
+	 * In case of the CompilationChallenge already exist.
+	 */
+	@Test
+	public void deleteCompilationChallengeTest() {
+		int userId = 5; 
+		String title= "Hello Word";
+		String className = "HelloWord4";
+		String description = "Test Hellos Word";
+		String source = "System.out.println('Hello Word')";
+		int point = 300;
+		int ownerSolutionId = 10;
+		CompilationChallenge.addCompilationChallenge(userId, title, className, description,
+		source, point, ownerSolutionId);
+		int id = Challenge.findFirst("class_name = ?", className).getInteger("id");
+		Challenge.deleteChallenge(id);
+		assertNull(CompilationChallenge.findFirst("challenge_id = ?", id));   
 	}
 
 } 

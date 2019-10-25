@@ -1,6 +1,7 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -81,19 +82,18 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void validateTestChallengeTest() {
-		Challenge challenge = new Challenge();
-		challenge.setUserId(1); 
-		challenge.setTitle("Hello Word");
-		challenge.setClassName("HelloWord");
-		challenge.setSource("public String hello(){ return "+"HelloWord"+"; }");
-		challenge.setPoint(100);
-		challenge.setOwnerSolutionId(9);
-		challenge.saveIt();
-		TestChallenge testChallenge = new TestChallenge();
-		testChallenge.set("id",challenge.getInteger("id"));
-		testChallenge.setTest("--");
-		testChallenge.saveIt();
-		boolean validate = TestChallenge.validateTestChallenge(challenge,testChallenge);
+		int userId = 1; 
+		String title = "Hello Word";
+		String description = "...";
+		String className = "HelloWord";
+		String source = "public String hello(){ return "+"HelloWord"+"; }";
+		int point = 100;
+		int ownerSolutionId = 9;
+		String test = "--";
+		TestChallenge.addTestChallenge(userId, title, className, description,
+		source, point, ownerSolutionId, test);
+		TestChallenge testChallenge = TestChallenge.findFirst("test = ?", test);
+		boolean validate = TestChallenge.validateTestChallenge(testChallenge);
 		assertEquals(true,validate);
 	}
 
@@ -191,4 +191,26 @@ public class TestChallengeTest {
 			source, point, test);
 		assertTrue(obtained);
 	}
+
+	/**
+	 * Test method for deleteChallenge.
+	 * In case of the CompilationChallenge already exist.
+	 */
+	@Test
+	public void deleteTestChallengeTest() {
+		int userId = 5; 
+		String title= "Hello Word";
+		String className = "HelloWord4";
+		String description = "Test Hellos Word";
+		String source = "System.out.println('Hello Word')";
+		int point = 300;
+		int ownerSolutionId = 10;
+		String test = "delete Test";
+		TestChallenge.addTestChallenge(userId, title, className, description,
+		source, point, ownerSolutionId, test);
+		int id = TestChallenge.findFirst("test = ?", test).getInteger("challenge_id");
+		Challenge.deleteChallenge(id);
+		assertNull(TestChallenge.findFirst("challenge_id = ?", id));   
+	}
+
 }

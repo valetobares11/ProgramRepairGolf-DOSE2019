@@ -1,6 +1,7 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -81,7 +82,6 @@ public class ChallengeTest {
 	 */
 	@Test
 	public void addChallengeTest() {
-		Challenge challenge = new Challenge();
 		int userId = 1; 
 		String title= "Hello Word";
 		String nameClass = "HelloWord1";
@@ -89,18 +89,18 @@ public class ChallengeTest {
 		String source = "System.out.println('Hello Word')";
 		int point = 100;
 		int ownerSolutionId = 9;
+		Challenge challenge = new Challenge();
 		challenge = Challenge.addChallenge(userId,nameClass,title,description,
 		source,point,ownerSolutionId);
-		challenge.saveIt();
 		assertEquals(1,challenge.getUserId());
 	}
 
 	/**
 	 * Test method for deleteChallenge.
+	 * In case of the challenge already exist.
 	 */
 	@Test
 	public void deleteChallengeTest() {
-		Challenge challenge = new Challenge();
 		int userId = 5; 
 		String title= "Hello Word";
 		String nameClass = "HelloWord4";
@@ -108,12 +108,28 @@ public class ChallengeTest {
 		String source = "System.out.println('Hello Word')";
 		int point = 300;
 		int ownerSolutionId = 10;
+		Challenge challenge = new Challenge();
 		challenge = Challenge.addChallenge(userId,title,nameClass,description,
 		source,point,ownerSolutionId);
-		challenge.saveIt();
-		Challenge.deleteChallenge(challenge);
-		assertEquals(null,Challenge.findFirst("title = ?",title));   
-	} 
+		Challenge.deleteChallenge(challenge.getInteger("id"));
+		assertNull(Challenge.findFirst("title = ?",title));   
+	}
+
+	/**
+	 * Test method for deleteChallenge.
+	 * In case of the challenge not exist.
+	 */
+	@Test
+	public void deleteChallengeTest1() {
+		try {
+			int id = 5;
+			Challenge.deleteChallenge(id);
+			fail();
+		} catch (IllegalArgumentException ex) {
+			assertEquals(Challenge.CHALLENGE_NOT_EXIST, ex.getMessage());
+		}
+		
+	}
 
 	/**
 	 * Test method for viewUserAssociatedChallange.
