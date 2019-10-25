@@ -55,14 +55,13 @@ public class TestChallenge extends Model {
 
     /**
      * This method is responsible for validating the test challenge.
-     * @param c challenge to validate.
      * @param t test challenge to validate
      * @return True in case the validation passes (the source compiles and
      * the tests run), otherwise, false.
      */
     public static boolean validateTestChallenge(
-        final Challenge c,
         final TestChallenge t) {
+        //Challenge c = Challenge.findFirst("challenge_id = ?", t.getId());
         return true;
     }
 
@@ -99,7 +98,7 @@ public class TestChallenge extends Model {
             t.setChallengeId(c.getInteger("id"));
             t.setTest(test);
             t.saveIt();
-        return (TestChallenge.validateTestChallenge(c, t));
+        return (TestChallenge.validateTestChallenge(t));
     }
 
     /**
@@ -210,7 +209,7 @@ public class TestChallenge extends Model {
         challengeId);
         t.setTest(test);
         t.saveIt();
-        return validateTestChallenge(c, t);
+        return validateTestChallenge(t);
     }
 
     /**
