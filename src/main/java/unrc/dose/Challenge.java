@@ -28,6 +28,12 @@ public class Challenge extends Model {
      * modify a resolved challenge.
      */
     public static final String CHALLENGE_RESOLVED = "The challenge is solved";
+     /**
+     * message that will throw the exception if the challenge
+     * to delete does not exist.
+     */
+    public static final String CHALLENGE_NOT_EXIST =
+    "The challenge is not exist";
 
     /**
      * the class constructor.
@@ -179,9 +185,13 @@ public class Challenge extends Model {
 
     /**
      * This method allows you to delete a challenge created.
-     * @param c challenge to eliminate.
+     * @param id id of tho challenge to eliminate.
      */
-    public static void deleteChallenge(final Challenge c) {
+    public static void deleteChallenge(final int id) {
+        Challenge c = Challenge.findFirst("id = ?", id);
+        if (c == null) {
+            throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
+        }
         c.deleteCascade();
     }
 
