@@ -13,7 +13,8 @@ import org.javalite.activejdbc.Model;
 *  updated_at      :datetime,
 *  average_score   :float,
 *  solved_count    :int(11)
-*
+*  @author Fernandez, Camilo
+*  @author Manzetti, Mariano
 **/
 
 /**
@@ -77,6 +78,12 @@ public class ChallengeStat extends Model {
      *@return the challenge stat created in the database.
      */
     public static ChallengeStat newChallengeStat(final int challengeId) {
+
+        if (ChallengeStat.findFirst("challenge_id = ?", challengeId) != null) {
+            throw new IllegalArgumentException(
+            "The record already exists for the given id challenge");
+        }
+
         ChallengeStat c = ChallengeStat.createIt(
         "challenge_id", challengeId, "average_score", 0.0, "solved_count", 0);
 
@@ -84,13 +91,27 @@ public class ChallengeStat extends Model {
     }
 
     /**
-     * Given a challenge id, returns a single ChallengeStat record from the
-     * data base.
-     * @param challengeId
+     * Given a challenge id, it returns his corresponding ChallengeStat record
+     * from the data base.
+     * @param challengeId The id of the challenge.
      * @return the challenge stat in the database.
      */
     public static ChallengeStat getChallengeStat(final int challengeId) {
         return (ChallengeStat.findFirst("challenge_id = ? ", challengeId));
+    }
+
+    /**
+     * Given a challenge id, it deletes his corresponding ChallengeStat record
+     * from the data base.
+     * @param challengeId The id of the challenge.
+     */
+    public static void delete(final int challengeId) {
+        ChallengeStat cs = ChallengeStat.findFirst(
+        "challenge_id = ? ", challengeId);
+        if (cs == null) {
+            throw new IllegalArgumentException("The record doesn't exists");
+        }
+        cs.delete();
     }
 
     /**
@@ -114,10 +135,6 @@ public class ChallengeStat extends Model {
     public boolean equals(final Object cs) {
         ChallengeStat cs2 = (ChallengeStat) cs;
 
-        return ((this.getInteger("id") == cs2.getInteger("id"))
-        && (this.get("challenge_id") == cs2.get("challenge_id"))
-        && ((float) this.get("average_score") == (float) cs2.get(
-        "average_score")) && (this.get("solved_count") == cs2.get(
-        "solved_count")));
+        return (this.getInteger("id") == cs2.getInteger("id"));
     }
 }

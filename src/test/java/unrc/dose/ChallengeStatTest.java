@@ -3,6 +3,7 @@ package unrc.dose;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
@@ -19,7 +20,7 @@ public class ChallengeStatTest {
     @BeforeClass
 	public static void before(){
         if (!Base.hasConnection()) {
-            Base.open();
+            Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/repair_game_test", "root", "root");
             Base.openTransaction();
         }
     }
@@ -37,7 +38,7 @@ public class ChallengeStatTest {
     */
     @Test
     public void newChallengeStatTest() {
-
+        ChallengeStat.delete(1);
         ChallengeStat.newChallengeStat(1);
         Base.commitTransaction();
         ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
@@ -45,7 +46,6 @@ public class ChallengeStatTest {
         assertEquals(1, c.get("challenge_id"));
         assertEquals((float) 0.0, c.get("average_score"));
         assertEquals(0, c.get("solved_count"));
-        
     }
 
     /**
@@ -74,10 +74,29 @@ public class ChallengeStatTest {
 
         ChallengeStat.updateAverageScore(p.getInteger("id"));
 
-        ChallengeStat cs2 = ChallengeStat.findFirst("challenge_id = ?", challengeId);
+        ChallengeStat cs1 = ChallengeStat.findFirst("challenge_id = ?", challengeId);
 
-        assertEquals((float) 15.0, cs2.get("average_score"));
-        assertEquals(1, cs2.get("solved_count"));
+        assertEquals((float) 15.0, cs1.get("average_score"));
+        assertEquals(1, cs1.get("solved_count"));
+        Challenge.deleteChallenge(testChallenge);
+
+    }
+
+    /**
+     * Test for delete() method.
+     */
+    @Test
+    public void deleteChallengeStatTest() {
+
+        ChallengeStat c = ChallengeStat.newChallengeStat(1);
+
+        assertNotNull(c);
+
+        ChallengeStat.delete(1);
+
+        c = ChallengeStat.getChallengeStat(1);
+
+        assertNull(c);
     }
 
     /**
@@ -85,8 +104,6 @@ public class ChallengeStatTest {
      */
     @Test
     public void getChallengeStatTest() {
-        ChallengeStat.newChallengeStat(1);
-        Base.commitTransaction();
 
         ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
         ChallengeStat result = ChallengeStat.getChallengeStat(1);
@@ -95,5 +112,7 @@ public class ChallengeStatTest {
 
         assertNotNull(c);
         assertTrue(comparison);
+        ChallengeStat.delete(1);
+
     }
 }
