@@ -8,6 +8,7 @@
 *  password        :varchar(20)    not null,
 *  email_address   :varchar(50)    not null,
 *  admin           BOOLEAN not null default 0
+*  active_account  BOOLEAN not null default 1
 *  unique(username),
 *  unique(email_address)
 *
@@ -25,23 +26,23 @@ public class User extends Model {
     /**
     * The value of ID is {@value}.
     */
-    static final String ID = "id";
+    private static final String ID = "id";
     /**
     * The value of USERNAME is {@value}.
     */
-    static final String USERNAME = "username";
+    private static final String USERNAME = "username";
     /**
     * The value of PASSWORD is {@value}.
     */
-    static final String PASSWORD = "password";
+    private static final String PASSWORD = "password";
     /**
     * The value of EMAIL is {@value}.
     */
-    static final String EMAIL = "email_address";
+    private static final String EMAIL = "email_address";
     /**
     * The value of ADMIN is {@value}.
     */
-    static final String ADMIN = "admin";
+    private static final String ADMIN = "admin";
 
     /*
      The value max of password
@@ -56,20 +57,20 @@ public class User extends Model {
     * @param name : username that user wants: String
     * @return value that represents if username already exits: Boolean
     */
-    public static Boolean searchUserByUsername(final String name) {
+    public static Boolean userExistsByUsername(final String name) {
         User user = User.findFirst(USERNAME + " = ?", name);
 
-        return (user == null);
+        return (user != null);
     }
 
     /**
     * @param email : username that user wants: String
     * @return value that represents if username already exits: Boolean
     */
-    public static Boolean searchUserByEmail(final String email) {
+    public static Boolean userExistsByEmail(final String email) {
         User user = User.findFirst(EMAIL + " = ?", email);
 
-        return (user == null);
+        return (user != null);
     }
 
     /**
@@ -96,11 +97,9 @@ public class User extends Model {
 
         return user;
     }
-    
     /**
     * @return id of a user: Integer
     */
-    
     public Integer getId() {
         return this.getInteger(ID);
 
@@ -117,8 +116,8 @@ public class User extends Model {
     /**
     * @return password of the user: String
     */
-    public String getPass() {
-        return this.getString(PASSWORD);
+    public byte[] getPass() {
+        return (byte[]) this.get(PASSWORD);
 
     }
 
@@ -152,6 +151,7 @@ public class User extends Model {
         u.set(EMAIL, email);
         u.set(ADMIN, admin);
     }
+
 
 
 
@@ -217,6 +217,52 @@ public class User extends Model {
 	}
 
 
+
+
+     /**
+     * this method remove logically a user, set the user as inactive.
+     * @param name this username is for delete logically,
+     * his account associate
+     * @param pass this param is used for confirm the operation
+     * @return a boolean with this exit of remove or no remove the user
+     */
+    public static boolean disableUser(final String name,
+        final String pass) {
+        User user = User.findFirst("username = ? ", name);
+        if (user != null) {
+            byte[] passSaved = user.getPass();
+            Password passUser = Password.findFirst("username = ?", name);
+            byte[] salt = (byte[]) passUser.get("salt");
+            user.set("active_account", false);
+            return ((Password.isExpectedPassword(pass.toCharArray(),
+            salt, passSaved)));
+        }
+        return false;
+    }
+
+     /**
+     * this method is for User's credential validation,
+     * given a particular user's credential,
+     * this method will validate if they are valid.
+     * @param name this username is for validate data
+     * @param pass this param is used for finally operation
+     * @return {@code true} iff the user's credential are valid and the
+     * user was successfully logged in
+     */
+    public static boolean validateCredentials(final String name,
+        final String pass) {
+        User user = User.findFirst("username = ? ", name);
+        if (user != null) {
+            byte[] passSaved = user.getPass();
+            Password passUser = Password.findFirst("username = ?", name);
+            byte[] salt = (byte[]) passUser.get("salt");
+
+            return (Password.isExpectedPassword(pass.toCharArray(),
+                salt, passSaved));
+        } else {
+            return false;
+        }
+    }
 
 
 }
