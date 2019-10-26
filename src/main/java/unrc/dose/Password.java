@@ -17,7 +17,6 @@ import javax.crypto.spec.PBEKeySpec;
 * Password class represents the way to keep
 * the safety of the security on the system.
 */
-
 public class Password extends Model {
    /**
   * The value of CHAR_LOWER is {@value}.
