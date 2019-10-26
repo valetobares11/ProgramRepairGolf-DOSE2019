@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-import java.security.SecureRandom;
 import java.util.Random;
 
 
@@ -15,7 +14,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
-* Password class represents the way to keep the safety of the security on the system.
+* Password class represents the way to keep
+* the safety of the security on the system.
 */
 
 public class Password extends Model {
@@ -34,11 +34,12 @@ public class Password extends Model {
    /**
   * The value of PASSWORD_ALLOW_BASE is {@value}.
   */
-  private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER;
-   /**
-  * The value of RAN is {@value}.
+  private static final String PASSWORD_ALLOW_BASE =
+                              CHAR_LOWER + CHAR_UPPER + NUMBER;
+    /**
+  * The value of RANDOM_POS is {@value}.
   */
-  private static SecureRandom RAN = new SecureRandom();
+  private static final SecureRandom RANDOM_POS = new SecureRandom();
   /**
   * The value of RANDOM is {@value}.
   */
@@ -125,9 +126,7 @@ public class Password extends Model {
   }
 
   /**
-   * Generates a random password of a given length, using letters and digits.
-   *
-   * @param length the length of the password
+   * Generates a random password using letters and digits.
    *
    * @return a random password
    */
@@ -136,14 +135,15 @@ public class Password extends Model {
       String password = new String();
       int pos;
 
-      for(int i = 0; i < PASSWORD_LENGTH; i++){
+      for (int i = 0; i < PASSWORD_LENGTH; i++) {
 
-        pos = RAN.nextInt(PASSWORD_ALLOW_BASE.length());
+        pos = RANDOM_POS.nextInt(PASSWORD_ALLOW_BASE.length());
 
-        password = password + PASSWORD_ALLOW_BASE.charAt(pos);  
+        password = password + PASSWORD_ALLOW_BASE.charAt(pos);
       }
 
     return password;
   }
+
 
 }
