@@ -40,11 +40,11 @@ public class App
         }
       });
 
-      get("/hello/:name", (req, res) -> {
+      spark.get("/hello/:name", (req, res) -> {
         return "hello" + req.params(":name");
       });
 
-      get("/users", (req, res) -> {
+      spark.get("/users", (req, res) -> {
         res.type("application/json");
 
         LazyList<User> users = User.findAll();
