@@ -44,12 +44,12 @@ public class User extends Model {
     */
     private static final String ADMIN = "admin";
 
-    /*
-     The value max of password
+    /**
+     The value of MAX_VALUE is {@value}.
     */
     static final Integer MAX_VALUE = 40;
-    /*
-     The value min of password
+    /**
+     The value of MIN_VALUE is {@value}.
     */
     static final Integer MIN_VALUE = 6;
 
@@ -155,16 +155,16 @@ public class User extends Model {
 
 
 
-	/**.
-	 * Method that given un email and new password returns a boolean ,
-	 * if the password has been modified successfully
+    /**.
+     * Method that given un email and new password returns a boolean ,
+     * if the password has been modified successfully
      * @param email : the email of the user who wants to change the password
-	 * @param  pass : the new password
-	 * @return A boolean if the password has been modified successfully
-	 */
-	public static Boolean updatePassword(final String email,
-		final String pass) {
-		User user = User.findFirst("email_address = ?", email);
+     * @param  pass : the new password
+     * @return A boolean if the password has been modified successfully
+     */
+    public static Boolean updatePassword(final String email,
+        final String pass) {
+        User user = User.findFirst("email_address = ?", email);
         if (user != null) {
             String name = user.getName();
             byte[] passSaved = user.getPass();
@@ -172,37 +172,37 @@ public class User extends Model {
             byte[] salt = (byte[]) passUser.get("salt");
 
             if ((Password.isExpectedPassword(pass.toCharArray(),
-				 salt, passSaved)) || (pass.length() < MIN_VALUE
-				|| pass.length() > MAX_VALUE)) {
+                 salt, passSaved)) || (pass.length() < MIN_VALUE
+                || pass.length() > MAX_VALUE)) {
 
-				return false;
-			} else {
-				user.set("password", pass);
-				user.saveIt();
-			return true;
-			}
-		}
-		return false;
-	}
+                return false;
+            } else {
+                user.set("password", pass);
+                user.saveIt();
+            return true;
+            }
+        }
+        return false;
+    }
 
-	/**.
-	 * Method that given un email and new username returns a boolean ,
-	 * if the username  has been modified successfully
+    /**.
+     * Method that given un email and new username returns a boolean ,
+     * if the username  has been modified successfully
      * @param email : the email of the user who wants to change the username
-	 * @param  username : the new username
+     * @param  username : the new username
      * @return A boolean if the username has been modified successfully
-	 */
+     */
 
-	public static Boolean updateUsername(final String email,
-		final String username) {
-		User user = User.findFirst("email_address = ?", email);
-		if (user != null) {
-			user.set("username", username);
-			user.saveIt();
-			return true;
-		}
-		return false;
-	}
+    public static Boolean updateUsername(final String email,
+        final String username) {
+        User user = User.findFirst("email_address = ?", email);
+        if (user != null) {
+            user.set("username", username);
+            user.saveIt();
+            return true;
+        }
+        return false;
+    }
 
 
 
