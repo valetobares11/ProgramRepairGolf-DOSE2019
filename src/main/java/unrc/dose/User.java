@@ -165,12 +165,16 @@ public class User extends Model {
 	public static Boolean updatePassword(final String email,
 		final String pass) {
 		User user = User.findFirst("email_address = ?", email);
-		if (user != null) {
+        if (user != null) {
+            String name = user.getName();
+            byte[] passSaved = user.getPass();
+            Password passUser = Password.findFirst("username = ?", name);
+            byte[] salt = (byte[]) passUser.get("salt");
 
-		String password = user.getString("Password");
-			if (password.equals(pass)
-				|| (pass.length() <= MIN_VALUE
-				|| pass.length() >= MAX_VALUE)) {
+            if ((Password.isExpectedPassword(pass.toCharArray(),
+				 salt, passSaved)) || (pass.length() < MIN_VALUE
+				|| pass.length() > MAX_VALUE)) {
+
 				return false;
 			} else {
 				user.set("password", pass);
@@ -198,22 +202,6 @@ public class User extends Model {
 			return true;
 		}
 		return false;
-	}
-
-
-	/**.
-	 * Method that given un email and  username returns,
-	 * a boolean if the user exists
-     * @param email :  with which you want to search for the user
-	 * @param  username : with which you want to search for the user
-     * @return A boolean if the username has been found
-	 */
-	public static Boolean searchUsernameAndEmail(final String email,
-		final String username) {
-		User user = User.findFirst("email_address = ? and username = ?",
-			email, username);
-
-		return (user == null);
 	}
 
 
