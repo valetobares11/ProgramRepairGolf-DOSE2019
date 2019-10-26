@@ -87,7 +87,7 @@ public class UserTest {
 		Boolean admin = false;
 		User pepe = new User();
 
-		pepe = User.set(name, password, email, admin);	
+		pepe = User.set(name, password, email, admin);
 
 		assertEquals(name , pepe.get("username"));
 	}

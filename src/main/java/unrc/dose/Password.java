@@ -7,7 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.security.SecureRandom;
 import java.util.Random;
+
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -17,7 +19,26 @@ import javax.crypto.spec.PBEKeySpec;
 */
 
 public class Password extends Model {
-
+   /**
+  * The value of CHAR_LOWER is {@value}.
+  */
+  private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+   /**
+  * The value of CHAR_UPPER is {@value}.
+  */
+  private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+   /**
+  * The value of NUMBER is {@value}.
+  */
+  private static final String NUMBER = "0123456789";
+   /**
+  * The value of PASSWORD_ALLOW_BASE is {@value}.
+  */
+  private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER;
+   /**
+  * The value of RAN is {@value}.
+  */
+  private static SecureRandom RAN = new SecureRandom();
   /**
   * The value of RANDOM is {@value}.
   */
@@ -35,21 +56,9 @@ public class Password extends Model {
   */
   private static final int BYTE_LENGTH = 16;
   /**
-  * The value of LIMIT_ONE is {@value}.
+  * The value of PASSWORD_LENGTH is {@value}.
   */
-  private static final int LIMIT_ONE = 62;
-  /**
-  * The value of LIMIT_TWO is {@value}.
-  */
-  private static final int LIMIT_TWO = 9;
-  /**
-  * The value of LIMIT_THREE is {@value}.
-  */
-  private static final int LIMIT_THREE = 10;
-  /**
-  * The value of LIMIT_FOUR is {@value}.
-  */
-  private static final int LIMIT_FOUR = 36;
+  private static final int PASSWORD_LENGTH = 12;
 
   /**
    * Returns a random salt to be used to hash a password.
@@ -122,18 +131,19 @@ public class Password extends Model {
    *
    * @return a random password
    */
-  public static String generateRandomPassword(final int length) {
-    StringBuilder sb = new StringBuilder(length);
-    for (int i = 0; i < length; i++) {
-      int c = RANDOM.nextInt(LIMIT_ONE);
-      if (c <= LIMIT_TWO) {
-        sb.append(String.valueOf(c));
-      } else if (c < LIMIT_FOUR) {
-        sb.append((char) ('a' + c - LIMIT_THREE));
-      } else {
-        sb.append((char) ('A' + c - LIMIT_FOUR));
+  public static String generateRandomPassword() {
+
+      String password = new String();
+      int pos;
+
+      for(int i = 0; i < PASSWORD_LENGTH; i++){
+
+        pos = RAN.nextInt(PASSWORD_ALLOW_BASE.length());
+
+        password = password + PASSWORD_ALLOW_BASE.charAt(pos);  
       }
-    }
-    return sb.toString();
+
+    return password;
   }
+
 }
