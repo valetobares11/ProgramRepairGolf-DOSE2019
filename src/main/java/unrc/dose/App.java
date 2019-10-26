@@ -21,7 +21,7 @@ public class App
       try {
         SparkSwagger
           .of(spark)
-          .endpoints(() -> Arrays.asList(new BellyEndpoint()))
+          .endpoints(() -> Arrays.asList(new CommentEndpoint()))
           .generateDoc();
       }
       catch(IOException e) {

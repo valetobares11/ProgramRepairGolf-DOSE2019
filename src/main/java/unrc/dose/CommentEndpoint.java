@@ -34,16 +34,15 @@ public final class CommentEndpoint implements Endpoint {
               ),
           (q, a) -> LOGGER.info("Logging Received request for Comment Rest API")
       )
-      ////////////////////////////////////
       .get(
           path("/users/:id")
               .withDescription("Will return all comments of user's id")
               .withPathParam()
                   .withName("id")
                   .withDescription("user's id").and()
-              .withResponseType(Gson.class),
+              .withResponseType(String.class),
           (req, res) -> {
-              return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new User()));
+              return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new User()).toArray());
           }
       )
       .get(
@@ -52,9 +51,9 @@ public final class CommentEndpoint implements Endpoint {
              .withPathParam()
                  .withName("id")
                  .withDescription("challenge's id").and()
-             .withResponseType(Gson.class),
+             .withResponseType(String.class),
          (req, res) -> {
-             return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new Challenge()));
+             return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new Challenge()).toArray());
          }
       )
       .get(
@@ -63,9 +62,9 @@ public final class CommentEndpoint implements Endpoint {
              .withPathParam()
                  .withName("id")
                  .withDescription("comment's id").and()
-             .withResponseType(Gson.class),
+             .withResponseType(String.class),
          (req, res) -> {
-             return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new Comment()));
+             return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new Comment()).toArray());
          }
       )
       .post(
@@ -80,7 +79,7 @@ public final class CommentEndpoint implements Endpoint {
                   .withDescription("challenge's id which is commented")
                   .withName("userId")
                   .withDescription(" user's id who commented").and()
-              .withResponseType(Gson.class),
+              .withResponseType(String.class),
           (req, res) -> {
               return new Gson().toJson(
                   commentService.createComment(req.queryParams("title"),
@@ -98,7 +97,7 @@ public final class CommentEndpoint implements Endpoint {
                   .withDescription(" user's id who commented")
                   .withName("commentId")
                   .withDescription("comment's id witch is responsed").and()
-              .withResponseType(Gson.class),
+              .withResponseType(String.class),
           (req, res) -> {
               return new Gson().toJson(
                   commentService.createResponse(req.queryParams(
