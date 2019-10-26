@@ -28,13 +28,13 @@ public class App
         e.printStackTrace();
       }
 
-      before((request, response) -> {
+      spark.before((request, response) -> {
         if (!Base.hasConnection()) {
           Base.open();
         }
       });
 
-      after((request, response) -> {
+      spark.after((request, response) -> {
         if (Base.hasConnection()) {
           Base.close();
         }
