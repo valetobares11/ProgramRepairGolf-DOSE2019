@@ -2,6 +2,9 @@ package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -23,6 +26,18 @@ public class ChallengeStatTest {
             Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/repair_game_test", "root", "root");
             Base.openTransaction();
         }
+
+        User testUser = User.set("testName", "testPass", "testMail", false);
+        int userId = testUser.getInteger("id");
+
+        Challenge testChallenge = Challenge.addChallenge(userId, "testChallenge",
+        "testClass", "testDesc", "testSrc", 20, 1);
+        int challengeId = testChallenge.getInteger("id");
+
+        Proposition.newProposition(userId, challengeId, "testSrc", true, 5, 0);
+        
+        ChallengeStat.newChallengeStat(challengeId);
+
     }
 
     @AfterClass
@@ -38,12 +53,12 @@ public class ChallengeStatTest {
     */
     @Test
     public void newChallengeStatTest() {
-        ChallengeStat.delete(1);
-        ChallengeStat.newChallengeStat(1);
-        Base.commitTransaction();
-        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
 
-        assertEquals(1, c.get("challenge_id"));
+        ChallengeStat.newChallengeStat(15);
+        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 15);
+
+        assertNotNull(c);
+        assertEquals(15, c.get("challenge_id"));
         assertEquals((float) 0.0, c.get("average_score"));
         assertEquals(0, c.get("solved_count"));
     }
@@ -54,22 +69,13 @@ public class ChallengeStatTest {
     @Test
     public void updateAverageScoreTest() {
 
-        User testUser = User.set("testName", "testPass", "testMail", false);
-        int userId = testUser.getInteger("id");
-        testUser.saveIt();
-
-        Challenge testChallenge = Challenge.addChallenge(userId, "testChallenge",
-        "testClass", "testDesc", "testSrc", 20, 1);
+        List<Challenge> challengeList = Challenge.where("title = 'testChallenge'");
+        Challenge testChallenge = challengeList.get(0);
         int challengeId = testChallenge.getInteger("id");
-        testChallenge.saveIt();
-
-        Proposition p = Proposition.newProposition(userId, challengeId);
-        p.setDistance(5);
-        p.saveIt();
-
-        ChallengeStat cs = (ChallengeStat) ChallengeStat.newChallengeStat(challengeId);
-        Float zero = Float.parseFloat("0");
-        assertEquals(zero, cs.getFloat("average_score"));
+        ChallengeStat cs = ChallengeStat.getChallengeStat(challengeId);
+        Proposition p = Proposition.findFirst("challenge_id = ?", challengeId);
+        
+        assertEquals((float) 0, cs.get("average_score"));
         assertEquals((int) 0, cs.get("solved_count"));
 
         ChallengeStat.updateAverageScore(p.getInteger("id"));
@@ -78,7 +84,6 @@ public class ChallengeStatTest {
 
         assertEquals((float) 15.0, cs1.get("average_score"));
         assertEquals(1, cs1.get("solved_count"));
-        Challenge.deleteChallenge(testChallenge);
 
     }
 
@@ -88,13 +93,13 @@ public class ChallengeStatTest {
     @Test
     public void deleteChallengeStatTest() {
 
-        ChallengeStat c = ChallengeStat.newChallengeStat(1);
+        ChallengeStat c = ChallengeStat.newChallengeStat(3);
 
         assertNotNull(c);
 
-        ChallengeStat.delete(1);
+        ChallengeStat.delete(3);
 
-        c = ChallengeStat.getChallengeStat(1);
+        c = ChallengeStat.getChallengeStat(3);
 
         assertNull(c);
     }
@@ -105,14 +110,17 @@ public class ChallengeStatTest {
     @Test
     public void getChallengeStatTest() {
 
-        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", 1);
-        ChallengeStat result = ChallengeStat.getChallengeStat(1);
+        List<Challenge> challengeList = Challenge.where("title = 'testChallenge'");
+        Challenge testChallenge = challengeList.get(0);
+        int challengeId = testChallenge.getInteger("id");
+        
+        ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", challengeId);
+        ChallengeStat result = ChallengeStat.getChallengeStat(challengeId);
 
         boolean comparison = result.equals(c);
 
-        assertNotNull(c);
+        assertNotNull(result);
         assertTrue(comparison);
-        ChallengeStat.delete(1);
 
     }
 }
