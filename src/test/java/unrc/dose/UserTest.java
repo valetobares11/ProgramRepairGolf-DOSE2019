@@ -104,7 +104,7 @@ public class UserTest {
 	public void deleteUserSuccessful(){
 		String username = "Enzo";
 		String password = "Ferrari";
-
+        
 		assertEquals(true, User.disableUser(username, password));
 	}
 
