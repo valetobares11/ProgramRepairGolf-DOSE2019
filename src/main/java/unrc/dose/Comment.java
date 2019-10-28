@@ -24,10 +24,10 @@ public class Comment extends Model {
   *@return the comment created
   **/
   public static Comment createComment(final String title,
-      final String description, 
-      final int challengeId, 
+      final String description,
+      final int challengeId,
       final int userId) {
-    if (description == null || title == null 
+    if (description == null || title == null
         || description == "" || title == "") {
       throw new IllegalArgumentException("Comment and title can't be empty");
     }
@@ -82,7 +82,7 @@ public class Comment extends Model {
   *create a list of comments associated to the id.
   *@param id the object's id
   *@param obj can be a User, Comment or Challenge
-  *@return a list of comments 
+  *@return a list of comments
   */
   public static LazyList<Comment> viewComment(final int id, final Object obj) {
     LazyList<Comment> list = null;
