@@ -184,14 +184,23 @@ public class Challenge extends Model {
     }
 
     /**
+     * 
+     * @param c
+     */
+    public static void validatePresenceChallenge(Challenge c ){
+        if (c==null) {
+            throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
+        }
+    }
+
+    /**
      * This method allows you to delete a challenge created.
+     * 
      * @param id id of tho challenge to eliminate.
      */
     public static void deleteChallenge(final int id) {
         Challenge c = Challenge.findFirst("id = ?", id);
-        if (c == null) {
-            throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
-        }
+        validatePresenceChallenge(c);
         c.deleteCascade();
     }
 
