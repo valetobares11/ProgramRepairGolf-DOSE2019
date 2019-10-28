@@ -72,11 +72,14 @@ public final class CommentEndpoint implements Endpoint {
               .withDescription("Creates a new Comment")
               .withQueryParam()
                   .withName("title")
-                  .withDescription("Comment's title")
+                  .withDescription("Comment's title").and()
+                .withQueryParam()
                   .withName("description")
-                  .withDescription("Comment's body")
+                  .withDescription("Comment's body").and()
+                .withQueryParam()
                   .withName("challengeId")
-                  .withDescription("challenge's id which is commented")
+                  .withDescription("challenge's id which is commented").and()
+                .withQueryParam()
                   .withName("userId")
                   .withDescription(" user's id who commented").and()
               .withResponseType(String.class),
@@ -92,13 +95,17 @@ public final class CommentEndpoint implements Endpoint {
               .withDescription("Creates a new Response")
               .withQueryParam()
                   .withName("description")
-                  .withDescription("Response's body")
+                  .withDescription("Response's body").and()
+              .withQueryParam()
                   .withName("userId")
-                  .withDescription(" user's id who commented")
+                  .withDescription(" user's id who commented").and()
+              .withQueryParam()
                   .withName("commentId")
                   .withDescription("comment's id witch is responsed").and()
               .withResponseType(String.class),
+               "application/json",
           (req, res) -> {
+            System.out.println("hola");
               return new Gson().toJson(
                   commentService.createResponse(req.queryParams(
                     "description"),Integer.parseInt(req.queryParams("userId")),Integer.parseInt(req.queryParams("commentId")))
