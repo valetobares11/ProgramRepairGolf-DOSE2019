@@ -213,4 +213,39 @@ public class TestChallengeTest {
 		assertNull(TestChallenge.findFirst("challenge_id = ?", id));   
 	}
 
+	/**
+	 * Test method for runCompilationTest.
+	 */
+	@Test
+	public void runCompilationTest() {
+		String nameFile = "TestCompilation";
+		String source = "import org.junit.*;\n";
+			   source += "public class "+ nameFile + " {\n";
+			   source += "	@Test\n";
+			   source += "	public void test() {\n";
+		       source += "		Assert.assertTrue(true);\n";
+			   source += "	}\n";
+			   source += "}";
+		Challenge.generateFileJava(nameFile, source);
+		boolean obtained = TestChallenge.runCompilationTestJava(nameFile);
+		assertEquals(true, obtained);
+	}
+
+	/**
+	 * Test method for runCompilationTest.
+	 */
+	/*@Test
+	public void runTestJavaTest() {
+		String nameFile = "RunTestCompilation";
+		String source = "import org.junit.*;\n";
+			   source += "public class "+ nameFile + " {\n";
+			   source += "	@Test\n";
+			   source += "	public void test() {\n";
+			   source += "		Assert.assertTrue(true);\n";
+			   source += "	}\n";
+			   source += "}";
+		Challenge.generateFileJava(nameFile, source);
+		boolean obtained = TestChallenge.runTestJava(nameFile);
+		assertEquals(true, obtained);
+	}*/
 }
