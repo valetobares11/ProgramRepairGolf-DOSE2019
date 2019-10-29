@@ -208,4 +208,18 @@ public class ChallengeTest {
 		}
 	}
 
+	/**
+	 * Test method for validatePresenceChallenge.
+	 */
+	@Test
+	public void validatePresenceChallengeTest() {
+		Challenge c = Challenge.findFirst("id = ?", 1);
+		try{
+			Challenge.validatePresenceChallenge(c);
+			fail();
+		} catch (RuntimeException ex) {
+			assertEquals(Challenge.CHALLENGE_NOT_EXIST, ex.getMessage());
+		}
+	}
+
 }
