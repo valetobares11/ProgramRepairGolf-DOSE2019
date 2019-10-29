@@ -184,8 +184,8 @@ public class Challenge extends Model {
     }
 
     /**
-     * 
-     * @param c
+     * this method verifies if the challenge exists.
+     * @param c challenge to verifies.
      */
     public static void validatePresenceChallenge(Challenge c ){
         if (c==null) {
