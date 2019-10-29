@@ -212,6 +212,28 @@ public class TestChallenge extends Model {
         return validateTestChallenge(t);
     }
 
+     /**
+     * This method to compile test.
+     * @param nameFile name of the file to execute.
+     * @return true if run otherwise false.
+     */
+    public static boolean runCompilationTestJava(final String nameFile) {
+        return Challenge.runProcess(
+            "javac -cp .:target/dependency/junit-4.12.jar /../tmp/"
+            + nameFile + ".java");
+    }
+
+    /**
+     * This method to run a JUnit test.
+     * @param nameFile name of the file to execute.
+     * @return true if run otherwise false.
+     */
+    public static boolean runTestJava(final String nameFile) {
+        return Challenge.runProcess(
+            "java -cp .:target/dependency/junit-4.12.jar" +
+            " org.junit.runner.JUnitCore /../tmp/" + nameFile);
+    }
+
     /**
      * hashCode redefined.
      */
