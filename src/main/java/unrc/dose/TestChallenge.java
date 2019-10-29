@@ -199,6 +199,7 @@ public class TestChallenge extends Model {
         final String test) {
         Challenge.checkUnsolvedChallenge(challengeId);
         Challenge c = Challenge.findFirst("id = ?", challengeId);
+        Challenge.validatePresenceChallenge(c);
         c.setTitle(title);
         c.setClassName(className);
         c.setDescription(description);

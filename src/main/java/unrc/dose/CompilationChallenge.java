@@ -161,6 +161,7 @@ public class CompilationChallenge extends Model {
         final int point) {
         Challenge.checkUnsolvedChallenge(challengeId);
         Challenge c = Challenge.findFirst("id = ?", challengeId);
+        Challenge.validatePresenceChallenge(c);
         c.setTitle(title);
         c.setClassName(className);
         c.setDescription(description);
