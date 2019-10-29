@@ -15,8 +15,10 @@ import spark.Service;
 
 public class App
 {
-    public static void main( String[] args ) {
-      Service spark = Service.ignite().port(55555);
+  public static Service spark = Service.ignite().port(55555);
+  
+  public static void main( String[] args ) {
+      
 
       try {
         SparkSwagger

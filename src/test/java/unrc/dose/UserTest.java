@@ -31,6 +31,45 @@ public class UserTest {
     	Base.close();
     }
     /**
+	 * test that verifies that the password provided is the same as the current password.
+	 * @result false since the password of the previous account cannot be updated with the same password
+	*/
+	@Test
+	public void repeatedPassword() {
+		String email = "F40@gmail.com";
+		String oldPass = "Ferrari";
+		String newPass = "Ferrari";
+
+		assertEquals(false, User.updatePassword(email, oldPass, newPass));
+	}
+	/**
+	 * test that verifies that the password has been modified successfully
+	 * @result false bescause the email is not registered in the DB
+	 */
+	@Test
+	public void updatePasswordUnSuccessfully() {
+		String email = "juanPerez@gmail.com";
+		String oldPass = "Ferrari";
+		String newPass = "NewPass";
+
+		assertEquals(false, User.updatePassword(email, oldPass, newPass));
+	}
+
+
+
+	/**.
+	 * test that verifies that the password could not be modified
+	 * @result true (password reset)
+	*/
+	@Test
+	public void updatePasswordSuccessfully() {
+		String email = "F40@gmail.com";
+		String newPass = "NewPass";
+		String oldPass = "Ferrari";
+
+		assertEquals(true, User.updatePassword(email, oldPass, newPass));
+	}
+    /**
     * found a user by his username succesfully
     * @result user found 
     */
@@ -93,7 +132,7 @@ public class UserTest {
 	public void deleteUserSuccessful(){
 		String username = "Enzo";
 		String password = "Ferrari";
-
+        
 		assertEquals(true, User.disableUser(username, password));
 	}
 
@@ -108,6 +147,46 @@ public class UserTest {
 
 		assertEquals(false, User.disableUser(username, password));
 	}
+	/**.
+	 * test that verifies that not exists an username with east emails
+	 * @result false because no user with east email provided
+	*/
+	@Test
+	public void userNotExists() {
+		String email = "F@gmail.com";
+		String name = "Enzo";
+
+		assertEquals(false, (User.userExistsByUsername(name) && User.userExistsByEmail(email)));
+	}
+
+	/**
+	 * test that verifies that  exists an username with east emails
+	 * @result true because exists an user with east email provided
+	*/
+	@Test
+	public void userExists() {
+		String email = "F40@gmail.com";
+		String name = "Enzo";
+
+		assertEquals(true, (User.userExistsByUsername(name) && User.userExistsByEmail(email)));
+	}
+
+	
+
+	/**
+	 * test that verifies that the password provided doesn't comply with password policies, 
+	 * where the password character range must be greater than 6 and less than 20
+	 * @result false since the password doesn't comply with password policies
+	*/
+	@Test
+	public void invalidPasswordForInvalidPolicies() {
+		String email = "F40@gmail.com";
+		String oldPass = "Ferrari";
+		String newPass = "1234";
+
+		assertEquals(false, User.updatePassword(email, oldPass, newPass));
+	}
+
 
 	/**
 	 * Unsuccessfully validate Credentials the user

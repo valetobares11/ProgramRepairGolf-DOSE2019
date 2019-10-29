@@ -45,6 +45,15 @@ public class User extends Model {
     private static final String ADMIN = "admin";
 
     /**
+     The value of MAX_VALUE is {@value}.
+    */
+    static final Integer MAX_VALUE = 20;
+    /**
+     The value of MIN_VALUE is {@value}.
+    */
+    static final Integer MIN_VALUE = 6;
+
+    /**
     * @param name : username that user wants: String
     * @return value that represents if username already exits: Boolean
     */
@@ -143,6 +152,77 @@ public class User extends Model {
         u.set(ADMIN, admin);
     }
 
+
+
+
+    /**.
+     * Method that given un email and new password returns a boolean ,
+     * if the password has been modified successfully
+     * @param email : the email of the user who wants to change the password
+     * @param  pass : the new password
+     * @return A boolean if the password has been modified successfully
+     */
+    public static Boolean updatePassword(final String email,
+        final String oldPass, final String newPass) {
+        User user = User.findFirst("email_address = ?", email);
+        if (user != null) {
+            String name = user.getName();
+            
+            if(User.validateCredentials(name,oldPass)){
+                byte[] passSaved = user.getPass();
+                Password passUser = Password.findFirst("username = ?", name);
+                byte[] salt = (byte[]) passUser.get("salt");
+                if ( Password.isExpectedPassword(newPass.toCharArray(),
+                     salt, passSaved) || newPass.length() <= MIN_VALUE
+                    || newPass.length() > MAX_VALUE) {
+
+                    return false;
+                } else {
+                    byte[] passw = Password.hash(newPass.toCharArray(), salt);
+                    user.set("password", passw);
+                    user.saveIt();
+                return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /*
+    * Documentacion en javadoc
+    */
+    public static Boolean resetPassword(final String name) {
+      User user = User.findFirst("username = ? ", name);
+      if (user != null) {
+        String newpas = Password.generateRandomPassword();
+            return true;
+        } else {
+            return false;
+        } 
+    }
+
+    /**.
+     * Method that given un email and new username returns a boolean ,
+     * if the username  has been modified successfully
+     * @param email : the email of the user who wants to change the username
+     * @param  username : the new username
+     * @return A boolean if the username has been modified successfully
+     */
+
+    public static Boolean updateUsername(final String email,
+        final String username) {
+        User user = User.findFirst("email_address = ?", email);
+        if (user != null) {
+            user.set("username", username);
+            user.saveIt();
+            return true;
+        }
+        return false;
+    }
+
+
+
+
      /**
      * this method remove logically a user, set the user as inactive.
      * @param name this username is for delete logically,
@@ -187,5 +267,6 @@ public class User extends Model {
             return false;
         }
     }
+
 
 }
