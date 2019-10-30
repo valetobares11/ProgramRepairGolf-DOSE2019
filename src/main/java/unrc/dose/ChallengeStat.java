@@ -47,7 +47,6 @@ public class ChallengeStat extends Model {
      */
     public static void updateAverageScore(final int propositionId) {
         //getting the info about the proposition
-
         Proposition solution = Proposition.findById(propositionId);
         int distance = solution.getInteger("distance");
         int challengeId = solution.getInteger("challenge_id");
@@ -112,6 +111,10 @@ public class ChallengeStat extends Model {
             throw new IllegalArgumentException("The record doesn't exists");
         }
         cs.delete();
+    }
+
+    public Float getAverageScore() {
+        return this.getFloat("average_score");
     }
 
     /**
