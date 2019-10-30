@@ -187,15 +187,14 @@ public class Challenge extends Model {
      * this method verifies if the challenge exists.
      * @param c challenge to verifies.
      */
-    public static void validatePresenceChallenge(Challenge c ){
-        if (c==null) {
+    public static void validatePresenceChallenge(final Challenge c) {
+        if (c == null) {
             throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
         }
     }
 
     /**
      * This method allows you to delete a challenge created.
-     * 
      * @param id id of tho challenge to eliminate.
      */
     public static void deleteChallenge(final int id) {

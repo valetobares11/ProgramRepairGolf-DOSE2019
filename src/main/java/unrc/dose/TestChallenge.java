@@ -61,8 +61,16 @@ public class TestChallenge extends Model {
      */
     public static boolean validateTestChallenge(
         final TestChallenge t) {
-        //Challenge c = Challenge.findFirst("challenge_id = ?", t.getId());
-        return true;
+        Challenge c = Challenge.findFirst("id = ?", t.getChallengeId());
+        String className = c.getClassName();
+        String source = c.getSource();
+        String test = t.getTest();
+        String classNameTest = className + "Test";
+        Challenge.generateFileJava(className, source);
+        Challenge.generateFileJava(classNameTest, test);
+        return Challenge.runCompilation(className)
+               && TestChallenge.runCompilationTestJava(className)
+               && TestChallenge.runTestJava(className);
     }
 
     /**
@@ -231,8 +239,9 @@ public class TestChallenge extends Model {
      */
     public static boolean runTestJava(final String nameFile) {
         return Challenge.runProcess(
-            "java -cp .:/tmp:target/dependency/junit-4.12.jar:target/dependency/" +
-            "hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore " + nameFile);
+            "java -cp .:/tmp:target/dependency/junit-4.12.jar:target"
+            + "/dependency/hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore "
+            + nameFile);
     }
 
     /**
