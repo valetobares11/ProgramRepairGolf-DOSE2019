@@ -47,7 +47,6 @@ public class ChallengeStat extends Model {
      */
     public static void updateAverageScore(final int propositionId) {
         //getting the info about the proposition
-
         Proposition solution = Proposition.findById(propositionId);
         int distance = solution.getInteger("distance");
         int challengeId = solution.getInteger("challenge_id");
