@@ -189,6 +189,15 @@ public class Proposition extends Model {
     }
 
     /**
+     * This method search one proposition for id.
+     * @param idProp represent the id from proposition
+     * @return one Proposition with id = idProp
+     */
+    public static Proposition searchByIdProposition(int idProp) {
+        return (Proposition.findById(idProp));
+    }
+
+    /**
      * Get the solutions for a challenge by a specific user..
      * @param userId reference the id of a user
      * @param challengeId reference the id of a challenge
@@ -461,8 +470,8 @@ public class Proposition extends Model {
     * This method passes the parameters of a proposition in a map 
     * @return the params of proposition
     */
-    public Map getMapProposition() {
-        Map m = new HashMap();
+    public Map<String, Object> getMapProposition() {
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("propo_id", this.getId());
         m.put("user_Id", this.getUserId());
         m.put("challenge_id", this.getChallengeId());
