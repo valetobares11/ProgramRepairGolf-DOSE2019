@@ -93,13 +93,13 @@ public class ChallengeStatTest {
     @Test
     public void deleteChallengeStatTest() {
 
-        ChallengeStat c = ChallengeStat.newChallengeStat(3);
+        ChallengeStat c = ChallengeStat.newChallengeStat(16);
 
         assertNotNull(c);
 
-        ChallengeStat.delete(3);
+        ChallengeStat.delete(16);
 
-        c = ChallengeStat.getChallengeStat(3);
+        c = ChallengeStat.getChallengeStat(16);
 
         assertNull(c);
     }
