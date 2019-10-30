@@ -22,7 +22,8 @@ public final class CommentEndpoint implements Endpoint {
   private static final String NAME_SPACE = "/comments";
 
   /** service used to manipulate in memory the bellies. */
-  private static Comment commentService = new Comment();
+//  private static Comment commentService = new Comment();
+  private static CommentService commentService = new CommentService();
 
   @Override
   public void bind(final SparkSwagger restApi) {
@@ -42,7 +43,7 @@ public final class CommentEndpoint implements Endpoint {
                   .withDescription("user's id").and()
               .withResponseType(String.class),
           (req, res) -> {
-              return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new User()).toArray());
+              return commentService.view(Integer.parseInt(req.params(":id")), new User());
           }
       )
       .get(
@@ -53,18 +54,18 @@ public final class CommentEndpoint implements Endpoint {
                  .withDescription("challenge's id").and()
              .withResponseType(String.class),
          (req, res) -> {
-             return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new Challenge()).toArray());
+             return commentService.view(Integer.parseInt(req.params(":id")), new Challenge());
          }
       )
       .get(
-         path("/reponses/:id")
+         path("/responses/:id")
              .withDescription("Will return all responses of comment's id")
              .withPathParam()
                  .withName("id")
                  .withDescription("comment's id").and()
              .withResponseType(String.class),
          (req, res) -> {
-             return new Gson().toJson(commentService.viewComment(Integer.parseInt(req.params(":id")), new Comment()).toArray());
+             return commentService.view(Integer.parseInt(req.params(":id")), new Comment());
          }
       )
       .post(
@@ -84,10 +85,9 @@ public final class CommentEndpoint implements Endpoint {
                   .withDescription(" user's id who commented").and()
               .withResponseType(String.class),
           (req, res) -> {
-              return new Gson().toJson(
-                  commentService.createComment(req.queryParams("title"),
-                    req.queryParams("description"),Integer.parseInt(req.queryParams("challengeId")),Integer.parseInt(req.queryParams("userId")))
-              );
+              return commentService.comment(req.queryParams("title"),
+                     req.queryParams("description"),Integer.parseInt(req.queryParams("challengeId")),Integer.parseInt(req.queryParams("userId")));
+
           }
       )
       .post(
@@ -105,11 +105,8 @@ public final class CommentEndpoint implements Endpoint {
               .withResponseType(String.class),
                "application/json",
           (req, res) -> {
-            System.out.println("hola");
-              return new Gson().toJson(
-                  commentService.createResponse(req.queryParams(
-                    "description"),Integer.parseInt(req.queryParams("userId")),Integer.parseInt(req.queryParams("commentId")))
-              );
+              return commentService.response(req.queryParams(
+                    "description"),Integer.parseInt(req.queryParams("userId")),Integer.parseInt(req.queryParams("commentId")));
           }
       );
   }
