@@ -114,6 +114,10 @@ public class ChallengeStat extends Model {
         cs.delete();
     }
 
+    public Float getAverageScore() {
+        return this.getFloat("average_score");
+    }
+
     /**
      * hashCode redefined.
      */
