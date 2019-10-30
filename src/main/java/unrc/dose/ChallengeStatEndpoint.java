@@ -64,16 +64,14 @@ public final class ChallengeStatEndpoint implements Endpoint {
         .post(
             path("/get/:challengeId")
                 .withDescription("Will fetch challenge stat data")
-                .withResponseType(String.class),
+                .withResponseType(ChallengeStat.class),
             (req, res) -> {
-                String result = "";
                 int challengeId = Integer.parseInt(req.params(":challengeId"));
 
                 ChallengeStat cs = ChallengeStat.getChallengeStat(challengeId);
                 //convertir cs a json y guardar en result
-                result = "Average score sucessfully updated!";
-
-                return result;
+                
+                return cs;
             }
         );
     }
