@@ -231,8 +231,8 @@ public class TestChallenge extends Model {
      */
     public static boolean runTestJava(final String nameFile) {
         return Challenge.runProcess(
-            "java -cp .:target/dependency/junit-4.12.jar" +
-            " org.junit.runner.JUnitCore /../tmp/" + nameFile);
+            "java -cp .:/tmp:target/dependency/junit-4.12.jar:target/dependency/" +
+            "hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore " + nameFile);
     }
 
     /**
