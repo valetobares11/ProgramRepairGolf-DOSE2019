@@ -47,7 +47,7 @@ public class User extends Model {
     /**
      The value of MAX_VALUE is {@value}.
     */
-    static final Integer MAX_VALUE = 40;
+    static final Integer MAX_VALUE = 20;
     /**
      The value of MIN_VALUE is {@value}.
     */
@@ -163,26 +163,42 @@ public class User extends Model {
      * @return A boolean if the password has been modified successfully
      */
     public static Boolean updatePassword(final String email,
-        final String pass) {
+        final String oldPass, final String newPass) {
         User user = User.findFirst("email_address = ?", email);
         if (user != null) {
             String name = user.getName();
-            byte[] passSaved = user.getPass();
-            Password passUser = Password.findFirst("username = ?", name);
-            byte[] salt = (byte[]) passUser.get("salt");
+            
+            if(User.validateCredentials(name,oldPass)){
+                byte[] passSaved = user.getPass();
+                Password passUser = Password.findFirst("username = ?", name);
+                byte[] salt = (byte[]) passUser.get("salt");
+                if ( Password.isExpectedPassword(newPass.toCharArray(),
+                     salt, passSaved) || newPass.length() <= MIN_VALUE
+                    || newPass.length() > MAX_VALUE) {
 
-            if ((Password.isExpectedPassword(pass.toCharArray(),
-                 salt, passSaved)) || (pass.length() < MIN_VALUE
-                || pass.length() > MAX_VALUE)) {
-
-                return false;
-            } else {
-                user.set("password", pass);
-                user.saveIt();
-            return true;
+                    return false;
+                } else {
+                    byte[] passw = Password.hash(newPass.toCharArray(), salt);
+                    user.set("password", passw);
+                    user.saveIt();
+                return true;
+                }
             }
         }
         return false;
+    }
+
+    /*
+    * Documentacion en javadoc
+    */
+    public static Boolean resetPassword(final String name) {
+      User user = User.findFirst("username = ? ", name);
+      if (user != null) {
+        String newpas = Password.generateRandomPassword();
+            return true;
+        } else {
+            return false;
+        } 
     }
 
     /**.

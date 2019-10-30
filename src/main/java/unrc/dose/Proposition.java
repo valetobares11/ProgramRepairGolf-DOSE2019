@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
+import java.util.*;
+
 /**
  * == Schema Info.
  *
@@ -156,6 +158,35 @@ public class Proposition extends Model {
         newProposition.saveIt();
         return newProposition;
     }
+    
+    /**
+     * Method for creates new proposition in the database.
+     * @param userId represent the id from user    
+     * @param challengeId represent the id from challenge
+     * @param source represent the code fron the new proposition
+     * @param solution represent if one proposition is solution or not
+     * @param distance represent the distance from the new proposition
+     * @param cantTest represent the quantity of test passed
+     * @return the new proposition created
+     */
+    public static Proposition newProposition(
+        final int userId,
+        final int challengeId,
+        final String source,
+        final boolean solution,
+        final int distance,
+        final int cantTest) {
+            
+        Proposition newProp = new Proposition();
+        newProp.setUserId(userId);
+        newProp.setChallengeId(challengeId);
+        newProp.setSource(source);
+        newProp.setIsSolution(solution);
+        newProp.setDistance(distance);
+        newProp.setCantTestPassed(cantTest);
+        newProp.saveIt();
+        return newProp;
+    }
 
     /**
      * Get the solutions for a challenge by a specific user..
@@ -292,11 +323,13 @@ public class Proposition extends Model {
     /**
      * Generate a .java file with the code of a challenge.
      * @param source text with code java
+     * @param className tetx with name of archive
      */
-    public static void generateFileJava(final String source) {
+    public static void generateFileJava(
+            final String source, final String className) {
 
         File f;
-        f = new File("Source.java");
+        f = new File(className + ".java");
 
         try
         {
@@ -358,14 +391,17 @@ public class Proposition extends Model {
     /**
      * Compile a proposal.
      * @param proposedCode represents the code for the possible solution.
+     * @param proposedClassName class name to compile
      * @return True if compiled, false otherwise
      */
-    public boolean compileProposition(final String proposedCode) {
+    public boolean compileProposition(
+            final String proposedCode,
+            final String proposedClassName) {
         this.setSource(proposedCode);
         this.saveIt();
-        generateFileJava(this.getSource());
+        generateFileJava(proposedCode, proposedClassName);
         try {
-            int k = compilar("Source.java");
+            int k = compilar(proposedClassName + ".java");
             if (k == 0) {
                 return true;
             }
@@ -381,10 +417,13 @@ public class Proposition extends Model {
      * change distance and isSolution 1.
      * @param proposedCode represents the possible
      * solution provided by a user
+     * @param proposedClassName class name to compile
      * @return false if the source not compile, true otherwise.
      */
-    public boolean submitProposition(final String proposedCode) {
-        if (!(this.compileProposition(proposedCode))) {
+    public boolean submitProposition(
+            final String proposedCode,
+            final String proposedClassName) {
+        if (!(this.compileProposition(proposedCode, proposedClassName))) {
             return false;
         }
         Integer newDistance = getDistanceProposition(this);
@@ -417,5 +456,22 @@ public class Proposition extends Model {
         }
         return result;
     }
-
+    
+    /**
+    * This method passes the parameters of a proposition in a map 
+    * @return the params of proposition
+    */
+    public Map getMapProposition() {
+        Map m = new HashMap();
+        m.put("propo_id", this.getId());
+        m.put("user_Id", this.getUserId());
+        m.put("challenge_id", this.getChallengeId());
+        m.put("source_id", this.getSource());
+        m.put("isSolution", this.getIsSolution());
+        m.put("distance", this.getDistance());
+        m.put("cantTestPassed", this.getCantTestPassed());
+        return m;
+    }
+    
+    
 }

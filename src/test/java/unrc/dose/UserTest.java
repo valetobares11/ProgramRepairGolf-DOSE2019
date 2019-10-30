@@ -37,9 +37,37 @@ public class UserTest {
 	@Test
 	public void repeatedPassword() {
 		String email = "F40@gmail.com";
+		String oldPass = "Ferrari";
 		String newPass = "Ferrari";
 
-		assertEquals(false, User.updatePassword(email, newPass));
+		assertEquals(false, User.updatePassword(email, oldPass, newPass));
+	}
+	/**
+	 * test that verifies that the password has been modified successfully
+	 * @result false bescause the email is not registered in the DB
+	 */
+	@Test
+	public void updatePasswordUnSuccessfully() {
+		String email = "juanPerez@gmail.com";
+		String oldPass = "Ferrari";
+		String newPass = "NewPass";
+
+		assertEquals(false, User.updatePassword(email, oldPass, newPass));
+	}
+
+
+
+	/**.
+	 * test that verifies that the password could not be modified
+	 * @result true (password reset)
+	*/
+	@Test
+	public void updatePasswordSuccessfully() {
+		String email = "F40@gmail.com";
+		String newPass = "NewPass";
+		String oldPass = "Ferrari";
+
+		assertEquals(true, User.updatePassword(email, oldPass, newPass));
 	}
     /**
     * found a user by his username succesfully
@@ -119,32 +147,6 @@ public class UserTest {
 
 		assertEquals(false, User.disableUser(username, password));
 	}
-	/**
-	 * test that verifies that the password has been modified successfully
-	 * @result false bescause the email is not registered in the DB
-	 */
-	@Test
-	public void updatePasswordUnSuccessfully() {
-		String email = "juanPerez@gmail.com";
-		String pass = "NewPass";
-
-		assertEquals(false, User.updatePassword(email, pass));
-	}
-
-
-
-	/**.
-	 * test that verifies that the password could not be modified
-	 * @result true (password reset)
-	*/
-	@Test
-	public void updatePasswordSuccessfully() {
-		String email = "F40@gmail.com";
-		String pass = "NewPass";
-
-		assertEquals(true, User.updatePassword(email, pass));
-	}
-	
 	/**.
 	 * test that verifies that not exists an username with east emails
 	 * @result false because no user with east email provided
@@ -179,9 +181,10 @@ public class UserTest {
 	@Test
 	public void invalidPasswordForInvalidPolicies() {
 		String email = "F40@gmail.com";
+		String oldPass = "Ferrari";
 		String newPass = "1234";
 
-		assertEquals(false, User.updatePassword(email, newPass));
+		assertEquals(false, User.updatePassword(email, oldPass, newPass));
 	}
 
 
