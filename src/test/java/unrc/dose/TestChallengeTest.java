@@ -234,7 +234,7 @@ public class TestChallengeTest {
 	/**
 	 * Test method for runCompilationTest.
 	 */
-	/*@Test
+	@Test
 	public void runTestJavaTest() {
 		String nameFile = "RunTestCompilation";
 		String source = "import org.junit.*;\n";
@@ -245,7 +245,8 @@ public class TestChallengeTest {
 			   source += "	}\n";
 			   source += "}";
 		Challenge.generateFileJava(nameFile, source);
+		TestChallenge.runCompilationTestJava(nameFile);
 		boolean obtained = TestChallenge.runTestJava(nameFile);
 		assertEquals(true, obtained);
-	}*/
+	}
 }
