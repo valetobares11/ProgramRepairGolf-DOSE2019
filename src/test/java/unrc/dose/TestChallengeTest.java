@@ -11,6 +11,8 @@ import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to test the TestChallenge class methods.
@@ -19,11 +21,13 @@ import org.junit.Test;
  */
 public class TestChallengeTest {
 
+	private static final Logger log = LoggerFactory.getLogger(TestChallengeTest.class);
+
 	@BeforeClass
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			System.out.println("TestChallengeTest setup");
+			log.info("TestChallengeTest setup");
 			Base.openTransaction();
 		}
 
@@ -58,7 +62,7 @@ public class TestChallengeTest {
 	@AfterClass
 	public static void after(){
 		if (Base.hasConnection()) {
-			System.out.println("TestChallengeTest tearDown");
+			log.info("TestChallengeTest tearDown");
 			Base.rollbackTransaction();
 			Base.close();
 		}  

@@ -11,6 +11,8 @@ import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to test the CompilationChallenge class methods.
@@ -19,11 +21,13 @@ import org.junit.Test;
  */
 public class CompilationChallengeTest {
 
+	private static final Logger log = LoggerFactory.getLogger(TestChallengeTest.class);
+
 	@BeforeClass
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			System.out.println("CompilationChallengeTest setup");
+			log.info("CompilationChallengeTest setup");
 			Base.openTransaction();
 		}
 		
@@ -59,7 +63,7 @@ public class CompilationChallengeTest {
 	public static void after(){
 		if (Base.hasConnection()) {
 			Base.rollbackTransaction();
-			System.out.println("Compilation ChallengeTest tearDown");
+			log.info("Compilation ChallengeTest tearDown");
 			Base.close();
 		}  
 	}
