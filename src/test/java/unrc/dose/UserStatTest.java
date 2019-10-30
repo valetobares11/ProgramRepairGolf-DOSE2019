@@ -25,6 +25,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 	@Before
 	public void before() {
 		log.info("UserStatTest SetUp");
+		User.deleteAll();
 		User u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);
 		u.saveIt();
 		User u2 = User.set("Themosque", "NotJohnConnor", "LaMosquita@gmail.com", false);
