@@ -43,7 +43,6 @@ public class User extends Model {
     * The value of ADMIN is {@value}.
     */
     private static final String ADMIN = "admin";
-
     /**
      The value of MAX_VALUE is {@value}.
     */
@@ -94,6 +93,8 @@ public class User extends Model {
         user.load(user, name, passw, email, admin);
         user.saveIt();
         p.saveIt();
+
+        UserStat.createUserStat(user.getId());
 
         return user;
     }
