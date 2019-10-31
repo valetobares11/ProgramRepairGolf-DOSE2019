@@ -107,4 +107,9 @@ public class Comment extends Model {
     return (this.getId().equals(((Comment) aux).getId()));
   }
 
+  public String toString(){
+    return "[id: "+this.getId()+", title: "+this.getString("title")+"description: "+this.getString("description")+"user_id: "+this.getInteger("user_id")
+    +"comment_id: "+this.getInteger("comment_id")+"challenge_id: "+this.getInteger("challenge_id")+"father_id:"+this.getInteger("comment_id")+"]";
+  }
+
 }
