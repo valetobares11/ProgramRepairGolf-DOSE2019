@@ -69,8 +69,8 @@ public class TestChallenge extends Model {
         Challenge.generateFileJava(className, source);
         Challenge.generateFileJava(classNameTest, test);
         return Challenge.runCompilation(className)
-               && TestChallenge.runCompilationTestJava(className)
-               && TestChallenge.runTestJava(className);
+               && TestChallenge.runCompilationTestJava(classNameTest)
+               && TestChallenge.runTestJava(classNameTest);
     }
 
     /**

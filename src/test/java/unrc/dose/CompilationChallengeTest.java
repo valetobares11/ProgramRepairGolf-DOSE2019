@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CompilationChallengeTest {
 
-	private static final Logger log = LoggerFactory.getLogger(TestChallengeTest.class);
+	private static final Logger log = LoggerFactory.getLogger(CompilationChallengeTest.class);
 
 	@BeforeClass
 	public static void before(){

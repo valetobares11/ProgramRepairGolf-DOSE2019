@@ -21,13 +21,13 @@ import org.slf4j.LoggerFactory;
  */
 public class ChallengeTest {
 
-	private static final Logger log = LoggerFactory.getLogger(TestChallengeTest.class);
+	private static final Logger log = LoggerFactory.getLogger(ChallengeTest.class);
 
 	@BeforeClass
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			log.info("CompilationChallengeTest setup");
+			log.info("ChallengeTest setup");
 			Base.openTransaction();
 		}
 		
