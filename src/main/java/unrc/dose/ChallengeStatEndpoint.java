@@ -27,10 +27,14 @@ public final class ChallengeStatEndpoint implements Endpoint {
                 .withDescription(""),
             (q, a) -> LOGGER.info("Logging Received request for Belly Rest API")
         )
-        ///:challengeid param
+
         .post(
             path("/new/:challengeId")
-                .withDescription("Will create the corresponding challenge stats")
+                .withDescription("It will create the corresponding challenge stats")
+                .withPathParam()
+                    .withName("challengeId")
+                    .withDescription("The challenge id to create its corresponding stats table")
+                    .withObject(String.class).and()
                 .withResponseType(String.class),
             (req, res) -> {
                 String result = "";
@@ -42,13 +46,17 @@ public final class ChallengeStatEndpoint implements Endpoint {
                     result = "Something went wrong";
                 }
 
-                return result;//gson.toJson(ChallengeStat.getChallengeStat(1));
+                return result;
             }
         )
 
-        .post(
+        .put(
             path("/updateAverageScore/:propositionId")
-                .withDescription("Will update challenge stats")
+                .withDescription("It will update the average score of a challenge stats")
+                .withPathParam()
+                    .withName("propositionId")
+                    .withDescription("The proposition id to update the corresponding challenge stats")
+                    .withObject(String.class).and()
                 .withResponseType(String.class),
             (req, res) -> {
                 String result = "";
@@ -61,17 +69,21 @@ public final class ChallengeStatEndpoint implements Endpoint {
                 return result;
             }
         )
+
         .post(
             path("/get/:challengeId")
                 .withDescription("Will fetch challenge stat data")
-                .withResponseType(ChallengeStat.class),
+                .withPathParam()
+                    .withName("challengeId")
+                    .withDescription("The challenge id to get its corresponding stats")
+                    .withObject(String.class).and()
+                .withResponseType(String.class),
             (req, res) -> {
                 int challengeId = Integer.parseInt(req.params(":challengeId"));
 
                 ChallengeStat cs = ChallengeStat.getChallengeStat(challengeId);
-                //convertir cs a json y guardar en result
-                
-                return cs;
+
+                return cs.toJson(true, "id", "challenge_id", "solved_count", "average_score");
             }
         );
     }
