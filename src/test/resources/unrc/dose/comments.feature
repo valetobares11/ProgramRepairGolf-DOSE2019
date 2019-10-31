@@ -7,7 +7,7 @@ Feature: comments
 
       Scenario: User wants to create a new response to a commment
         Given the user "Pablo" is already logged on
-        And the comment with id 1 already exists
+        And the comment exists
         When the user writes the title "titleEx" of the response and the description "descriptionEx"
         Then the system will save the response
 
@@ -19,12 +19,12 @@ Feature: comments
 
       Scenario: User wants to see the comments of a challenge
         Given the user "Pablo" is already logged on
-        And the challenge with id 1 exists
+        And the challenge exists
         When the user wants to see the comments
         Then the system will return a list of comments of the challenge
 
       Scenario: User wants to see the response of a comment
         Given the user "Pablo" is already logged on
-        And the comment with id 1 exists
+        And the comment exists
         When the user wants to see the responses of that comment
         Then the system will return a list of responses to the comment
