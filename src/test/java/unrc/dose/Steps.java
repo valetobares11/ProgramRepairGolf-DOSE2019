@@ -35,15 +35,9 @@ public class Steps extends StepUtils {
       if(!Base.hasConnection()) {
           Base.open();
       }
-  }
-  /**
-   * Opens a transaction
-   * before each test
-   */
-  @Before
-  public void setUp() {
       Base.openTransaction();
   }
+
   
   /**
    * Rollback a transaction
@@ -122,7 +116,6 @@ public class Steps extends StepUtils {
       assertEquals(res.get(UserStat.CURRENTPOINTS),us.getCurrentPoints());
   }
       
-  
   @Given("^he wants to select the type of level education for play$")
   public void he_wants_to_select_the_type_of_level_education_for_play() throws Exception {
     // Write code here that turns the phrase above into concrete actions
