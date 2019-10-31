@@ -56,6 +56,16 @@ public class Tuple<A, B> {
 	}
 
 	/**
+	 * toString() redefined.
+	 * @return show tuple.
+	 */
+	@Override
+	public String toString() {
+		return "{" + this.getFirst().toString() + ", " +
+		this.getSecond().toString() + "}";
+	}
+
+	/**
 	 * equals() redefined.
 	 * @param obj tuple to compare.
 	 * @return true if two tuples are equal.
