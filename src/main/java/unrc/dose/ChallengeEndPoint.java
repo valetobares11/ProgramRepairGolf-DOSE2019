@@ -56,6 +56,7 @@ public final class ChallengeEndPoint implements Endpoint {
                 .withResponseType(String.class),
             (req, res) -> {
                 Challenge c = Challenge.findFirst("id = ?", req.params("id"));
+                Challenge.validatePresenceChallenge(c);
                 return c.toJson(true, "id", "user_id", "title",
                 "class_name", "description", "source", "point",
                 "owner_solution_id");

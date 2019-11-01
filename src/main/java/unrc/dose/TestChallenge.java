@@ -19,6 +19,13 @@ import org.javalite.activejdbc.Model;
 public class TestChallenge extends Model {
 
     /**
+     * message that will throw the exception if the challenge
+     * to delete does not exist.
+     */
+    public static final String CHALLENGE_NOT_EXIST =
+    "The test challenge is not exist";
+
+    /**
      * the class constructor.
      */
     public TestChallenge() { }
@@ -246,6 +253,16 @@ public class TestChallenge extends Model {
             "java -cp .:/tmp:target/dependency/junit-4.12.jar:target"
             + "/dependency/hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore "
             + nameFile);
+    }
+
+    /**
+     * this method verifies if the challenge exists.
+     * @param t test challenge to verifies.
+     */
+    public static void validatePresenceTestChallenge(final TestChallenge t) {
+        if (t == null) {
+            throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
+        }
     }
 
     /**

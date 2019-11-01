@@ -117,6 +117,20 @@ public final class TestChallengeEndPoint implements Endpoint {
             }
         )
         .get(
+            path("/challenge/:id")
+                .withDescription("Return a test challenge")
+                .withPathParam()
+                    .withName("id")
+                    .withDescription("id challenge").and()
+                .withResponseType(String.class),
+            (req, res) -> {
+                TestChallenge t =
+                TestChallenge.findFirst("challenge_id = ?", req.params("id"));
+                TestChallenge.validatePresenceTestChallenge(t);
+                return t.toJson(true, "id", "challenge_id", "test");
+            }
+        )
+        .get(
             path("/all")
                 .withDescription("Will return all test challenge")
                 .withResponseType(String.class),
