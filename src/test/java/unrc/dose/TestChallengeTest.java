@@ -2,7 +2,7 @@ package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.util.List;
@@ -117,7 +117,7 @@ public class TestChallengeTest {
 		String test = "this is a challenge test";
 		boolean validation = TestChallenge.addTestChallenge(userId,title,nameClass,description,
 		source,point,ownerSolutionId,test);
-		assertEquals(true,validation);
+		assertFalse(validation);
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class TestChallengeTest {
 		boolean obtained = TestChallenge.modifyUnsolvedTestChallenge(
 			c.getInteger("id"), title, className, description,
 			source, point, test);
-		assertTrue(obtained);
+		assertFalse(obtained);
 	}
 
 	/**
@@ -263,8 +263,9 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void validatePresenceTestChallengeTest() {
+		TestChallenge t = TestChallenge.findFirst("challenge_id = ?", 1);
 		try {
-			TestChallenge.validateTestChallenge(null);
+			TestChallenge.validatePresenceTestChallenge(t);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertEquals(TestChallenge.CHALLENGE_NOT_EXIST, ex.getMessage());

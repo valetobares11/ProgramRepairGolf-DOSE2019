@@ -221,7 +221,7 @@ public class ChallengeTest {
 		try{
 			Challenge.validatePresenceChallenge(c);
 			fail();
-		} catch (RuntimeException ex) {
+		} catch (IllegalArgumentException ex) {
 			assertEquals(Challenge.CHALLENGE_NOT_EXIST, ex.getMessage());
 		}
 	}
