@@ -1,7 +1,9 @@
 package unrc.dose;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -113,20 +115,21 @@ public class TestChallenge extends Model {
      * method that resturns a list of all test challenges.
      * @return list of all test challange.
      */
-    public static List<Tuple<Challenge, TestChallenge>>
+    public static List<Tuple<Map<String, Object>, Map<String, Object>>>
         viewAllTestChallange() {
         LazyList<TestChallenge> all = TestChallenge.findAll();
-        LinkedList<Tuple<Challenge, TestChallenge>> allChallenges
-        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>
+        allChallenges
+        = new LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>();
         if (!all.isEmpty()) {
             for (TestChallenge currentChallenge : all) {
                 Challenge c = Challenge.findFirst(
                     "id = ?",
                     currentChallenge.get("challenge_id"));
-                Tuple<Challenge, TestChallenge> t =
-                new Tuple<Challenge, TestChallenge>(
-                    c,
-                    currentChallenge);
+                Tuple<Map<String, Object>, Map<String, Object>> t =
+                new Tuple<Map<String, Object>, Map<String, Object>>(
+                    c.toJson(),
+                    currentChallenge.toJson());
                 allChallenges.add(t);
             }
         }
@@ -138,12 +141,12 @@ public class TestChallenge extends Model {
      * method that returns a list of resolved test challenges.
      * @return list of test challanges resolved.
      */
-    public static List<Tuple<Challenge, TestChallenge>>
+    public static List<Tuple<Map<String, Object>, Map<String, Object>>>
         viewResolvedTestChallange() {
         LazyList<Proposition> allResolved =
         Proposition.where("isSolution = ?", 1);
-        LinkedList<Tuple<Challenge, TestChallenge>> resolved
-        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        LinkedList<Tuple<Map<String, Object>, Map<String, Object>>> resolved
+        = new LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>();
         if (!allResolved.isEmpty()) {
             for (Proposition challengeResolved : allResolved) {
                 Challenge c = Challenge.findFirst(
@@ -152,8 +155,9 @@ public class TestChallenge extends Model {
                 TestChallenge tc = TestChallenge.findFirst(
                     "challenge_id = ?",
                     challengeResolved.get("challenge_id"));
-                Tuple<Challenge, TestChallenge> t =
-                new Tuple<Challenge, TestChallenge>(c, tc);
+                Tuple<Map<String, Object>, Map<String, Object>> t =
+                new Tuple<Map<String, Object>, Map<String, Object>>(
+                    c.toJson(), tc.toJson());
                 if (!(resolved.contains(t))) {
                     resolved.add(t);
                 }
@@ -166,16 +170,16 @@ public class TestChallenge extends Model {
      * method that returns a list of unsolved test challenges.
      * @return list of test challanges unresolved.
      */
-    public static List<Tuple<Challenge, TestChallenge>>
+    public static List<Tuple<Map<String, Object>, Map<String, Object>>>
         viewUnsolvedTestChallange() {
-        List<Tuple<Challenge, TestChallenge>> resolved =
+        List<Tuple<Map<String, Object>, Map<String, Object>>> resolved =
         viewResolvedTestChallange();
-        List<Tuple<Challenge, TestChallenge>> all =
+        List<Tuple<Map<String, Object>, Map<String, Object>>> all =
         viewAllTestChallange();
-        List<Tuple<Challenge, TestChallenge>> unsolved =
-        new LinkedList<Tuple<Challenge, TestChallenge>>();
+        List<Tuple<Map<String, Object>, Map<String, Object>>> unsolved =
+        new LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>();
         if (!all.isEmpty()) {
-            for (Tuple<Challenge, TestChallenge> c: all) {
+            for (Tuple<Map<String, Object>, Map<String, Object>> c: all) {
                 if (!(resolved.contains(c))) {
                     unsolved.add(c);
                 }
@@ -242,6 +246,18 @@ public class TestChallenge extends Model {
             "java -cp .:/tmp:target/dependency/junit-4.12.jar:target"
             + "/dependency/hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore "
             + nameFile);
+    }
+
+    /**
+     * This method arms the json correctly to return.
+     * @return a test challenge.
+     */
+    public Map<String, Object> toJson() {
+        Map<String, Object> ret = new HashMap<String, Object>();
+        ret.put("id", this.getInteger("id"));
+        ret.put("challenge_id", this.getInteger("challenge_id"));
+        ret.put("test", this.getString("test"));
+        return ret;
     }
 
     /**

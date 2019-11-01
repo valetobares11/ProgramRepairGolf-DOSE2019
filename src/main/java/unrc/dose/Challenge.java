@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -277,6 +279,23 @@ public class Challenge extends Model {
         idChallege).size() != 0) {
             throw new RuntimeException(CHALLENGE_RESOLVED);
         }
+    }
+
+    /**
+     * This method arms the json correctly to return.
+     * @return a challenge.
+     */
+    public Map<String, Object> toJson() {
+        Map<String, Object> ret = new HashMap<String, Object>();
+        ret.put("id", this.getInteger("id"));
+        ret.put("user_id", this.getInteger("user_id"));
+        ret.put("title", this.getString("title"));
+        ret.put("class_name", this.getString("class_name"));
+        ret.put("description", this.getString("description"));
+        ret.put("source", this.getString("source"));
+        ret.put("point", this.getInteger("point"));
+        ret.put("owner_solution_id", this.getString("owner_solution_id"));
+        return ret;
     }
 
     /**
