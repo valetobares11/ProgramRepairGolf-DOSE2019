@@ -4,7 +4,9 @@ import com.beerboy.ss.SparkSwagger;
 import com.beerboy.ss.rest.Endpoint;
 
 import java.util.List;
+import java.util.Map;
 
+import org.javalite.common.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,9 +121,9 @@ public final class TestChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all test challenge")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Tuple<Challenge, TestChallenge>> all =
+                List<Tuple<Map<String, Object>, Map<String, Object>>> all =
                 TestChallenge.viewAllTestChallange();
-                return all;
+                return JsonHelper.toJsonString(all);
             }
         )
         .get(
@@ -129,9 +131,9 @@ public final class TestChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all test challenge solved")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Tuple<Challenge, TestChallenge>> resolved =
-                TestChallenge.viewResolvedTestChallange();
-                return resolved;
+                List<Tuple<Map<String, Object>, Map<String, Object>>> resolved
+                = TestChallenge.viewResolvedTestChallange();
+                return JsonHelper.toJsonString(resolved);
             }
         )
         .get(
@@ -139,9 +141,9 @@ public final class TestChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all test challenge solved")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Tuple<Challenge, TestChallenge>> unsolved =
+                List<Tuple<Map<String, Object>, Map<String, Object>>> unsolved =
                 TestChallenge.viewUnsolvedTestChallange();
-                return unsolved;
+                return JsonHelper.toJsonString(unsolved);
             }
         );
     }

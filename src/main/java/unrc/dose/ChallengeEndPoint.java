@@ -48,17 +48,33 @@ public final class ChallengeEndPoint implements Endpoint {
             }
         )
         .get(
-            path("/:userId")
+            path("/:id")
+                .withDescription("Return a challenge")
+                .withPathParam()
+                    .withName("id")
+                    .withDescription("id challenge").and()
+                .withResponseType(String.class),
+            (req, res) -> {
+                Challenge c = Challenge.findFirst("id = ?", req.params("id"));
+                return c.toJson(true, "id", "user_id", "title",
+                "class_name", "description", "source", "point",
+                "owner_solution_id");
+            }
+        )
+        .get(
+            path("/user/:id")
                 .withDescription("Show the challenges associated with a user")
                 .withPathParam()
-                    .withName("userId")
+                    .withName("id")
                     .withDescription("user id owner of the challenges").and()
                     .withResponseType(String.class),
             (req, res) -> {
                 LazyList<Challenge> list =
                 Challenge.viewUserAssociatedChallange(
-                Integer.parseInt(req.params("userId")));
-                return list;
+                Integer.parseInt(req.params("id")));
+                return list.toJson(true, "id", "user_id", "title",
+                "class_name", "description", "source", "point",
+                "owner_solution_id");
             }
         );
     }

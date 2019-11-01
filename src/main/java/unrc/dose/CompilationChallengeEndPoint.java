@@ -4,7 +4,9 @@ import com.beerboy.ss.SparkSwagger;
 import com.beerboy.ss.rest.Endpoint;
 
 import java.util.List;
+import java.util.Map;
 
+import org.javalite.common.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,9 +114,9 @@ public final class CompilationChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all compilation challenge")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Challenge> all =
+                List<Map<String, Object>> all =
                 CompilationChallenge.viewAllCompilationChallange();
-                return all;
+                return JsonHelper.toJsonString(all);
             }
         )
         .get(
@@ -122,9 +124,9 @@ public final class CompilationChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all compilation challenge solved")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Challenge> resolved =
+                List<Map<String, Object>> resolved =
                 CompilationChallenge.viewResolvedCompilationChallange();
-                return resolved;
+                return JsonHelper.toJsonString(resolved);
             }
         )
         .get(
@@ -132,9 +134,9 @@ public final class CompilationChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all compilation challenge solved")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Challenge> unsolved =
+                List<Map<String, Object>> unsolved =
                 CompilationChallenge.viewUnsolvedCompilationChallange();
-                return unsolved;
+                return JsonHelper.toJsonString(unsolved);
             }
         );
     }
