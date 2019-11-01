@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
@@ -119,12 +120,12 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void viewAllCompilationChallangeTest() {
-		List<Challenge> all = CompilationChallenge.viewAllCompilationChallange();
+		List<Map<String,Object>> all = CompilationChallenge.viewAllCompilationChallange();
 		assertEquals(4, all.size());
-		assertEquals("Test", all.get(0).getString("title"));
-		assertEquals("Test1", all.get(1).getString("title"));
-		assertEquals("Test2", all.get(2).getString("title"));
-		assertEquals("Test3", all.get(3).getString("title"));
+		assertEquals("Test", all.get(0).get("title"));
+		assertEquals("Test1", all.get(1).get("title"));
+		assertEquals("Test2", all.get(2).get("title"));
+		assertEquals("Test3", all.get(3).get("title"));
 	}
 
 	/**
@@ -132,10 +133,10 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void viewResolvedCompilationChallangeTest() {
-		List<Challenge> resolved = CompilationChallenge.viewResolvedCompilationChallange();
+		List<Map<String,Object>> resolved = CompilationChallenge.viewResolvedCompilationChallange();
 		assertEquals(2, resolved.size());
-		assertEquals("Test1", resolved.get(0).getString("title"));
-		assertEquals("Test2", resolved.get(1).getString("title"));
+		assertEquals("Test1", resolved.get(0).get("title"));
+		assertEquals("Test2", resolved.get(1).get("title"));
 	}
 
 	/**
@@ -143,10 +144,10 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void viewUnsolvedCompilationChallangeTest() {
-		List<Challenge> unsolved = CompilationChallenge.viewUnsolvedCompilationChallange();
+		List<Map<String,Object>> unsolved = CompilationChallenge.viewUnsolvedCompilationChallange();
 		assertEquals(2, unsolved.size());
-		assertEquals("Test", unsolved.get(0).getString("title"));
-		assertEquals("Test3", unsolved.get(1).getString("title"));
+		assertEquals("Test", unsolved.get(0).get("title"));
+		assertEquals("Test3", unsolved.get(1).get("title"));
 	}
 
 	/**

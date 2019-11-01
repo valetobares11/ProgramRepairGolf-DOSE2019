@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
@@ -124,12 +125,13 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewAllTestChallangeTest() {
-		List<Tuple<Challenge, TestChallenge>> all = TestChallenge.viewAllTestChallange();
+		List<Tuple<Map<String, Object>, Map<String, Object>>> all =
+		TestChallenge.viewAllTestChallange();
 		assertEquals(4, all.size());
-		assertEquals("Test", all.get(0).getFirst().getString("title"));
-		assertEquals("Test1", all.get(1).getFirst().getString("title"));
-		assertEquals("Test2", all.get(2).getFirst().getString("title"));
-		assertEquals("Test3", all.get(3).getFirst().getString("title"));
+		assertEquals("Test", all.get(0).getFirst().get("title"));
+		assertEquals("Test1", all.get(1).getFirst().get("title"));
+		assertEquals("Test2", all.get(2).getFirst().get("title"));
+		assertEquals("Test3", all.get(3).getFirst().get("title"));
 	}
 
 	/**
@@ -137,10 +139,11 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewResolvedTestChallangeTest() {
-		List<Tuple<Challenge, TestChallenge>> resolved = TestChallenge.viewResolvedTestChallange();
+		List<Tuple<Map<String, Object>, Map<String, Object>>> resolved =
+		TestChallenge.viewResolvedTestChallange();
 		assertEquals(2, resolved.size());
-		assertEquals("Test1", resolved.get(0).getFirst().getString("title"));
-		assertEquals("Test2", resolved.get(1).getFirst().getString("title"));
+		assertEquals("Test1", resolved.get(0).getFirst().get("title"));
+		assertEquals("Test2", resolved.get(1).getFirst().get("title"));
 	}
 
 	/**
@@ -148,10 +151,11 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewUnsolvedTestChallangeTest() {
-		List<Tuple<Challenge, TestChallenge>> unsolved = TestChallenge.viewUnsolvedTestChallange();
+		List<Tuple<Map<String, Object>, Map<String, Object>>> unsolved =
+		TestChallenge.viewUnsolvedTestChallange();
 		assertEquals(2, unsolved.size());
-		assertEquals("Test", unsolved.get(0).getFirst().getString("title"));
-		assertEquals("Test3", unsolved.get(1).getFirst().getString("title"));
+		assertEquals("Test", unsolved.get(0).getFirst().get("title"));
+		assertEquals("Test3", unsolved.get(1).getFirst().get("title"));
 	}
 
 	/**
