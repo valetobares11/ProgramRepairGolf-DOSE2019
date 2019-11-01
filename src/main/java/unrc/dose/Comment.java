@@ -103,13 +103,21 @@ public class Comment extends Model {
   *@param aux the object to compare
   *@return true if two comments are equals
   */
-  public boolean equals(Object aux) {
+  public boolean equals(final Object aux) {
     return (this.getId().equals(((Comment) aux).getId()));
   }
 
-  public String toString(){
-    return "[id: "+this.getId()+", title: "+this.getString("title")+"description: "+this.getString("description")+"user_id: "+this.getInteger("user_id")
-    +"challenge_id: "+this.getInteger("challenge_id")+"father_id:"+this.getInteger("comment_id")+"]";
+  /**
+   * toString of Comment.
+   * @return comment as a string
+   */
+  public String toString() {
+    return "[id: " + this.getId() + ", title: "
+      + this.getString("title") + "description: "
+      + this.getString("description") + "user_id: "
+      + this.getInteger("user_id") + "challenge_id: "
+      + this.getInteger("challenge_id") + "father_id:"
+      + this.getInteger("comment_id") + "]";
   }
 
 }
