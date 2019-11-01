@@ -1,41 +1,40 @@
 package unrc.dose;
 
+import static com.beerboy.ss.descriptor.EndpointDescriptor.endpointPath;
+import static com.beerboy.ss.descriptor.MethodDescriptor.path;
+
 import com.beerboy.ss.SparkSwagger;
 import com.beerboy.ss.rest.Endpoint;
-import com.google.gson.Gson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.beerboy.ss.descriptor.EndpointDescriptor.endpointPath;
-import static com.beerboy.ss.descriptor.MethodDescriptor.path;
-import static com.beerboy.ss.descriptor.ParameterDescriptor.Builder.newBuilder;
-import org.javalite.activejdbc.LazyList;
-
-/** Endpoint wrapping everything related to Comments. */
+/**
+ *Endpoint wrapping everything related to Comments.
+ */
 public final class CommentEndpoint implements Endpoint {
 
-  /** logger... */
+  /**logger... */
   static final Logger LOGGER = LoggerFactory.getLogger(CommentEndpoint.class);
 
-  /** main namespace of this endpoint. */
+  /**main namespace of this endpoint. */
   private static final String NAME_SPACE = "/comments";
 
-  /** service used to manipulate in memory the bellies. */
-//  private static Comment commentService = new Comment();
+  /**service used to manipulate in memory the bellies.
+   */
   private static CommentService commentService = new CommentService();
 
   @Override
   public void bind(final SparkSwagger restApi) {
 
-      restApi.endpoint(
+    restApi.endpoint(
           endpointPath(NAME_SPACE)
               .withDescription(
                   "comment REST API exposing all comments utilities"
               ),
-          (q, a) -> LOGGER.info("Logging Received request for Comment Rest API")
+        (q, a) -> LOGGER.info("Logging Received request for Comment Rest API")
       )
-      .get(
+        .get(
           path("/users/:id")
               .withDescription("Will return all comments of user's id")
               .withPathParam()
@@ -43,32 +42,35 @@ public final class CommentEndpoint implements Endpoint {
                   .withDescription("user's id").and()
               .withResponseType(String.class),
           (req, res) -> {
-              return commentService.view(Integer.parseInt(req.params(":id")), new User());
+              return commentService.view(
+                Integer.parseInt(req.params(":id")), new User());
           }
       )
-      .get(
+        .get(
          path("/challenges/:id")
              .withDescription("Will return all comments of user's id")
              .withPathParam()
                  .withName("id")
                  .withDescription("challenge's id").and()
              .withResponseType(String.class),
-         (req, res) -> {
-             return commentService.view(Integer.parseInt(req.params(":id")), new Challenge());
-         }
+          (req, res) -> {
+            return commentService.view(
+              Integer.parseInt(req.params(":id")), new Challenge());
+          }
       )
-      .get(
+        .get(
          path("/responses/:id")
              .withDescription("Will return all responses of comment's id")
              .withPathParam()
                  .withName("id")
                  .withDescription("comment's id").and()
              .withResponseType(String.class),
-         (req, res) -> {
-             return commentService.view(Integer.parseInt(req.params(":id")), new Comment());
-         }
+          (req, res) -> {
+            return commentService.view(
+              Integer.parseInt(req.params(":id")), new Comment());
+          }
       )
-      .post(
+        .post(
           path("/createComment")
               .withDescription("Creates a new Comment")
               .withQueryParam()
@@ -86,11 +88,13 @@ public final class CommentEndpoint implements Endpoint {
               .withResponseType(String.class),
           (req, res) -> {
               return commentService.comment(req.queryParams("title"),
-                     req.queryParams("description"),Integer.parseInt(req.queryParams("challengeId")),Integer.parseInt(req.queryParams("userId")));
+                     req.queryParams("description"),
+                     Integer.parseInt(req.queryParams("challengeId")),
+                     Integer.parseInt(req.queryParams("userId")));
 
           }
       )
-      .post(
+        .post(
           path("/createResponse")
               .withDescription("Creates a new Response")
               .withQueryParam()
@@ -106,7 +110,8 @@ public final class CommentEndpoint implements Endpoint {
                "application/json",
           (req, res) -> {
               return commentService.response(req.queryParams(
-                    "description"),Integer.parseInt(req.queryParams("userId")),Integer.parseInt(req.queryParams("commentId")));
+                    "description"), Integer.parseInt(req.queryParams("userId")),
+                      Integer.parseInt(req.queryParams("commentId")));
           }
       );
   }

@@ -1,4 +1,5 @@
 package unrc.dose;
+
 import com.google.gson.Gson;
 
 /**
@@ -17,7 +18,7 @@ public final class CommentService {
       final String description,
       final int challengeId,
       final int userId) {
-          Gson g = new Gson();
+    Gson g = new Gson();
     return g.toJson(Comment.createComment(
       title, description, challengeId, userId));
 
@@ -34,8 +35,8 @@ public final class CommentService {
   public String response(final String description,
       final int userId,
       final int commentId) {
-      Gson g = new Gson();
-      return g.toJson(Comment.createResponse(description, userId, commentId));
+    Gson g = new Gson();
+    return g.toJson(Comment.createResponse(description, userId, commentId));
 
   }
 
