@@ -257,4 +257,17 @@ public class TestChallengeTest {
 		boolean obtained = TestChallenge.runTestJava(nameFile);
 		assertEquals(true, obtained);
 	}
+
+	/**
+	 * Test method for validatePresenceTestChallenge.
+	 */
+	@Test
+	public void validatePresenceTestChallengeTest() {
+		try {
+			TestChallenge.validateTestChallenge(null);
+		} catch (IllegalArgumentException ex) {
+			assertEquals(TestChallenge.CHALLENGE_NOT_EXIST, ex.getMessage());
+		}
+	}
+
 }
