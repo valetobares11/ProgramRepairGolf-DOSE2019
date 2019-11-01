@@ -265,6 +265,7 @@ public class TestChallengeTest {
 	public void validatePresenceTestChallengeTest() {
 		try {
 			TestChallenge.validateTestChallenge(null);
+			fail();
 		} catch (IllegalArgumentException ex) {
 			assertEquals(TestChallenge.CHALLENGE_NOT_EXIST, ex.getMessage());
 		}
