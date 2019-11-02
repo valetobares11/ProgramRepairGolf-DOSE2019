@@ -225,10 +225,56 @@ public class Challenge extends Model {
         final String name,
         final String source) {
         try {
-            String nameFile = "/../tmp/" + name + ".java";
+            File folderSrc = new File("/../tmp/src");
+            if (!folderSrc.exists() || !folderSrc.isDirectory()){
+                runProcess("mkdir /../tmp/src");
+            }
+            File folderMain = new File("/../tmp/src/main");
+            if (!folderMain.exists() || !folderMain.isDirectory()){
+                runProcess("mkdir /../tmp/src/main");
+            }
+            File folderTest = new File("/../tmp/src/test");
+            if (!folderTest.exists() || !folderTest.isDirectory()){
+                runProcess("mkdir /../tmp/src/test");
+            }
+            String nameFile = "/../tmp/src/main/" + name + ".java";
             File file = new File(nameFile);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write(source);
+            bw.close();
+            return true;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error the read file");
+        }
+    }
+
+
+    /**
+     * method to generate the java file test of the challenge.
+     * @param name name test file.
+     * @param test test file.
+     * @return true generate correct.
+     */
+    public static boolean generateFileJavaTest(
+        final String name,
+        final String test) {
+        try {
+            File folderSrc = new File("/../tmp/src");
+            if (!folderSrc.exists() || !folderSrc.isDirectory()){
+                runProcess("mkdir /../tmp/src");
+            }
+            File folderMain = new File("/../tmp/src/main");
+            if (!folderMain.exists() || !folderMain.isDirectory()){
+                runProcess("mkdir /../tmp/src/main");
+            }
+            File folderTest = new File("/../tmp/src/test");
+            if (!folderTest.exists() || !folderTest.isDirectory()){
+                runProcess("mkdir /../tmp/src/test");
+            }
+            String nameFile = "/../tmp/src/test/" + name + ".java";
+            File file = new File(nameFile);
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write(test);
             bw.close();
             return true;
         } catch (IOException e) {
@@ -258,7 +304,7 @@ public class Challenge extends Model {
      * @return true if run otherwise false.
      */
     public static boolean runCompilation(final String nameFile) {
-        return runProcess("javac /../tmp/" + nameFile + ".java");
+        return runProcess("javac /../tmp/src/main/" + nameFile + ".java");
     }
 
     /**
@@ -267,7 +313,7 @@ public class Challenge extends Model {
      * @return true if run otherwise false.
      */
     public static boolean runJava(final String nameFile) {
-        return runProcess("java -cp .:/tmp/ " + nameFile);
+        return runProcess("java -cp .:/tmp/ src.main." + nameFile);
     }
 
     /**
