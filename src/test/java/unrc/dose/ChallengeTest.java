@@ -187,7 +187,8 @@ public class ChallengeTest {
 	@Test
 	public void runJavaTest() {
 		String nameFile = "TestRunJava";
-		String source = "public class " + nameFile + " {\n";
+		String source = "package src.main;\n";
+			  source += "public class " + nameFile + " {\n";
 			  source += "    public static void main(String[] args) {\n";
 			  source += "        System.out.println("+"\"Test RunJava\""+");\n";
 			  source += "    }\n";
