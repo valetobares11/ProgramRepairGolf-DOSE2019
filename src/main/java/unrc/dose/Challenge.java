@@ -226,15 +226,15 @@ public class Challenge extends Model {
         final String source) {
         try {
             File folderSrc = new File("/../tmp/src");
-            if (!folderSrc.exists() || !folderSrc.isDirectory()){
+            if (!folderSrc.exists() || !folderSrc.isDirectory()) {
                 runProcess("mkdir /../tmp/src");
             }
             File folderMain = new File("/../tmp/src/main");
-            if (!folderMain.exists() || !folderMain.isDirectory()){
+            if (!folderMain.exists() || !folderMain.isDirectory()) {
                 runProcess("mkdir /../tmp/src/main");
             }
             File folderTest = new File("/../tmp/src/test");
-            if (!folderTest.exists() || !folderTest.isDirectory()){
+            if (!folderTest.exists() || !folderTest.isDirectory()) {
                 runProcess("mkdir /../tmp/src/test");
             }
             String nameFile = "/../tmp/src/main/" + name + ".java";
@@ -260,15 +260,15 @@ public class Challenge extends Model {
         final String test) {
         try {
             File folderSrc = new File("/../tmp/src");
-            if (!folderSrc.exists() || !folderSrc.isDirectory()){
+            if (!folderSrc.exists() || !folderSrc.isDirectory()) {
                 runProcess("mkdir /../tmp/src");
             }
             File folderMain = new File("/../tmp/src/main");
-            if (!folderMain.exists() || !folderMain.isDirectory()){
+            if (!folderMain.exists() || !folderMain.isDirectory()) {
                 runProcess("mkdir /../tmp/src/main");
             }
             File folderTest = new File("/../tmp/src/test");
-            if (!folderTest.exists() || !folderTest.isDirectory()){
+            if (!folderTest.exists() || !folderTest.isDirectory()) {
                 runProcess("mkdir /../tmp/src/test");
             }
             String nameFile = "/../tmp/src/test/" + name + ".java";
