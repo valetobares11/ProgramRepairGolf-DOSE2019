@@ -88,13 +88,26 @@ public class TestChallengeTest {
 	@Test
 	public void validateTestChallengeTest() {
 		int userId = 1; 
-		String title = "Hello Word";
+		String title = "Oneees";
 		String description = "...";
-		String className = "HelloWord";
-		String source = "public String hello(){ return "+"HelloWord"+"; }";
+		String className = "Ones";
+		String source = "package src.main;\n";
+			   source += "public class Ones {\n";
+			   source += "	public static int one() {\n";
+			   source += "		return 1;\n";
+			   source += "	}\n";
+			   source += "}";
 		int point = 100;
 		int ownerSolutionId = 9;
-		String test = "--";
+		String test = "package src.test;\n";
+				test += "import src.main.Ones;\n";
+				test += "import org.junit.*;\n";
+				test += "public class OnesTest {\n";
+				test += "	@Test\n";
+				test += "	public void test() {\n";
+				test += "		Assert.assertEquals(1, Ones.one());\n";
+				test += "	}\n";
+				test += "}";
 		TestChallenge.addTestChallenge(userId, title, className, description,
 		source, point, ownerSolutionId, test);
 		TestChallenge testChallenge = TestChallenge.findFirst("test = ?", test);
@@ -108,16 +121,29 @@ public class TestChallengeTest {
 	@Test
 	public void addTestChallengeTest() {
 		int userId = 32; 
-		String title= "Hello Word";
-		String nameClass = "HelloWord2";
-		String description = "Test Hellos Word";
-		String source = "System.out.println('Hello Word');";
+		String title= "suma ones";
+		String nameClass = "SumaOnes";
+		String description = "Test suma ones";
+		String source = "package src.main;\n";
+			   source += "public class SumaOnes {\n";
+			   source += "	public static int sumOnes() {\n";
+			   source += "		return 1+1;\n";
+			   source += "	}\n";
+			   source += "}";
 		int point = 52;
 		int ownerSolutionId = 3;
-		String test = "this is a challenge test";
+		String test = "package src.test;\n";
+			   test += "import src.main.SumaOnes;\n";
+			   test += "import org.junit.*;\n";
+			   test += "public class SumaOnesTest {\n";
+			   test += "	@Test\n";
+			   test += "	public void test() {\n";
+			   test += "		Assert.assertEquals(2, SumaOnes.sumOnes());\n";
+			   test += "	}\n";
+			   test += "}";
 		boolean validation = TestChallenge.addTestChallenge(userId,title,nameClass,description,
 		source,point,ownerSolutionId,test);
-		assertFalse(validation);
+		assertEquals(true,validation);
 	}
 
 	/**
@@ -189,15 +215,28 @@ public class TestChallengeTest {
 	public void modifyUnsolvedTestChallengeTest1() {
 		Challenge c = Challenge.findFirst("title = ?", "Test3");
 		String title = "Test3";
-		String className = "NotFound";
+		String className = "MultOnes";
 		String description = "";
-		String source = "//";
+		String source = "package src.main;\n";
+			   source += "public class MultOnes {\n";
+			   source += "	public static int multOnes() {\n";
+			   source += "		return 1*1;\n";
+			   source += "	}\n";
+			   source += "}";
 		int point = 0;
-		String test = "Test";
+		String test = "package src.test;\n";
+			   test += "import src.main.MultOnes;\n";
+			   test += "import org.junit.*;\n";
+			   test += "public class MultOnesTest {\n";
+			   test += "	@Test\n";
+			   test += "	public void test() {\n";
+			   test += "		Assert.assertEquals(1, MultOnes.multOnes());\n";
+			   test += "	}\n";
+			   test += "}";
 		boolean obtained = TestChallenge.modifyUnsolvedTestChallenge(
 			c.getInteger("id"), title, className, description,
 			source, point, test);
-		assertFalse(obtained);
+		assertEquals(true,obtained);
 	}
 
 	/**
@@ -227,14 +266,15 @@ public class TestChallengeTest {
 	@Test
 	public void runCompilationTest() {
 		String nameFile = "TestCompilation";
-		String source = "import org.junit.*;\n";
+		String source = "package src.test; \n";
+			   source += "import org.junit.*;\n";
 			   source += "public class "+ nameFile + " {\n";
 			   source += "	@Test\n";
 			   source += "	public void test() {\n";
 		       source += "		Assert.assertTrue(true);\n";
 			   source += "	}\n";
 			   source += "}";
-		Challenge.generateFileJava(nameFile, source);
+		Challenge.generateFileJavaTest(nameFile, source);
 		boolean obtained = TestChallenge.runCompilationTestJava(nameFile);
 		assertEquals(true, obtained);
 	}
@@ -245,14 +285,15 @@ public class TestChallengeTest {
 	@Test
 	public void runTestJavaTest() {
 		String nameFile = "RunTestCompilation";
-		String source = "import org.junit.*;\n";
+		String source = "package src.test; \n";
+			   source += "import org.junit.*;\n";
 			   source += "public class "+ nameFile + " {\n";
 			   source += "	@Test\n";
 			   source += "	public void test() {\n";
 			   source += "		Assert.assertTrue(true);\n";
 			   source += "	}\n";
 			   source += "}";
-		Challenge.generateFileJava(nameFile, source);
+		Challenge.generateFileJavaTest(nameFile, source);
 		TestChallenge.runCompilationTestJava(nameFile);
 		boolean obtained = TestChallenge.runTestJava(nameFile);
 		assertEquals(true, obtained);
