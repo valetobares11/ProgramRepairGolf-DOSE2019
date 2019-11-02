@@ -76,7 +76,7 @@ public class TestChallenge extends Model {
         String test = t.getTest();
         String classNameTest = className + "Test";
         Challenge.generateFileJava(className, source);
-        Challenge.generateFileJava(classNameTest, test);
+        Challenge.generateFileJavaTest(classNameTest, test);
         return Challenge.runCompilation(className)
                && TestChallenge.runCompilationTestJava(classNameTest)
                && TestChallenge.runTestJava(classNameTest);
@@ -239,8 +239,8 @@ public class TestChallenge extends Model {
      */
     public static boolean runCompilationTestJava(final String nameFile) {
         return Challenge.runProcess(
-            "javac -cp .:target/dependency/junit-4.12.jar /../tmp/"
-            + nameFile + ".java");
+            "javac -cp .:/tmp/:target/dependency/junit-4.12.jar:. "
+            + "/tmp/src/test/" + nameFile + ".java");
     }
 
     /**
@@ -250,9 +250,9 @@ public class TestChallenge extends Model {
      */
     public static boolean runTestJava(final String nameFile) {
         return Challenge.runProcess(
-            "java -cp .:/tmp:target/dependency/junit-4.12.jar:target"
-            + "/dependency/hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore "
-            + nameFile);
+            "java -cp .:/tmp:target/dependency/junit-4.12.jar:target/"
+            + "dependency/hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore "
+            + "src.test." + nameFile);
     }
 
     /**
