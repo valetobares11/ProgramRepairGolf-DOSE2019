@@ -2,6 +2,7 @@ package unrc.dose;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -86,15 +87,16 @@ public class CompilationChallenge extends Model {
      * method that returns a list of all compilation challenges.
      * @return list of all compilation challange.
      */
-    public static List<Challenge> viewAllCompilationChallange() {
+    public static List<Map<String, Object>> viewAllCompilationChallange() {
         LazyList<CompilationChallenge> all = CompilationChallenge.findAll();
-        LinkedList<Challenge> allChallenges = new LinkedList<Challenge>();
+        LinkedList<Map<String, Object>> allChallenges =
+        new LinkedList<Map<String, Object>>();
         if (!all.isEmpty()) {
             for (CompilationChallenge currentChallenge : all) {
                 Challenge c = Challenge.findFirst(
                     "id = ?",
                     currentChallenge.get("challenge_id"));
-                allChallenges.add(c);
+                allChallenges.add(c.toJson());
             }
         }
         return allChallenges;
@@ -105,17 +107,19 @@ public class CompilationChallenge extends Model {
      * method that returns a list of resolved compilation challenges.
      * @return list of compilacion challanges resolved.
      */
-    public static List<Challenge> viewResolvedCompilationChallange() {
+    public static List<Map<String, Object>> viewResolvedCompilationChallange() {
         LazyList<Proposition> allResolved =
         Proposition.where("isSolution = ?", 1);
-        List<Challenge> resolved = new LinkedList<Challenge>();
+        List<Map<String, Object>> resolved =
+        new LinkedList<Map<String, Object>>();
         if (!allResolved.isEmpty()) {
             for (Proposition challengeResolved : allResolved) {
                 Challenge c = Challenge.findFirst(
                     "id = ?",
                     challengeResolved.get("challenge_id"));
-                if (!(resolved.contains(c))) {
-                    resolved.add(c);
+                    Map<String, Object> currentMap = c.toJson();
+                if (!(resolved.contains(currentMap))) {
+                    resolved.add(c.toJson());
                 }
             }
         }
@@ -126,12 +130,14 @@ public class CompilationChallenge extends Model {
      * method that returns a list of unresolved compilation challenges.
      * @return list of compilation challanges unresolved.
      */
-    public static List<Challenge> viewUnsolvedCompilationChallange() {
-        List<Challenge> resolved = viewResolvedCompilationChallange();
-        List<Challenge> all = viewAllCompilationChallange();
-        List<Challenge> unsolved = new LinkedList<Challenge>();
+    public static List<Map<String, Object>> viewUnsolvedCompilationChallange() {
+        List<Map<String, Object>> resolved =
+        viewResolvedCompilationChallange();
+        List<Map<String, Object>> all = viewAllCompilationChallange();
+        List<Map<String, Object>> unsolved =
+        new LinkedList<Map<String, Object>>();
         if (!(all.isEmpty())) {
-            for (Challenge c: all) {
+            for (Map<String, Object> c: all) {
                 if (!(resolved.contains(c))) {
                     unsolved.add(c);
                 }
@@ -161,6 +167,7 @@ public class CompilationChallenge extends Model {
         final int point) {
         Challenge.checkUnsolvedChallenge(challengeId);
         Challenge c = Challenge.findFirst("id = ?", challengeId);
+        Challenge.validatePresenceChallenge(c);
         c.setTitle(title);
         c.setClassName(className);
         c.setDescription(description);

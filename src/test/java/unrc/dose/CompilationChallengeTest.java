@@ -1,15 +1,19 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to test the CompilationChallenge class methods.
@@ -18,11 +22,13 @@ import org.junit.Test;
  */
 public class CompilationChallengeTest {
 
+	private static final Logger log = LoggerFactory.getLogger(CompilationChallengeTest.class);
+
 	@BeforeClass
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			System.out.println("CompilationChallengeTest setup");
+			log.info("CompilationChallengeTest setup");
 			Base.openTransaction();
 		}
 		
@@ -41,31 +47,14 @@ public class CompilationChallengeTest {
 		CompilationChallenge.addCompilationChallenge(u.getInteger("id"), "Test3", "Test3", "description",
 		"source", 100, 0);
 
-		Proposition p = new Proposition();
-		p.set("user_id", u.getId());
-		p.set("challenge_id", c.getId());
-		p.set("source", "//");
-		p.set("isSolution", 0);
-		p.saveIt();
-
-		Proposition p1 = new Proposition();
-		p1.set("user_id", u.getId());
-		p1.set("challenge_id", c1.getId());
-		p1.set("source","//");
+		Proposition.newProposition(u.getInteger("id"), c.getInteger("id"));
+		Proposition p1 = Proposition.newProposition(u.getInteger("id"), c1.getInteger("id"));
 		p1.set("isSolution", 1);
 		p1.saveIt();
-
-		Proposition p2 = new Proposition();
-		p2.set("user_id", u.getId());
-		p2.set("challenge_id", c2.getId());
-		p2.set("source","//");
+		Proposition p2 = Proposition.newProposition(u.getInteger("id"), c2.getInteger("id"));
 		p2.set("isSolution", 1);
 		p2.saveIt();
-
-		Proposition p3 = new Proposition();
-		p3.set("user_id", u1.getId());
-		p3.set("challenge_id", c2.getId());
-		p3.set("source","//");
+		Proposition p3 = Proposition.newProposition(u1.getInteger("id"), c2.getInteger("id"));
 		p3.set("isSolution", 1);
 		p3.saveIt();
 	
@@ -75,7 +64,7 @@ public class CompilationChallengeTest {
 	public static void after(){
 		if (Base.hasConnection()) {
 			Base.rollbackTransaction();
-			System.out.println("Compilation ChallengeTest tearDown");
+			log.info("Compilation ChallengeTest tearDown");
 			Base.close();
 		}  
 	}
@@ -96,14 +85,15 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void validateCompilationChallengeTest() {
-		Challenge challenge = new Challenge();
-		challenge.setUserId(1); 
-		challenge.setTitle("Hello Word");
-		challenge.setClassName("HelloWordx2");
-		challenge.setSource("public String hello(){ return "+"HelloWord"+" }");
-		challenge.setPoint(100);
-		challenge.setOwnerSolutionId(9);
-		challenge.saveIt();
+		int userId = 1; 
+		String title = "Hello Word";
+		String description = "---";
+		String className = "HelloWordx2";
+		String source = "public String hello(){ return "+"HelloWord"+" }";
+		int point= 100;
+		int ownerSolutionId= 9;
+		Challenge challenge = Challenge.addChallenge(userId, title, className, description,
+		source, point, ownerSolutionId);
 		boolean validate = CompilationChallenge.validateCompilationChallenge(challenge);
 		assertEquals(true ,validate);
 	}
@@ -130,12 +120,12 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void viewAllCompilationChallangeTest() {
-		List<Challenge> all = CompilationChallenge.viewAllCompilationChallange();
+		List<Map<String,Object>> all = CompilationChallenge.viewAllCompilationChallange();
 		assertEquals(4, all.size());
-		assertEquals("Test", all.get(0).getString("title"));
-		assertEquals("Test1", all.get(1).getString("title"));
-		assertEquals("Test2", all.get(2).getString("title"));
-		assertEquals("Test3", all.get(3).getString("title"));
+		assertEquals("Test", all.get(0).get("title"));
+		assertEquals("Test1", all.get(1).get("title"));
+		assertEquals("Test2", all.get(2).get("title"));
+		assertEquals("Test3", all.get(3).get("title"));
 	}
 
 	/**
@@ -143,10 +133,10 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void viewResolvedCompilationChallangeTest() {
-		List<Challenge> resolved = CompilationChallenge.viewResolvedCompilationChallange();
+		List<Map<String,Object>> resolved = CompilationChallenge.viewResolvedCompilationChallange();
 		assertEquals(2, resolved.size());
-		assertEquals("Test1", resolved.get(0).getString("title"));
-		assertEquals("Test2", resolved.get(1).getString("title"));
+		assertEquals("Test1", resolved.get(0).get("title"));
+		assertEquals("Test2", resolved.get(1).get("title"));
 	}
 
 	/**
@@ -154,10 +144,10 @@ public class CompilationChallengeTest {
 	 */
 	@Test
 	public void viewUnsolvedCompilationChallangeTest() {
-		List<Challenge> unsolved = CompilationChallenge.viewUnsolvedCompilationChallange();
+		List<Map<String,Object>> unsolved = CompilationChallenge.viewUnsolvedCompilationChallange();
 		assertEquals(2, unsolved.size());
-		assertEquals("Test", unsolved.get(0).getString("title"));
-		assertEquals("Test3", unsolved.get(1).getString("title"));
+		assertEquals("Test", unsolved.get(0).get("title"));
+		assertEquals("Test3", unsolved.get(1).get("title"));
 	}
 
 	/**
@@ -196,7 +186,9 @@ public class CompilationChallengeTest {
 		String title = "Change1";
 		String className = "NotFound";
 		String description = "";
-		String source = "//";
+		String source = "public class " + className + " {\n";
+			   source+= " ///";
+			   source+= "}\n";
 		int point = 0;
 		boolean obtained = CompilationChallenge.modifyUnsolvedCompilationChallenge(
 			c.getInteger("id"),
@@ -206,6 +198,26 @@ public class CompilationChallengeTest {
 			source,
 			point);
 		assertTrue(obtained);
+	}
+
+	/**
+	 * Test method for deleteChallenge.
+	 * In case of the CompilationChallenge already exist.
+	 */
+	@Test
+	public void deleteCompilationChallengeTest() {
+		int userId = 5; 
+		String title= "Hello Word";
+		String className = "HelloWord4";
+		String description = "Test Hellos Word";
+		String source = "System.out.println('Hello Word')";
+		int point = 300;
+		int ownerSolutionId = 10;
+		CompilationChallenge.addCompilationChallenge(userId, title, className, description,
+		source, point, ownerSolutionId);
+		int id = Challenge.findFirst("class_name = ?", className).getInteger("id");
+		Challenge.deleteChallenge(id);
+		assertNull(CompilationChallenge.findFirst("challenge_id = ?", id));   
 	}
 
 } 

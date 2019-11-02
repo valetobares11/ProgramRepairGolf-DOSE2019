@@ -15,8 +15,10 @@ import spark.Service;
 
 public class App
 {
-    public static void main( String[] args ) {
-      Service spark = Service.ignite().port(55555);
+  public static Service spark = Service.ignite().port(55555);
+  
+  public static void main( String[] args ) {
+      
 
       try {
         SparkSwagger
@@ -28,13 +30,13 @@ public class App
         e.printStackTrace();
       }
 
-      before((request, response) -> {
+      spark.before((request, response) -> {
         if (!Base.hasConnection()) {
           Base.open();
         }
       });
 
-      after((request, response) -> {
+      spark.after((request, response) -> {
         if (Base.hasConnection()) {
           Base.close();
         }
