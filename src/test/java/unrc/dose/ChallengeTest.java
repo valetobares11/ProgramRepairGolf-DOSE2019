@@ -218,7 +218,7 @@ public class ChallengeTest {
 	 */
 	@Test
 	public void validatePresenceChallengeTest() {
-		Challenge c = Challenge.findFirst("id = ?", 1);
+		Challenge c = null;
 		try{
 			Challenge.validatePresenceChallenge(c);
 			fail();
