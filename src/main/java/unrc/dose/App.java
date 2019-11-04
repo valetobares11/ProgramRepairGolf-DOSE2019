@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.beerboy.ss.SparkSwagger;
+import com.beerboy.ss.rest.Endpoint;
+
 import spark.Service;
 
 public class App
@@ -33,7 +35,9 @@ public class App
                       Base.close();
                     }
               })
-          .endpoints(() -> Arrays.asList(new BellyEndpoint(), new UserStatEndpoint()))
+          .endpoints(() -> Arrays.asList(new BellyEndpoint(),
+                  new UserStatEndpoint(),
+                  new PropositionEndpoint()))
           .generateDoc();
       }
       catch(IOException e) {
