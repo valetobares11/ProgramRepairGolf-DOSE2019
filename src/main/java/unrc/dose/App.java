@@ -13,6 +13,7 @@ import spark.Service;
 
 public class App
 {
+
 	static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 	
     public static Service spark = Service.ignite().port(55555);

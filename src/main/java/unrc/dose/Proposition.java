@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
+import java.util.*;
+
 /**
  * == Schema Info.
  *
@@ -136,8 +138,8 @@ public class Proposition extends Model {
      * @return the proposition created in the database.
      */
     public static Proposition newProposition(
-        final int userId,
-        final int challengeId) {
+            final int userId,
+            final int challengeId) {
 
         Challenge currentChallenge = Challenge.findById(challengeId);
         User currentUser = User.findById(userId);
@@ -156,6 +158,35 @@ public class Proposition extends Model {
         newProposition.saveIt();
         return newProposition;
     }
+    
+    /**
+     * Method for creates new proposition in the database.
+     * @param userId represent the id from user    
+     * @param challengeId represent the id from challenge
+     * @param source represent the code fron the new proposition
+     * @param solution represent if one proposition is solution or not
+     * @param distance represent the distance from the new proposition
+     * @param cantTest represent the quantity of test passed
+     * @return the new proposition created
+     */
+    public static Proposition newProposition(
+        final int userId,
+        final int challengeId,
+        final String source,
+        final boolean solution,
+        final int distance,
+        final int cantTest) {
+            
+        Proposition newProp = new Proposition();
+        newProp.setUserId(userId);
+        newProp.setChallengeId(challengeId);
+        newProp.setSource(source);
+        newProp.setIsSolution(solution);
+        newProp.setDistance(distance);
+        newProp.setCantTestPassed(cantTest);
+        newProp.saveIt();
+        return newProp;
+    }
 
     /**
      * Get the solutions for a challenge by a specific user..
@@ -164,7 +195,7 @@ public class Proposition extends Model {
      * @return List of proposition for user in challenge
      */
     public static LazyList<Proposition> getChallengeSolutionsByUser(
-            final Integer userId, final Integer challengeId) {
+            final int userId, final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? "
                 + "and isSolution = ?", userId, challengeId, true);
     }
@@ -175,8 +206,8 @@ public class Proposition extends Model {
      * @param distanceObtained reference the new distance obtained
      */
     public void saveSolution(
-        final String proposedCode,
-        final int distanceObtained) {
+            final String proposedCode,
+            final int distanceObtained) {
         this.setSource(proposedCode);
         this.set("distance", distanceObtained);
         this.set("isSolution", true);
@@ -198,8 +229,8 @@ public class Proposition extends Model {
      *  or the proposition found.
      */
     public static LazyList<Proposition> getUnsubmittedChallengePropByUser(
-        final int userId,
-        final int challengeId) {
+            final int userId,
+            final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? and "
                 + "isSolution = ?", userId, challengeId, false);
     }
@@ -211,7 +242,7 @@ public class Proposition extends Model {
      * @return list the solution for one challenge.
      */
     public static LazyList<Proposition> getAllSolutionsForChallenge(
-        final int challengerId) {
+            final int challengerId) {
         return Proposition.where("challenge_id = ? and isSolution = ?",
                 challengerId, true);
     }
@@ -236,12 +267,12 @@ public class Proposition extends Model {
      * @return the editing distance of both string
      */
     public static int computeLevenshteinDistance(
-        final String str1,
-        final String str2) {
+            final String str1,
+            final String str2) {
         return computeLevenshteinDistance(
-            str1.toCharArray(),
-            str2.toCharArray()
-            );
+                str1.toCharArray(),
+                str2.toCharArray()
+                );
     }
 
     /**
@@ -269,8 +300,8 @@ public class Proposition extends Model {
      * @return the editing distance of both arrangements
      */
     private static int computeLevenshteinDistance(
-        final char[] str1,
-        final char[] str2) {
+            final char[] str1,
+            final char[] str2) {
         int[][] distance = new int[str1.length + 1][str2.length + 1];
 
         for (int i = 0; i <= str1.length; i++) {
@@ -292,13 +323,16 @@ public class Proposition extends Model {
     /**
      * Generate a .java file with the code of a challenge.
      * @param source text with code java
+     * @param className tetx with name of archive
      */
-    public static void generateFileJava(final String source) {
+    public static void generateFileJava(
+            final String source, final String className) {
 
         File f;
-        f = new File("Source.java");
+        f = new File(className + ".java");
 
-        try {
+        try
+        {
             FileWriter w = new FileWriter(f);
             BufferedWriter bw = new BufferedWriter(w);
             PrintWriter wr = new PrintWriter(bw);
@@ -306,7 +340,10 @@ public class Proposition extends Model {
             wr.close();
             bw.close();
         }
-        catch (IOException e) {
+        catch (IOException e) 
+        {
+            System.out.println("File exception");
+            System.out.println(e.getMessage());
         };
     }
 
@@ -354,14 +391,17 @@ public class Proposition extends Model {
     /**
      * Compile a proposal.
      * @param proposedCode represents the code for the possible solution.
+     * @param proposedClassName class name to compile
      * @return True if compiled, false otherwise
      */
-    public boolean compileProposition(final String proposedCode) {
+    public boolean compileProposition(
+            final String proposedCode,
+            final String proposedClassName) {
         this.setSource(proposedCode);
         this.saveIt();
-        generateFileJava(this.getSource());
+        generateFileJava(proposedCode, proposedClassName);
         try {
-            int k = compilar("Source.java");
+            int k = compilar(proposedClassName + ".java");
             if (k == 0) {
                 return true;
             }
@@ -377,10 +417,13 @@ public class Proposition extends Model {
      * change distance and isSolution 1.
      * @param proposedCode represents the possible
      * solution provided by a user
+     * @param proposedClassName class name to compile
      * @return false if the source not compile, true otherwise.
      */
-    public boolean submitProposition(final String proposedCode) {
-        if (!(this.compileProposition(proposedCode))) {
+    public boolean submitProposition(
+            final String proposedCode,
+            final String proposedClassName) {
+        if (!(this.compileProposition(proposedCode, proposedClassName))) {
             return false;
         }
         Integer newDistance = getDistanceProposition(this);
@@ -399,10 +442,10 @@ public class Proposition extends Model {
      * in a specific challenge
      */
     public static Proposition bestPropDistance(
-        final int userId, final int challengeId) {
+            final int userId, final int challengeId) {
 
         LazyList<Proposition> list = getChallengeSolutionsByUser(
-            userId, challengeId);
+                userId, challengeId);
         int min = Integer.MAX_VALUE;
         Proposition result = new Proposition();
         for (Proposition i : list) {
@@ -413,5 +456,22 @@ public class Proposition extends Model {
         }
         return result;
     }
-
+    
+    /**
+    * This method passes the parameters of a proposition in a map 
+    * @return the params of proposition
+    */
+    public Map getMapProposition() {
+        Map m = new HashMap();
+        m.put("propo_id", this.getId());
+        m.put("user_Id", this.getUserId());
+        m.put("challenge_id", this.getChallengeId());
+        m.put("source_id", this.getSource());
+        m.put("isSolution", this.getIsSolution());
+        m.put("distance", this.getDistance());
+        m.put("cantTestPassed", this.getCantTestPassed());
+        return m;
+    }
+    
+    
 }
