@@ -43,7 +43,6 @@ public class User extends Model {
     * The value of ADMIN is {@value}.
     */
     private static final String ADMIN = "admin";
-
     /**
      The value of MAX_VALUE is {@value}.
     */
@@ -94,6 +93,8 @@ public class User extends Model {
         user.load(user, name, passw, email, admin);
         user.saveIt();
         p.saveIt();
+
+        UserStat.createUserStat(user.getId());
 
         return user;
     }
@@ -188,34 +189,43 @@ public class User extends Model {
         return false;
     }
 
-    /*
-    * Documentacion en javadoc
-    */
-    public static Boolean resetPassword(final String name) {
-      User user = User.findFirst("username = ? ", name);
+    /**.
+     * Method that generate a new password for a user ,
+     * for a user that forgot his pass
+     * @param email : the email of the user who wants to change the username
+     * @return A String the new pass
+     */
+    public static String resetPassword(final String email) {
+      User user = User.findFirst(EMAIL + " = ? ", email);
       if (user != null) {
-        String newpas = Password.generateRandomPassword();
-            return true;
+        String name = user.getName();
+        Password passUser = Password.findFirst(USERNAME + " = ?", name);
+        byte[] salt = (byte[]) passUser.get("salt");
+        String newpass = Password.generateRandomPassword();
+        byte[] passw = Password.hash(newpass.toCharArray(), salt);
+        user.set(PASSWORD, passw);
+        user.saveIt();
+        return newpass;
         } else {
-            return false;
+            return null;
         } 
     }
 
     /**.
-     * Method that given un email and new username returns a boolean ,
-     * if the username  has been modified successfully
-     * @param email : the email of the user who wants to change the username
+     * Method that given un new email and username returns a boolean ,
+     * if the email has been modified successfully
+     * @param email : the new email of the user who wants to change his email address
      * @param  username : the new username
-     * @return A boolean if the username has been modified successfully
+     * @return A boolean if the email has been modified successfully
      */
 
-    public static Boolean updateUsername(final String email,
+    public static Boolean updateEmail(final String newEmail,
         final String username) {
-        User user = User.findFirst("email_address = ?", email);
+        User user = User.findFirst(USERNAME + " = ?", username);
         if (user != null) {
-            user.set("username", username);
+            user.set(EMAIL, newEmail);
             user.saveIt();
-            return true;
+        return true;
         }
         return false;
     }

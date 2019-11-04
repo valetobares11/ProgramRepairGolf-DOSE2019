@@ -13,44 +13,53 @@ package unrc.dose;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
-
 /**
  * Class for UserStat.
  * @author Nahuel Alvarez, Borda Agustin, Castillo Conrado
  */
 public class UserStat extends Model {
-/* Validators for model */
-static {
-    validatePresenceOf("user_id");
-    validatePresenceOf("created_challenges");
-    validatePresenceOf("solved_challenges");
-    validatePresenceOf("current_points");
-}
+
+    /** Id of the user. **/
+    public static final String USERID = "user_id";
+    /** Number of challenges created by the user. **/
+    public static final String CREATEDCHALLENGES = "created_challenges";
+    /** Number of challenges solved by the user. **/
+    public static final String SOLVEDCHALLENGES = "solved_challenges";
+    /** Number of points of the user. **/
+    public static final String CURRENTPOINTS = "current_points";
+
+    /* Validators for model */
+    static {
+        validatePresenceOf(USERID);
+        validatePresenceOf(CREATEDCHALLENGES);
+        validatePresenceOf(SOLVEDCHALLENGES);
+        validatePresenceOf(CURRENTPOINTS);
+    }
     /**
      * Gets the id of the user who has assigned this statistics.
      * in the database.
      * @return The id of the user.
      */
     public int getUserId() {
-        return this.getInteger("user_id");
+        return this.getInteger(USERID);
     }
 
     /**
-     * Gets the number of created challenges by the user
+     * Gets the number of created challenges by the user.
      * who has assigned this statistics in the database.
      * @return The number of created challenges.
      */
     public int getCreatedChallenges() {
-        return this.getInteger("created_challenges");
+        return this.getInteger(CREATEDCHALLENGES);
     }
 
     /**
-     * Gets the number of solved challenges by the user
+     * Gets the number of solved challenges by the user.
      * who has assigned this statistics in the database.
      * @return The number of solved challenges.
      */
     public int getSolvedChallenges() {
-        return this.getInteger("solved_challenges");
+        return this.getInteger(SOLVEDCHALLENGES);
     }
 
     /**
@@ -58,7 +67,7 @@ static {
      * @return The points of the user.
      */
     public int getCurrentPoints() {
-        return this.getInteger("current_points");
+        return this.getInteger(CURRENTPOINTS);
     }
 
     /**
@@ -66,7 +75,7 @@ static {
      * @param id The id of the user who statistics we will set.
      */
     public void setUserId(final int id) {
-        this.set("user_id", id).saveIt();
+        this.set(USERID, id).saveIt();
     }
 
     /**
@@ -74,7 +83,7 @@ static {
      * @param challengesCreated The number of challenges created.
      */
     public void setCreatedChallenges(final int challengesCreated) {
-        this.set("created_challenges", challengesCreated).saveIt();
+        this.set(CREATEDCHALLENGES, challengesCreated).saveIt();
     }
 
     /**
@@ -82,7 +91,7 @@ static {
      * @param solvedChallenges The number of solved challenges.
      */
     public void setSolvedChallenges(final int solvedChallenges) {
-        this.set("solved_challenges", solvedChallenges).saveIt();
+        this.set(SOLVEDCHALLENGES, solvedChallenges).saveIt();
     }
 
     /**
@@ -90,7 +99,7 @@ static {
      * @param currentPoints The number of curret points.
      */
     public void setCurrentPoints(final int currentPoints) {
-        this.set("current_points", currentPoints).saveIt();
+        this.set(CURRENTPOINTS, currentPoints).saveIt();
     }
 
     /**
@@ -109,10 +118,10 @@ static {
      */
     public static UserStat createUserStat(final int id) {
         UserStat stat = new UserStat();
-        stat.set("user_id", id);
-        stat.set("created_challenges", 0);
-        stat.set("solved_challenges", 0);
-        stat.set("current_points", 0);
+        stat.set(USERID, id);
+        stat.set(CREATEDCHALLENGES, 0);
+        stat.set(SOLVEDCHALLENGES, 0);
+        stat.set(CURRENTPOINTS, 0);
         stat.saveIt();
         return stat;
     }
@@ -123,19 +132,29 @@ static {
      * @return Statistics of the user
      */
     public static UserStat getUserStat(final User user) {
-        return UserStat.findFirst("user_id = ?", user.getId());
+        return getUserStat(user.getId());
+    }
+
+    /**
+     * This method return the statics of a user.
+     * @param user The user from who wants to get the statistics
+     * @return Statistics of the user
+     */
+    public static UserStat getUserStat(final int user) {
+        return UserStat.findFirst("user_id = ?", user);
     }
 
     /**
      * This method return the x users with the best scores.
      * @param x The number of users.
-     * @return A LazyList of the userStats with the higest scores.
+     * @return A LazyList of the userStats with the highest scores.
      */
-    public static LazyList<UserStat> showBestScores(final int x) {
-      LazyList<UserStat> userStats = UserStat.findAll().orderBy(
-      "current_points desc").limit(x);
-
-      return userStats;
+    public static LazyList<UserStat> showBestScores(final Integer x) {
+        LazyList<UserStat> userStats = UserStat.findAll();
+        userStats.orderBy("current_points desc");
+        if (x != null) {
+            userStats.limit(x);
+        }
+        return userStats;
     }
-
 }
