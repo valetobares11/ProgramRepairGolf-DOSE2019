@@ -23,7 +23,7 @@ public class ChallengeStatTest {
     @BeforeClass
 	public static void before(){
         if (!Base.hasConnection()) {
-            Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/repair_game_test", "root", "root");
+            Base.open();
             Base.openTransaction();
         }
 
@@ -35,7 +35,7 @@ public class ChallengeStatTest {
         int challengeId = testChallenge.getInteger("id");
 
         Proposition.newProposition(userId, challengeId, "testSrc", true, 5, 0);
-        
+
         ChallengeStat.newChallengeStat(challengeId);
 
     }
@@ -74,7 +74,7 @@ public class ChallengeStatTest {
         int challengeId = testChallenge.getInteger("id");
         ChallengeStat cs = ChallengeStat.getChallengeStat(challengeId);
         Proposition p = Proposition.findFirst("challenge_id = ?", challengeId);
-        
+
         assertEquals((float) 0, cs.get("average_score"));
         assertEquals((int) 0, cs.get("solved_count"));
 
@@ -93,13 +93,13 @@ public class ChallengeStatTest {
     @Test
     public void deleteChallengeStatTest() {
 
-        ChallengeStat c = ChallengeStat.newChallengeStat(3);
+        ChallengeStat c = ChallengeStat.newChallengeStat(16);
 
         assertNotNull(c);
 
-        ChallengeStat.delete(3);
+        ChallengeStat.delete(16);
 
-        c = ChallengeStat.getChallengeStat(3);
+        c = ChallengeStat.getChallengeStat(16);
 
         assertNull(c);
     }
@@ -113,7 +113,7 @@ public class ChallengeStatTest {
         List<Challenge> challengeList = Challenge.where("title = 'testChallenge'");
         Challenge testChallenge = challengeList.get(0);
         int challengeId = testChallenge.getInteger("id");
-        
+
         ChallengeStat c = ChallengeStat.findFirst("challenge_id = ?", challengeId);
         ChallengeStat result = ChallengeStat.getChallengeStat(challengeId);
 
