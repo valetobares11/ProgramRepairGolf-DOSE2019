@@ -304,7 +304,7 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void validatePresenceTestChallengeTest() {
-		TestChallenge t = TestChallenge.findFirst("challenge_id = ?", 1);
+		TestChallenge t = null;
 		try {
 			TestChallenge.validatePresenceTestChallenge(t);
 			fail();
