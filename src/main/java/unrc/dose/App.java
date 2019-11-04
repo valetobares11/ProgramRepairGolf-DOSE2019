@@ -16,14 +16,14 @@ import spark.Service;
 public class App
 {
   public static Service spark = Service.ignite().port(55555);
-  
+
   public static void main( String[] args ) {
-      
+
 
       try {
         SparkSwagger
           .of(spark)
-          .endpoints(() -> Arrays.asList(new BellyEndpoint()))
+          .endpoints(() -> Arrays.asList(new ChallengeStatEndpoint()))
           .generateDoc();
       }
       catch(IOException e) {
