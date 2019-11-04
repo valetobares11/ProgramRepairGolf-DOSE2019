@@ -59,7 +59,6 @@ public class User extends Model {
     */
     public static Boolean searchUserByEmail(final String email) {
         User user = User.findFirst(EMAIL + " = ?", email);
-
         return (user == null);
     }
 

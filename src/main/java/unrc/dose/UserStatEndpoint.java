@@ -3,13 +3,13 @@ package unrc.dose;
 import static com.beerboy.ss.descriptor.EndpointDescriptor.endpointPath;
 import static com.beerboy.ss.descriptor.MethodDescriptor.path;
 
-import javax.xml.transform.OutputKeys;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.beerboy.ss.SparkSwagger;
 import com.beerboy.ss.rest.Endpoint;
+
+import spark.ExceptionHandler;
 
 /**
  * Endpoint for UserStat.
@@ -25,6 +25,11 @@ public final class UserStatEndpoint implements Endpoint {
 
     @Override
     public void bind(final SparkSwagger restApi) {
+        ExceptionHandler<UserStatException> handler = (exc, req, res) -> {
+            res.status(exc.getCode());
+            res.body(exc.getMessage());
+        };
+        restApi.exception(UserStatException.class, handler);
         restApi.endpoint(
             endpointPath(NAME_SPACE)
             .withDescription(
@@ -58,6 +63,16 @@ public final class UserStatEndpoint implements Endpoint {
             .withResponseType(String.class),
             (req, res) -> UserStatService.getScore(req.queryParams("id"))
         )
+        .delete(
+            path("")
+            .withDescription("Will delete the userStat of a user")
+            .withQueryParam()
+            .withName("id")
+            .withObject(Integer.class)
+            .withDescription("id of the user").and()
+            .withResponseType(String.class),
+            (req, res) -> UserStatService.delete(req.queryParams("id"))
+         )
         .get(
             path("")
             .withDescription("Will return the userStat of a user")
