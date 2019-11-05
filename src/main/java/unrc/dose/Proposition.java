@@ -352,7 +352,8 @@ public class Proposition extends Model {
             final String source, final String className) {
 
         File f;
-        f = new File(className + ".java");
+        String nameFile = "/../tmp/" + className + ".java";
+        f = new File(nameFile);
 
         try {
             FileWriter w = new FileWriter(f);
@@ -375,7 +376,7 @@ public class Proposition extends Model {
      */
     private static int compilar(
             final String archivoSourceJava) throws Exception {
-        int k = runProcess("javac " +  archivoSourceJava);
+        int k = runProcess("javac /../tmp/" + archivoSourceJava);
         return k;
     }
 
