@@ -122,21 +122,16 @@ public class TestChallenge extends Model {
      * method that resturns a list of all test challenges.
      * @return list of all test challange.
      */
-    public static List<Tuple<Map<String, Object>, Map<String, Object>>>
-        viewAllTestChallange() {
+    public static List<Map<String, String>> viewAllTestChallange() {
         LazyList<TestChallenge> all = TestChallenge.findAll();
-        LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>
-        allChallenges
-        = new LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>();
+        LinkedList<Map<String, String>> allChallenges
+        = new LinkedList<Map<String, String>>();
         if (!all.isEmpty()) {
             for (TestChallenge currentChallenge : all) {
                 Challenge c = Challenge.findFirst(
                     "id = ?",
                     currentChallenge.get("challenge_id"));
-                Tuple<Map<String, Object>, Map<String, Object>> t =
-                new Tuple<Map<String, Object>, Map<String, Object>>(
-                    c.toJson(),
-                    currentChallenge.toJson());
+                Map<String, String> t = toTestChallege(c, currentChallenge);
                 allChallenges.add(t);
             }
         }
@@ -148,12 +143,11 @@ public class TestChallenge extends Model {
      * method that returns a list of resolved test challenges.
      * @return list of test challanges resolved.
      */
-    public static List<Tuple<Map<String, Object>, Map<String, Object>>>
-        viewResolvedTestChallange() {
+    public static List<Map<String, String>> viewResolvedTestChallange() {
         LazyList<Proposition> allResolved =
         Proposition.where("isSolution = ?", 1);
-        LinkedList<Tuple<Map<String, Object>, Map<String, Object>>> resolved
-        = new LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>();
+        LinkedList<Map<String, String>> resolved =
+        new LinkedList<Map<String, String>>();
         if (!allResolved.isEmpty()) {
             for (Proposition challengeResolved : allResolved) {
                 Challenge c = Challenge.findFirst(
@@ -162,9 +156,7 @@ public class TestChallenge extends Model {
                 TestChallenge tc = TestChallenge.findFirst(
                     "challenge_id = ?",
                     challengeResolved.get("challenge_id"));
-                Tuple<Map<String, Object>, Map<String, Object>> t =
-                new Tuple<Map<String, Object>, Map<String, Object>>(
-                    c.toJson(), tc.toJson());
+                Map<String, String> t = toTestChallege(c, tc);
                 if (!(resolved.contains(t))) {
                     resolved.add(t);
                 }
@@ -177,16 +169,13 @@ public class TestChallenge extends Model {
      * method that returns a list of unsolved test challenges.
      * @return list of test challanges unresolved.
      */
-    public static List<Tuple<Map<String, Object>, Map<String, Object>>>
-        viewUnsolvedTestChallange() {
-        List<Tuple<Map<String, Object>, Map<String, Object>>> resolved =
-        viewResolvedTestChallange();
-        List<Tuple<Map<String, Object>, Map<String, Object>>> all =
-        viewAllTestChallange();
-        List<Tuple<Map<String, Object>, Map<String, Object>>> unsolved =
-        new LinkedList<Tuple<Map<String, Object>, Map<String, Object>>>();
+    public static List<Map<String, String>> viewUnsolvedTestChallange() {
+        List<Map<String, String>> resolved = viewResolvedTestChallange();
+        List<Map<String, String>> all = viewAllTestChallange();
+        List<Map<String, String>> unsolved =
+        new LinkedList<Map<String, String>>();
         if (!all.isEmpty()) {
-            for (Tuple<Map<String, Object>, Map<String, Object>> c: all) {
+            for (Map<String, String> c: all) {
                 if (!(resolved.contains(c))) {
                     unsolved.add(c);
                 }
@@ -266,15 +255,19 @@ public class TestChallenge extends Model {
     }
 
     /**
-     * This method arms the json correctly to return.
-     * @return a test challenge.
+     * This method returns a map <Challenge, TestChallenge>.
+     * @param c a Challenge.
+     * @param t a TestChallenge.
+     * @return Map<Challenge, TestChallenge>.
      */
-    public Map<String, Object> toJson() {
-        Map<String, Object> ret = new HashMap<String, Object>();
-        ret.put("id", this.getInteger("id"));
-        ret.put("challenge_id", this.getInteger("challenge_id"));
-        ret.put("test", this.getString("test"));
+    public static Map<String, String> toTestChallege(
+        final Challenge c, final TestChallenge t) {
+        Map<String, String> ret = new HashMap<String, String>();
+        ret.put(c.toJson(true, "id", "user_id", "title",
+        "class_name", "description", "source", "point", "owner_solution_id"),
+        t.toJson(true, "id", "challenge_id", "test"));
         return ret;
+
     }
 
     /**
