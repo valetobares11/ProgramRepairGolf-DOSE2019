@@ -13,10 +13,13 @@ import spark.Service;
 
 public class App
 {
+
 	static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 	
+    public static Service spark = Service.ignite().port(55555);
+    
     public static void main( String[] args ) {
-      Service spark = Service.ignite().port(55555);
+
       
 
       try {

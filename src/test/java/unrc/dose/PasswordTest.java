@@ -2,6 +2,7 @@ package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
@@ -39,5 +40,18 @@ public class PasswordTest {
 
 
         assertEquals(false, Password.isExpectedPassword(password.toCharArray(), salt, hash));
+    }
+
+    /**
+    * proof that the method genereateRandomPassword generate a new password.
+    * @result false, because expected password it's different that it's passed now.
+    */
+    @Test
+    public void prueba() {
+
+        String pass = Password.generateRandomPassword();
+
+        assertNotNull("This is not working", Password.generateRandomPassword());
+        assertEquals(12, pass.length());
     }
 }
