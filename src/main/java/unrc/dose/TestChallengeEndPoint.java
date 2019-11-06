@@ -6,7 +6,6 @@ import com.beerboy.ss.rest.Endpoint;
 import java.util.List;
 import java.util.Map;
 
-import org.javalite.common.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,9 +134,9 @@ public final class TestChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all test challenge")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Tuple<Map<String, Object>, Map<String, Object>>> all =
+                List<Map<String, String>> all =
                 TestChallenge.viewAllTestChallange();
-                return JsonHelper.toJsonString(all);
+                return all;
             }
         )
         .get(
@@ -145,9 +144,9 @@ public final class TestChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all test challenge solved")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Tuple<Map<String, Object>, Map<String, Object>>> resolved
-                = TestChallenge.viewResolvedTestChallange();
-                return JsonHelper.toJsonString(resolved);
+                List<Map<String, String>> resolved =
+                TestChallenge.viewResolvedTestChallange();
+                return resolved;
             }
         )
         .get(
@@ -155,9 +154,9 @@ public final class TestChallengeEndPoint implements Endpoint {
                 .withDescription("Will return all test challenge solved")
                 .withResponseType(String.class),
             (req, res) -> {
-                List<Tuple<Map<String, Object>, Map<String, Object>>> unsolved =
+                List<Map<String, String>> unsolved =
                 TestChallenge.viewUnsolvedTestChallange();
-                return JsonHelper.toJsonString(unsolved);
+                return unsolved;
             }
         );
     }

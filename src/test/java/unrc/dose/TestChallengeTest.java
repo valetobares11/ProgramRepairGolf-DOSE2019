@@ -46,6 +46,8 @@ public class TestChallengeTest {
 		Challenge c2 = Challenge.findFirst("title = ?", "Test2");
 		TestChallenge.addTestChallenge(u.getInteger("id"), "Test3", "Test3", "description",
 		"source", 100, 0, "test");
+		CompilationChallenge.addCompilationChallenge(u.getInteger("id"), "Test4", "Test4", "description",
+		"source", 100, 0);
 
 		Proposition.newProposition(u.getInteger("id"),c.getInteger("id"));
 		Proposition p1 = Proposition.newProposition(u.getInteger("id"), c1.getInteger("id"));
@@ -151,25 +153,18 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewAllTestChallangeTest() {
-		List<Tuple<Map<String, Object>, Map<String, Object>>> all =
+		List<Map<String, String>> all =
 		TestChallenge.viewAllTestChallange();
-		assertEquals(4, all.size());
-		assertEquals("Test", all.get(0).getFirst().get("title"));
-		assertEquals("Test1", all.get(1).getFirst().get("title"));
-		assertEquals("Test2", all.get(2).getFirst().get("title"));
-		assertEquals("Test3", all.get(3).getFirst().get("title"));
-	}
+		assertEquals(4, all.size());	}
 
 	/**
 	 * Test method for viewResolvedTestChallange.
 	 */
 	@Test
 	public void viewResolvedTestChallangeTest() {
-		List<Tuple<Map<String, Object>, Map<String, Object>>> resolved =
+		List<Map<String, String>> resolved =
 		TestChallenge.viewResolvedTestChallange();
 		assertEquals(2, resolved.size());
-		assertEquals("Test1", resolved.get(0).getFirst().get("title"));
-		assertEquals("Test2", resolved.get(1).getFirst().get("title"));
 	}
 
 	/**
@@ -177,11 +172,9 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewUnsolvedTestChallangeTest() {
-		List<Tuple<Map<String, Object>, Map<String, Object>>> unsolved =
+		List<Map<String, String>> unsolved =
 		TestChallenge.viewUnsolvedTestChallange();
 		assertEquals(2, unsolved.size());
-		assertEquals("Test", unsolved.get(0).getFirst().get("title"));
-		assertEquals("Test3", unsolved.get(1).getFirst().get("title"));
 	}
 
 	/**
