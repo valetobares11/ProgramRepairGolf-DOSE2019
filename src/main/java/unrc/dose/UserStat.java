@@ -117,6 +117,13 @@ public class UserStat extends Model {
      * @return the created user statistics.
      */
     public static UserStat createUserStat(final int id) {
+
+        if (!User.exists(id)) {
+            throw new UserNotFoundException(String.valueOf(id));
+        }
+        if (getUserStat(id) != null) {
+            throw new DuplicateUserStatException(String.valueOf(id));
+        }
         UserStat stat = new UserStat();
         stat.set(USERID, id);
         stat.set(CREATEDCHALLENGES, 0);
