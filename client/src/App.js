@@ -5,14 +5,21 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom'
 import Home from './components/Home'
 import About from './components/About'
 import Navbar from './components/Navbar'
+import axios from 'axios';
 
 class App extends Component {
   state = {
-    hackers: [
-      { name: 'Alan', age: 30, skill: 'Smalltalk', id: 1 },
-      { name: 'White', age: 20, skill: 'Pascal', id: 2 },
-      { name: 'Abramov', age: 25, skill: 'React', id: 3 }
-    ]
+    hackers: []
+  }
+
+  componentDidMount() {
+    axios.get('https://swapi.co/api/people')
+      .then(res => {
+        console.log(res.daa);
+        this.setState({
+          hackers: res.data.results.slice(0,10)
+        })
+      })
   }
 
   addHacker = (hacker) => {

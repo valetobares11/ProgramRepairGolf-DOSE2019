@@ -4,11 +4,12 @@ import AddHacker from './AddHacker';
 
 const Hackers = ({ hackers, addHacker, deleteHacker }) => {
     const hackerList = hackers.map(hacker => {
+      const id = hacker.url.slice(0, -1).split('/').pop();
       return (
-        <div className="hacker card" key={hacker.id}>
+        <div className="hacker card" key={hacker.url}>
           <div className="card-content">
             <span className="card-title">
-            <Link to={'/' + hacker.id}>{ hacker.name }</Link>
+              <Link to={'/' + id}>{ hacker.name }</Link>
             </span>
             <p>Skills: { hacker.skill }</p>
             <div>Age: { hacker.age }</div>
