@@ -1,31 +1,40 @@
 import React, { Component } from 'react'
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { fetchHacker } from '../actions/hackersActions'
 
 class Hacker extends Component {
-  state = {
-    id: null,
-    url: null,
-    heigth: null
-  }
-
-  componentDidMount(){
-    const id = this.props.match.params.hacker_id;
-
-    axios.get('https://swapi.co/api/people/' + id)
-      .then(res =>
-        this.setState({
-          ...res.data
-        })
-      )
+  componentDidMount() {
+    this.props.fetchHacker(this.props.match.params.hacker_id)
   }
 
   render() {
+    const { hacker } = this.props
     return (
-      <div className="container">
-        Congratullations, you're the hacker <span>{this.state.name}</span>
-      </div>
+      hacker ? (
+        <div className="container">
+          <h1>You're the hacker</h1>
+          <h2>#{this.props.hacker.id}</h2>
+          <h4>{this.props.hacker.name}</h4>
+        </div>
+      ) : (
+        <div>There is no hacker in the store... refetching</div>
+      )
     )
   }
 }
 
-export default Hacker
+const mapStateToProps = (state, ownProps) => {
+  return {
+    hacker: state.hacker.data
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchHacker: (id) => {
+      dispatch(fetchHacker(id))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Hacker)

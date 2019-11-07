@@ -9,16 +9,16 @@ const Hackers = ({ hackers, addHacker, deleteHacker }) => {
         <div className="hacker card" key={hacker.url}>
           <div className="card-content">
             <span className="card-title">
-              <Link to={'/' + id}>{ hacker.name }</Link>
+              <Link to={'/' + id} hacker={hacker}>{ hacker.name }</Link>
             </span>
             <p>Skills: { hacker.skill }</p>
             <div>Age: { hacker.age }</div>
             <button onClick={() => deleteHacker(hacker.id)}>Delete</button>
           </div>
-        </div>   
+        </div>
       )
     });
-  
+
     return (
       <div className="post">
         <div className="hacker-list">
@@ -26,9 +26,7 @@ const Hackers = ({ hackers, addHacker, deleteHacker }) => {
         </div>
         <AddHacker addHacker={addHacker}/>
       </div>
-      
     );
-  
   }
-  
+
   export default Hackers

@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 export default class AddHacker extends Component {
   state = {
     name: null,
-    age: null,
-    skill: null
+    heigth: null,
+    url: null
   }
 
   handleChange = (e) => {
@@ -25,10 +25,10 @@ export default class AddHacker extends Component {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="name">Name:</label>
           <input type="text" id="name" onChange={this.handleChange} />
-          <label htmlFor="age">Age:</label>
-          <input type="text" id="age" onChange={this.handleChange} />
-          <label htmlFor="skill">Skill:</label>
-          <input type="text"id="skill" onChange={this.handleChange} />
+          <label htmlFor="age">heigth:</label>
+          <input type="text" id="heigth" onChange={this.handleChange} />
+          <label htmlFor="skill">url:</label>
+          <input type="text"id="url" onChange={this.handleChange} />
 
           <button>Submit</button>
         </form>
