@@ -30,10 +30,12 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		u.saveIt();
 		User u2 = User.set("Themosque", "NotJohnConnor", "LaMosquita@gmail.com", false);
 		u2.saveIt();
-		UserStat stat1 = UserStat.createUserStat(u.getId());
+		UserStat stat1 = UserStat.getUserStat(u);
 		stat1.setCurrentPoints(10);
-		UserStat stat2 = UserStat.createUserStat(u2.getId());
+		stat1.saveIt();
+		UserStat stat2 = UserStat.getUserStat(u2);
 		stat2.setCurrentPoints(20);
+		stat2.saveIt();
 	}
 
 	/**
@@ -45,7 +47,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		User u = User.findFirst("username = ?","Hackerman");
 		UserStat stat = UserStat.findFirst("user_id = ?", u.getId());
 		assertEquals(stat.getUserId(),stat.get("user_id"));
-		
+
 	}
 	/**
 	 * Test the method getCreatedChallenges from
@@ -119,7 +121,7 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 			assertTrue(stat.getUserId() == u.getId() || stat.getUserId() == u2.getId());
 		}
 	}
-	
+
 	/**
 	 * Test the method showBestScores
 	 * UserStat class.
@@ -130,12 +132,12 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		 LazyList<UserStat> userStats = UserStat.showBestScores(1);
 		 assertTrue(userStats.get(0).getUserId()==u2.getId());
 	 }
-	
+
 	/*Test for validators*/
 
 	/**
 	 * Test the validator of
-	 * presence of user_id 
+	 * presence of user_id
 	 */
 	@Test
 	public void validatePresenceOfUserId() {
@@ -145,10 +147,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		stat.set("current_points", 0);
 		assertFalse(stat.isValid());
 	}
-	
+
 	/**
 	 * Test the validator of
-	 * presence of created_challenges 
+	 * presence of created_challenges
 	 */
 	@Test
 	public void validatePresenceOfCreatedChallenges() {
@@ -159,10 +161,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		stat.set("current_points", 0);
 		assertFalse(stat.isValid());
 	}
-	
+
 	/**
 	 * Test the validator of
-	 * presence of solved_challenges 
+	 * presence of solved_challenges
 	 */
 	@Test
 	public void validatePresenceOfSolvedChallenges() {
@@ -173,10 +175,10 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		stat.set("current_points", 0);
 		assertFalse(stat.isValid());
 	}
-	
+
 	/**
 	 * Test the validator of
-	 * presence of current_points 
+	 * presence of current_points
 	 */
 	@Test
 	public void validatePresenceOfCurrentPoints() {
@@ -187,5 +189,5 @@ private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 		stat.set("solved_challenges", 0);
 		assertFalse(stat.isValid());
 	}
-	
+
 }

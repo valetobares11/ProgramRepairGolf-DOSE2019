@@ -143,7 +143,7 @@ public class UserStat extends Model {
     }
 
     /**
-     * This method return the statics of a user.
+     * This method return the statics of a user by the id of the user.
      * @param user The user from who wants to get the statistics
      * @return Statistics of the user
      */
