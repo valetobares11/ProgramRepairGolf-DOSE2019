@@ -83,8 +83,11 @@ public class UserStep extends StepUtils{
     @Then( "^the system should create the account$")
     public void the_system_should_create_the_account() {
         passw = new Password();
-        Password u = Password.findFirst("username = ?", name); 
-        u.delete();
+        Password u = Password.findFirst("username = ?", name);
+        if(u != null) {
+            u.delete();
+        }
+        
         user = User.set(name, email, pass, false);
     }
 
