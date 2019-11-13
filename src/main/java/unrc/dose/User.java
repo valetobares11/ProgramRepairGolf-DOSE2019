@@ -68,7 +68,6 @@ public class User extends Model {
     */
     public static Boolean userExistsByEmail(final String email) {
         User user = User.findFirst(EMAIL + " = ?", email);
-
         return (user != null);
     }
 

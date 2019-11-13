@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSerializer;
 
+
 /**
  * Intermediate class between UserStat Model and the Endpoint.
  * @author Nahuel Alvarez, Borda Agustin, Castillo Conrado
@@ -36,7 +37,25 @@ public final class UserStatService {
      */
     public static String getUserStat(final String userid) {
         UserStat userStat = UserStat.getUserStat(Integer.valueOf(userid));
+        if (userStat == null) {
+            throw new UserStatNotFoundException(userid);
+        }
         return userStatToJson(userStat);
+    }
+
+    /**
+     * Delete the userStat of an user.
+     * @param userid id of the user
+     * @return the statistics in json format
+     */
+    public static String delete(final String userid) {
+        UserStat userStat = UserStat.getUserStat(Integer.valueOf(userid));
+        if (userStat == null) {
+            throw new UserStatNotFoundException(userid);
+        }
+        String ret = userStatToJson(userStat);
+        userStat.delete();
+        return ret;
     }
 
     /**
@@ -48,7 +67,7 @@ public final class UserStatService {
         JsonParser parser = new JsonParser();
         JsonObject userStat = parser.parse(getUserStat(userid)).
                 getAsJsonObject();
-        return subJsonObject(userStat, "current_points").toString();
+        return subJsonObject(userStat, UserStat.CURRENTPOINTS).toString();
     }
 
     /**
@@ -86,10 +105,6 @@ public final class UserStatService {
         JsonObject object = new JsonObject();
         object.add(memberName, jsonObject.get(memberName));
         return object;
-    }
-
-    public static void delete(final String userid) {
- 
     }
 
 }
