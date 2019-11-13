@@ -25,6 +25,7 @@ public class Steps extends StepUtils {
   Belly belly;
   UrlResponse response;
   User u;
+  int points;
   
   /**
    * Opens the database
@@ -103,17 +104,14 @@ public class Steps extends StepUtils {
   public void user_press_show_score() throws Exception {
     Map<String, Integer> parameters = new HashMap<>();
     parameters.put("id", u.getId());
-    response = StepUtils.doRequest("GET", "/userstat/score", parameters);
+    UserStat us = UserStat.findFirst("user_id", u.getId());
+    points = us.getCurrentPoints();
   }
 
   @Then("^the system show the score on a message$")
   public void the_system_show_the_score_on_a_messag() throws Exception {
-      assertNotNull(response);
-      assertNotNull(response.body);
-      assertEquals(200, response.status);
-      JsonObject res = new Gson().fromJson(response.body, JsonObject.class);
       UserStat us = UserStat.findFirst("user_id", u.getId());
-      assertEquals(res.get(UserStat.CURRENTPOINTS),us.getCurrentPoints());
+      assertEquals((int)us.getInteger(UserStat.CURRENTPOINTS),points);
   }
       
   @Given("^he wants to select the type of level education for play$")
