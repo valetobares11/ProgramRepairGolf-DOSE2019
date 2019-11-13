@@ -18,6 +18,7 @@ public class UserStatTest extends DBSpecAlternative{
 
 private static final Logger log = LoggerFactory.getLogger(UserStatTest.class);
 
+
 	/**
 	 * This perform the 'arrange' phase
 	 * of all the tests below
