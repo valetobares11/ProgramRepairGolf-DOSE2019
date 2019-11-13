@@ -1,46 +1,49 @@
 package unrc.dose;
 
-import static spark.Spark.after;
-import static spark.Spark.before;
-import static spark.Spark.get;
-
 import java.io.IOException;
 import java.util.Arrays;
 
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.beerboy.ss.SparkSwagger;
+import com.beerboy.ss.rest.Endpoint;
+
 import spark.Service;
 
 public class App
 {
-  public static Service spark = Service.ignite().port(55555);
-  
-  public static void main( String[] args ) {
-      
+
+	static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+	
+    public static Service spark = Service.ignite().port(55555);
+    
+    public static void main( String[] args ) {
 
       try {
         SparkSwagger
-          .of(spark)
-          .endpoints(() -> Arrays.asList(new BellyEndpoint()))
+          .of(spark).before((request, response) -> {
+              if (!Base.hasConnection()) {
+                  Base.open();
+                }
+              }).after((request, response) -> {
+                  if (Base.hasConnection()) {
+                      Base.close();
+                    }
+              })
+          .endpoints(() -> Arrays.asList(new BellyEndpoint(),
+                  new UserStatEndpoint(),
+                  new ChallengeEndPoint(),
+                  new CompilationChallengeEndPoint(),
+                  new TestChallengeEndPoint(),
+                  new PropositionEndpoint()))
           .generateDoc();
       }
       catch(IOException e) {
-        e.printStackTrace();
+        LOGGER.error(e.getMessage());
       }
-
-      spark.before((request, response) -> {
-        if (!Base.hasConnection()) {
-          Base.open();
-        }
-      });
-
-      spark.after((request, response) -> {
-        if (Base.hasConnection()) {
-          Base.close();
-        }
-      });
 
       spark.get("/hello/:name", (req, res) -> {
         return "hello" + req.params(":name");

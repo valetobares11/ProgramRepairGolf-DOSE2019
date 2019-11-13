@@ -192,6 +192,27 @@ public class PropositionTest {
         Proposition.deleteAll();
     }
 
+    @Test
+    public void searchByIdPropositionTest() {
+        
+        int playerId = User.findFirst("username = ?", "player1").getInteger("id");
+        int challId = Challenge.findFirst("title = ?", "challenge1").getInteger("id");
+
+        Proposition p1 = new Proposition();
+        p1.set("challenge_id", challId);
+        p1.set("user_id", playerId);
+        p1.set("source", "System.out.println('Hello World');");
+        p1.set("isSolution", true);
+        p1.set("distance", Integer.MAX_VALUE);
+        p1.set("cantTestPassed", 0);
+        p1.saveIt();
+
+        int idProp = p1.getInteger("id");
+        
+        assertTrue(Proposition.searchByIdProposition(idProp).getInteger("id") == idProp);
+        Proposition.deleteAll();
+    }
+
     @Test 
     public void solutionsForUserInChallengeTest() {
 
@@ -219,6 +240,35 @@ public class PropositionTest {
         LazyList<Proposition> propositions = Proposition.getChallengeSolutionsByUser(playerId, challId);
         assertEquals(2, propositions.size());
         Proposition.deleteAll();
+    }
+
+    @Test
+    public void getSolutionFromAUserTest() {
+        int playerId1 = User.findFirst("username = ?", "player1").getInteger("id");
+        int playerId2 = User.findFirst("username = ?", "player2").getInteger("id");
+        int challId = Challenge.findFirst("title = ?", "challenge1").getInteger("id");
+
+        Proposition p1 = new Proposition();
+        p1.set("challenge_id", challId);
+        p1.set("user_id", playerId1);
+        p1.set("source", "System.out.println('Hello World');");
+        p1.set("isSolution", true);
+        p1.set("distance", Integer.MAX_VALUE);
+        p1.set("cantTestPassed", 0);
+        p1.saveIt();
+
+        Proposition p2 = new Proposition();
+        p2.set("challenge_id", challId);
+        p2.set("user_id", playerId2);
+        p2.set("source", "System.out.println('Hello World');");
+        p2.set("isSolution", true);
+        p2.set("distance", Integer.MAX_VALUE);
+        p2.set("cantTestPassed", 0);
+        p2.saveIt();
+
+        LazyList<Proposition> propositions = Proposition.getSolutionsFromAUser(playerId2);
+        assertEquals(1, propositions.size());
+        Proposition.deleteAll();        
     }
 
     @Test

@@ -24,10 +24,10 @@ public class Comment extends Model {
   *@return the comment created
   **/
   public static Comment createComment(final String title,
-      final String description, 
-      final int challengeId, 
+      final String description,
+      final int challengeId,
       final int userId) {
-    if (description == null || title == null 
+    if (description == null || title == null
         || description == "" || title == "") {
       throw new IllegalArgumentException("Comment and title can't be empty");
     }
@@ -82,7 +82,7 @@ public class Comment extends Model {
   *create a list of comments associated to the id.
   *@param id the object's id
   *@param obj can be a User, Comment or Challenge
-  *@return a list of comments 
+  *@return a list of comments
   */
   public static LazyList<Comment> viewComment(final int id, final Object obj) {
     LazyList<Comment> list = null;
@@ -103,8 +103,21 @@ public class Comment extends Model {
   *@param aux the object to compare
   *@return true if two comments are equals
   */
-  public boolean equals(Object aux) {
+  public boolean equals(final Object aux) {
     return (this.getId().equals(((Comment) aux).getId()));
+  }
+
+  /**
+   * toString of Comment.
+   * @return comment as a string
+   */
+  public String toString() {
+    return "[id: " + this.getId() + ", title: "
+      + this.getString("title") + "description: "
+      + this.getString("description") + "user_id: "
+      + this.getInteger("user_id") + "challenge_id: "
+      + this.getInteger("challenge_id") + "father_id:"
+      + this.getInteger("comment_id") + "]";
   }
 
 }

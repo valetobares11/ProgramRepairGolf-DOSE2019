@@ -1,5 +1,7 @@
 package unrc.dose;
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -12,11 +14,44 @@ import java.util.Map;
 import unrc.dose.User;
 import unrc.dose.StepUtils;
 
+import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 
 public class Steps extends StepUtils {
   Belly belly;
+  UrlResponse response;
+  User u;
+  
+  /**
+   * Opens the database
+   * before all the tests
+   */
+  @Before
+  public static void classSetUp() {
+      if(!Base.hasConnection()) {
+          Base.open();
+      }
+      Base.openTransaction();
+  }
 
+  
+  /**
+   * Rollback a transaction
+   * after each test
+   */
+  @After
+  public void tearDown() {
+      Base.rollbackTransaction();
+      if(Base.hasConnection()) {
+          Base.close();
+      }
+  }
+
+  
   @Given("^(?:I have|the user has) (\\d+) cukes in my belly$")
   public void i_have_cukes_in_my_belly(int cukes) throws Exception {
     belly = new Belly(1, "pedro");
@@ -44,7 +79,7 @@ public class Steps extends StepUtils {
     Map<String, String> parameters = new HashMap<>();
 
     // Notice we pass empty parameter when we do a GET request
-    UrlResponse response = StepUtils.doRequest("GET", "/users", parameters);
+    response = StepUtils.doRequest("GET", "/users", parameters);
 
     // Retrieve DB users
     LazyList<User> users = User.findAll();
@@ -60,22 +95,27 @@ public class Steps extends StepUtils {
 
   @Given("^user wants to look his score$")
   public void user_wants_to_look_his_score() throws Exception {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    u = User.set("Hackerman", "T3H4ck303lC0r4z0n", "hackingnsa@gmail.com", false);
+    u.saveIt();
   }
 
   @When("^user press show score$")
   public void user_press_show_score() throws Exception {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    Map<String, Integer> parameters = new HashMap<>();
+    parameters.put("id", u.getId());
+    response = StepUtils.doRequest("GET", "/userstat/score", parameters);
   }
 
   @Then("^the system show the score on a message$")
   public void the_system_show_the_score_on_a_messag() throws Exception {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+      assertNotNull(response);
+      assertNotNull(response.body);
+      assertEquals(200, response.status);
+      JsonObject res = new Gson().fromJson(response.body, JsonObject.class);
+      UserStat us = UserStat.findFirst("user_id", u.getId());
+      assertEquals(res.get(UserStat.CURRENTPOINTS),us.getCurrentPoints());
   }
-
+      
   @Given("^he wants to select the type of level education for play$")
   public void he_wants_to_select_the_type_of_level_education_for_play() throws Exception {
     // Write code here that turns the phrase above into concrete actions
