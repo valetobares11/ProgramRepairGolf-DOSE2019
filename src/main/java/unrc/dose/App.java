@@ -22,8 +22,6 @@ public class App
     
     public static void main( String[] args ) {
 
-      
-
       try {
         SparkSwagger
           .of(spark).before((request, response) -> {
@@ -37,6 +35,9 @@ public class App
               })
           .endpoints(() -> Arrays.asList(new BellyEndpoint(),
                   new UserStatEndpoint(),
+                  new ChallengeEndPoint(),
+                  new CompilationChallengeEndPoint(),
+                  new TestChallengeEndPoint(),
                   new PropositionEndpoint()))
           .generateDoc();
       }
