@@ -1,15 +1,19 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to test the TestChallenge class methods.
@@ -18,11 +22,13 @@ import org.junit.Test;
  */
 public class TestChallengeTest {
 
+	private static final Logger log = LoggerFactory.getLogger(TestChallengeTest.class);
+
 	@BeforeClass
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			System.out.println("TestChallengeTest setup");
+			log.info("TestChallengeTest setup");
 			Base.openTransaction();
 		}
 
@@ -40,32 +46,17 @@ public class TestChallengeTest {
 		Challenge c2 = Challenge.findFirst("title = ?", "Test2");
 		TestChallenge.addTestChallenge(u.getInteger("id"), "Test3", "Test3", "description",
 		"source", 100, 0, "test");
+		CompilationChallenge.addCompilationChallenge(u.getInteger("id"), "Test4", "Test4", "description",
+		"source", 100, 0);
 
-		Proposition p = new Proposition();
-		p.set("user_id", u.getId());
-		p.set("challenge_id", c.getId());
-		p.set("source", "//");
-		p.set("isSolution", 0);
-		p.saveIt();
-
-		Proposition p1 = new Proposition();
-		p1.set("user_id", u.getId());
-		p1.set("challenge_id", c1.getId());
-		p1.set("source","//");
+		Proposition.newProposition(u.getInteger("id"),c.getInteger("id"));
+		Proposition p1 = Proposition.newProposition(u.getInteger("id"), c1.getInteger("id"));
 		p1.set("isSolution", 1);
 		p1.saveIt();
-
-		Proposition p2 = new Proposition();
-		p2.set("user_id", u.getId());
-		p2.set("challenge_id", c2.getId());
-		p2.set("source","//");
+		Proposition p2 = Proposition.newProposition(u.getInteger("id"), c2.getInteger("id"));
 		p2.set("isSolution", 1);
 		p2.saveIt();
-
-		Proposition p3 = new Proposition();
-		p3.set("user_id", u1.getId());
-		p3.set("challenge_id", c2.getId());
-		p3.set("source","//");
+		Proposition p3 = Proposition.newProposition(u1.getInteger("id"), c2.getInteger("id"));
 		p3.set("isSolution", 1);
 		p3.saveIt();
 	
@@ -74,7 +65,7 @@ public class TestChallengeTest {
 	@AfterClass
 	public static void after(){
 		if (Base.hasConnection()) {
-			System.out.println("TestChallengeTest tearDown");
+			log.info("TestChallengeTest tearDown");
 			Base.rollbackTransaction();
 			Base.close();
 		}  
@@ -98,19 +89,31 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void validateTestChallengeTest() {
-		Challenge challenge = new Challenge();
-		challenge.setUserId(1); 
-		challenge.setTitle("Hello Word");
-		challenge.setClassName("HelloWord");
-		challenge.setSource("public String hello(){ return "+"HelloWord"+"; }");
-		challenge.setPoint(100);
-		challenge.setOwnerSolutionId(9);
-		challenge.saveIt();
-		TestChallenge testChallenge = new TestChallenge();
-		testChallenge.set("id",challenge.getInteger("id"));
-		testChallenge.setTest("--");
-		testChallenge.saveIt();
-		boolean validate = TestChallenge.validateTestChallenge(challenge,testChallenge);
+		int userId = 1; 
+		String title = "Oneees";
+		String description = "...";
+		String className = "Ones";
+		String source = "package src.main;\n";
+			   source += "public class Ones {\n";
+			   source += "	public static int one() {\n";
+			   source += "		return 1;\n";
+			   source += "	}\n";
+			   source += "}";
+		int point = 100;
+		int ownerSolutionId = 9;
+		String test = "package src.test;\n";
+				test += "import src.main.Ones;\n";
+				test += "import org.junit.*;\n";
+				test += "public class OnesTest {\n";
+				test += "	@Test\n";
+				test += "	public void test() {\n";
+				test += "		Assert.assertEquals(1, Ones.one());\n";
+				test += "	}\n";
+				test += "}";
+		TestChallenge.addTestChallenge(userId, title, className, description,
+		source, point, ownerSolutionId, test);
+		TestChallenge testChallenge = TestChallenge.findFirst("test = ?", test);
+		boolean validate = TestChallenge.validateTestChallenge(testChallenge);
 		assertEquals(true,validate);
 	}
 
@@ -120,13 +123,26 @@ public class TestChallengeTest {
 	@Test
 	public void addTestChallengeTest() {
 		int userId = 32; 
-		String title= "Hello Word";
-		String nameClass = "HelloWord2";
-		String description = "Test Hellos Word";
-		String source = "System.out.println('Hello Word');";
+		String title= "suma ones";
+		String nameClass = "SumaOnes";
+		String description = "Test suma ones";
+		String source = "package src.main;\n";
+			   source += "public class SumaOnes {\n";
+			   source += "	public static int sumOnes() {\n";
+			   source += "		return 1+1;\n";
+			   source += "	}\n";
+			   source += "}";
 		int point = 52;
 		int ownerSolutionId = 3;
-		String test = "this is a challenge test";
+		String test = "package src.test;\n";
+			   test += "import src.main.SumaOnes;\n";
+			   test += "import org.junit.*;\n";
+			   test += "public class SumaOnesTest {\n";
+			   test += "	@Test\n";
+			   test += "	public void test() {\n";
+			   test += "		Assert.assertEquals(2, SumaOnes.sumOnes());\n";
+			   test += "	}\n";
+			   test += "}";
 		boolean validation = TestChallenge.addTestChallenge(userId,title,nameClass,description,
 		source,point,ownerSolutionId,test);
 		assertEquals(true,validation);
@@ -137,23 +153,18 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewAllTestChallangeTest() {
-		List<Tuple<Challenge, TestChallenge>> all = TestChallenge.viewAllTestChallange();
-		assertEquals(4, all.size());
-		assertEquals("Test", all.get(0).getFirst().getString("title"));
-		assertEquals("Test1", all.get(1).getFirst().getString("title"));
-		assertEquals("Test2", all.get(2).getFirst().getString("title"));
-		assertEquals("Test3", all.get(3).getFirst().getString("title"));
-	}
+		List<Map<String, String>> all =
+		TestChallenge.viewAllTestChallange();
+		assertEquals(4, all.size());	}
 
 	/**
 	 * Test method for viewResolvedTestChallange.
 	 */
 	@Test
 	public void viewResolvedTestChallangeTest() {
-		List<Tuple<Challenge, TestChallenge>> resolved = TestChallenge.viewResolvedTestChallange();
+		List<Map<String, String>> resolved =
+		TestChallenge.viewResolvedTestChallange();
 		assertEquals(2, resolved.size());
-		assertEquals("Test1", resolved.get(0).getFirst().getString("title"));
-		assertEquals("Test2", resolved.get(1).getFirst().getString("title"));
 	}
 
 	/**
@@ -161,10 +172,9 @@ public class TestChallengeTest {
 	 */
 	@Test
 	public void viewUnsolvedTestChallangeTest() {
-		List<Tuple<Challenge, TestChallenge>> unsolved = TestChallenge.viewUnsolvedTestChallange();
+		List<Map<String, String>> unsolved =
+		TestChallenge.viewUnsolvedTestChallange();
 		assertEquals(2, unsolved.size());
-		assertEquals("Test", unsolved.get(0).getFirst().getString("title"));
-		assertEquals("Test3", unsolved.get(1).getFirst().getString("title"));
 	}
 
 	/**
@@ -198,14 +208,102 @@ public class TestChallengeTest {
 	public void modifyUnsolvedTestChallengeTest1() {
 		Challenge c = Challenge.findFirst("title = ?", "Test3");
 		String title = "Test3";
-		String className = "NotFound";
+		String className = "MultOnes";
 		String description = "";
-		String source = "//";
+		String source = "package src.main;\n";
+			   source += "public class MultOnes {\n";
+			   source += "	public static int multOnes() {\n";
+			   source += "		return 1*1;\n";
+			   source += "	}\n";
+			   source += "}";
 		int point = 0;
-		String test = "Test";
+		String test = "package src.test;\n";
+			   test += "import src.main.MultOnes;\n";
+			   test += "import org.junit.*;\n";
+			   test += "public class MultOnesTest {\n";
+			   test += "	@Test\n";
+			   test += "	public void test() {\n";
+			   test += "		Assert.assertEquals(1, MultOnes.multOnes());\n";
+			   test += "	}\n";
+			   test += "}";
 		boolean obtained = TestChallenge.modifyUnsolvedTestChallenge(
 			c.getInteger("id"), title, className, description,
 			source, point, test);
-		assertTrue(obtained);
+		assertEquals(true,obtained);
 	}
+
+	/**
+	 * Test method for deleteChallenge.
+	 * In case of the CompilationChallenge already exist.
+	 */
+	@Test
+	public void deleteTestChallengeTest() {
+		int userId = 5; 
+		String title= "Hello Word";
+		String className = "HelloWord4";
+		String description = "Test Hellos Word";
+		String source = "System.out.println('Hello Word')";
+		int point = 300;
+		int ownerSolutionId = 10;
+		String test = "delete Test";
+		TestChallenge.addTestChallenge(userId, title, className, description,
+		source, point, ownerSolutionId, test);
+		int id = TestChallenge.findFirst("test = ?", test).getInteger("challenge_id");
+		Challenge.deleteChallenge(id);
+		assertNull(TestChallenge.findFirst("challenge_id = ?", id));   
+	}
+
+	/**
+	 * Test method for runCompilationTest.
+	 */
+	@Test
+	public void runCompilationTest() {
+		String nameFile = "TestCompilation";
+		String source = "package src.test; \n";
+			   source += "import org.junit.*;\n";
+			   source += "public class "+ nameFile + " {\n";
+			   source += "	@Test\n";
+			   source += "	public void test() {\n";
+		       source += "		Assert.assertTrue(true);\n";
+			   source += "	}\n";
+			   source += "}";
+		Challenge.generateFileJavaTest(nameFile, source);
+		boolean obtained = TestChallenge.runCompilationTestJava(nameFile);
+		assertEquals(true, obtained);
+	}
+
+	/**
+	 * Test method for runCompilationTest.
+	 */
+	@Test
+	public void runTestJavaTest() {
+		String nameFile = "RunTestCompilation";
+		String source = "package src.test; \n";
+			   source += "import org.junit.*;\n";
+			   source += "public class "+ nameFile + " {\n";
+			   source += "	@Test\n";
+			   source += "	public void test() {\n";
+			   source += "		Assert.assertTrue(true);\n";
+			   source += "	}\n";
+			   source += "}";
+		Challenge.generateFileJavaTest(nameFile, source);
+		TestChallenge.runCompilationTestJava(nameFile);
+		boolean obtained = TestChallenge.runTestJava(nameFile);
+		assertEquals(true, obtained);
+	}
+
+	/**
+	 * Test method for validatePresenceTestChallenge.
+	 */
+	@Test
+	public void validatePresenceTestChallengeTest() {
+		TestChallenge t = null;
+		try {
+			TestChallenge.validatePresenceTestChallenge(t);
+			fail();
+		} catch (IllegalArgumentException ex) {
+			assertEquals(TestChallenge.CHALLENGE_NOT_EXIST, ex.getMessage());
+		}
+	}
+
 }

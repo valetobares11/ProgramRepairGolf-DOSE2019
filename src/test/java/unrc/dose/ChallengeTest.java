@@ -1,6 +1,7 @@
 package unrc.dose;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -10,6 +11,8 @@ import org.javalite.activejdbc.Base;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to test the Challenge class methods.
@@ -18,11 +21,13 @@ import org.junit.Test;
  */
 public class ChallengeTest {
 
+	private static final Logger log = LoggerFactory.getLogger(ChallengeTest.class);
+
 	@BeforeClass
 	public static void before(){
 		if (!Base.hasConnection()) {
 			Base.open();
-			System.out.println("CompilationChallengeTest setup");
+			log.info("ChallengeTest setup");
 			Base.openTransaction();
 		}
 		
@@ -38,10 +43,7 @@ public class ChallengeTest {
 		"source", 100, 0);
 		Challenge c = Challenge.findFirst("title = ?", "Test");
 
-		Proposition p = new Proposition();
-		p.set("user_id", u.getId());
-		p.set("challenge_id", c.getId());
-		p.set("source","//");
+		Proposition p = Proposition.newProposition(u.getInteger("id"), c.getInteger("id"));
 		p.set("isSolution", 1);
 		p.saveIt();
 	}
@@ -51,7 +53,7 @@ public class ChallengeTest {
 	public static void after(){
 		if (Base.hasConnection()) {
 			Base.rollbackTransaction();
-			System.out.println("ChallengeTest tearDown");
+			log.info("ChallengeTest tearDown");
 			Base.close();
 		}  
 	}
@@ -84,7 +86,6 @@ public class ChallengeTest {
 	 */
 	@Test
 	public void addChallengeTest() {
-		Challenge challenge = new Challenge();
 		int userId = 1; 
 		String title= "Hello Word";
 		String nameClass = "HelloWord1";
@@ -92,18 +93,18 @@ public class ChallengeTest {
 		String source = "System.out.println('Hello Word')";
 		int point = 100;
 		int ownerSolutionId = 9;
+		Challenge challenge = new Challenge();
 		challenge = Challenge.addChallenge(userId,nameClass,title,description,
 		source,point,ownerSolutionId);
-		challenge.saveIt();
 		assertEquals(1,challenge.getUserId());
 	}
 
 	/**
 	 * Test method for deleteChallenge.
+	 * In case of the challenge already exist.
 	 */
 	@Test
 	public void deleteChallengeTest() {
-		Challenge challenge = new Challenge();
 		int userId = 5; 
 		String title= "Hello Word";
 		String nameClass = "HelloWord4";
@@ -111,12 +112,28 @@ public class ChallengeTest {
 		String source = "System.out.println('Hello Word')";
 		int point = 300;
 		int ownerSolutionId = 10;
+		Challenge challenge = new Challenge();
 		challenge = Challenge.addChallenge(userId,title,nameClass,description,
 		source,point,ownerSolutionId);
-		challenge.saveIt();
-		Challenge.deleteChallenge(challenge);
-		assertEquals(null,Challenge.findFirst("title = ?",title));   
-	} 
+		Challenge.deleteChallenge(challenge.getInteger("id"));
+		assertNull(Challenge.findFirst("title = ?",title));   
+	}
+
+	/**
+	 * Test method for deleteChallenge.
+	 * In case of the challenge not exist.
+	 */
+	@Test
+	public void deleteChallengeTest1() {
+		try {
+			int id = 5;
+			Challenge.deleteChallenge(id);
+			fail();
+		} catch (IllegalArgumentException ex) {
+			assertEquals(Challenge.CHALLENGE_NOT_EXIST, ex.getMessage());
+		}
+		
+	}
 
 	/**
 	 * Test method for viewUserAssociatedChallange.
@@ -139,9 +156,11 @@ public class ChallengeTest {
 	@Test
 	public void generateFileJavaTest() {
 		String name = "TestGenerateFile";
-		String source = "    public static void main(String[] args) {\n";
+		String source = "public class " + name + " {\n";
+			   source = "    public static void main(String[] args) {\n";
 			   source+= "        System.out.println("+"\"TestGenerateFile\""+");\n";
 			   source+= "    }\n";
+			   source+= "}\n";
 		boolean obtained = Challenge.generateFileJava(name, source);
 		assertTrue(obtained);
 	}
@@ -152,9 +171,11 @@ public class ChallengeTest {
 	@Test
 	public void runCompilationTest() {
 		String nameFile = "TestCompilation";
-		String source = "    public static void main(String[] args) {\n";
-			   source+= "        System.out.println("+"\"Test Compilation\""+");\n";
-			   source+= "    }\n";
+		String source = "public class " + nameFile + " {\n";
+			   source += "   public static void main(String[] args) {\n";
+			   source += "    	System.out.println("+"\"Test Compilation\""+");\n";
+			   source += "    }\n";
+			   source += "}\n";
 		Challenge.generateFileJava(nameFile, source);
 		boolean obtained = Challenge.runCompilation(nameFile);
 		assertEquals(true, obtained);
@@ -166,9 +187,12 @@ public class ChallengeTest {
 	@Test
 	public void runJavaTest() {
 		String nameFile = "TestRunJava";
-		String source = "    public static void main(String[] args) {\n";
-			   source+= "        System.out.println("+"\"Test RunJava\""+");\n";
-			   source+= "    }\n";
+		String source = "package src.main;\n";
+			  source += "public class " + nameFile + " {\n";
+			  source += "    public static void main(String[] args) {\n";
+			  source += "        System.out.println("+"\"Test RunJava\""+");\n";
+			  source += "    }\n";
+			  source += "}\n";
 		Challenge.generateFileJava(nameFile, source);
 		Challenge.runCompilation(nameFile);
 		boolean obtained = Challenge.runJava(nameFile);
@@ -186,6 +210,20 @@ public class ChallengeTest {
 			fail();
 		} catch (RuntimeException ex) {
 			assertEquals(Challenge.CHALLENGE_RESOLVED, ex.getMessage());
+		}
+	}
+
+	/**
+	 * Test method for validatePresenceChallenge.
+	 */
+	@Test
+	public void validatePresenceChallengeTest() {
+		Challenge c = null;
+		try{
+			Challenge.validatePresenceChallenge(c);
+			fail();
+		} catch (IllegalArgumentException ex) {
+			assertEquals(Challenge.CHALLENGE_NOT_EXIST, ex.getMessage());
 		}
 	}
 

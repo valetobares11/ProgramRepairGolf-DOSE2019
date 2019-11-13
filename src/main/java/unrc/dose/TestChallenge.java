@@ -1,7 +1,9 @@
 package unrc.dose;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -15,6 +17,13 @@ import org.javalite.activejdbc.Model;
  * @author Cuesta, Alvaro
  */
 public class TestChallenge extends Model {
+
+    /**
+     * message that will throw the exception if the challenge
+     * to delete does not exist.
+     */
+    public static final String CHALLENGE_NOT_EXIST =
+    "The test challenge is not exist";
 
     /**
      * the class constructor.
@@ -55,15 +64,22 @@ public class TestChallenge extends Model {
 
     /**
      * This method is responsible for validating the test challenge.
-     * @param c challenge to validate.
      * @param t test challenge to validate
      * @return True in case the validation passes (the source compiles and
      * the tests run), otherwise, false.
      */
     public static boolean validateTestChallenge(
-        final Challenge c,
         final TestChallenge t) {
-        return true;
+        Challenge c = Challenge.findFirst("id = ?", t.getChallengeId());
+        String className = c.getClassName();
+        String source = c.getSource();
+        String test = t.getTest();
+        String classNameTest = className + "Test";
+        Challenge.generateFileJava(className, source);
+        Challenge.generateFileJavaTest(classNameTest, test);
+        return Challenge.runCompilation(className)
+               && TestChallenge.runCompilationTestJava(classNameTest)
+               && TestChallenge.runTestJava(classNameTest);
     }
 
     /**
@@ -99,27 +115,23 @@ public class TestChallenge extends Model {
             t.setChallengeId(c.getInteger("id"));
             t.setTest(test);
             t.saveIt();
-        return (TestChallenge.validateTestChallenge(c, t));
+        return (TestChallenge.validateTestChallenge(t));
     }
 
     /**
      * method that resturns a list of all test challenges.
      * @return list of all test challange.
      */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewAllTestChallange() {
+    public static List<Map<String, String>> viewAllTestChallange() {
         LazyList<TestChallenge> all = TestChallenge.findAll();
-        LinkedList<Tuple<Challenge, TestChallenge>> allChallenges
-        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        LinkedList<Map<String, String>> allChallenges
+        = new LinkedList<Map<String, String>>();
         if (!all.isEmpty()) {
             for (TestChallenge currentChallenge : all) {
                 Challenge c = Challenge.findFirst(
                     "id = ?",
                     currentChallenge.get("challenge_id"));
-                Tuple<Challenge, TestChallenge> t =
-                new Tuple<Challenge, TestChallenge>(
-                    c,
-                    currentChallenge);
+                Map<String, String> t = toTestChallege(c, currentChallenge);
                 allChallenges.add(t);
             }
         }
@@ -131,12 +143,11 @@ public class TestChallenge extends Model {
      * method that returns a list of resolved test challenges.
      * @return list of test challanges resolved.
      */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewResolvedTestChallange() {
+    public static List<Map<String, String>> viewResolvedTestChallange() {
         LazyList<Proposition> allResolved =
         Proposition.where("isSolution = ?", 1);
-        LinkedList<Tuple<Challenge, TestChallenge>> resolved
-        = new LinkedList<Tuple<Challenge, TestChallenge>>();
+        LinkedList<Map<String, String>> resolved =
+        new LinkedList<Map<String, String>>();
         if (!allResolved.isEmpty()) {
             for (Proposition challengeResolved : allResolved) {
                 Challenge c = Challenge.findFirst(
@@ -145,8 +156,7 @@ public class TestChallenge extends Model {
                 TestChallenge tc = TestChallenge.findFirst(
                     "challenge_id = ?",
                     challengeResolved.get("challenge_id"));
-                Tuple<Challenge, TestChallenge> t =
-                new Tuple<Challenge, TestChallenge>(c, tc);
+                Map<String, String> t = toTestChallege(c, tc);
                 if (!(resolved.contains(t))) {
                     resolved.add(t);
                 }
@@ -159,16 +169,13 @@ public class TestChallenge extends Model {
      * method that returns a list of unsolved test challenges.
      * @return list of test challanges unresolved.
      */
-    public static List<Tuple<Challenge, TestChallenge>>
-        viewUnsolvedTestChallange() {
-        List<Tuple<Challenge, TestChallenge>> resolved =
-        viewResolvedTestChallange();
-        List<Tuple<Challenge, TestChallenge>> all =
-        viewAllTestChallange();
-        List<Tuple<Challenge, TestChallenge>> unsolved =
-        new LinkedList<Tuple<Challenge, TestChallenge>>();
+    public static List<Map<String, String>> viewUnsolvedTestChallange() {
+        List<Map<String, String>> resolved = viewResolvedTestChallange();
+        List<Map<String, String>> all = viewAllTestChallange();
+        List<Map<String, String>> unsolved =
+        new LinkedList<Map<String, String>>();
         if (!all.isEmpty()) {
-            for (Tuple<Challenge, TestChallenge> c: all) {
+            for (Map<String, String> c: all) {
                 if (!(resolved.contains(c))) {
                     unsolved.add(c);
                 }
@@ -200,6 +207,7 @@ public class TestChallenge extends Model {
         final String test) {
         Challenge.checkUnsolvedChallenge(challengeId);
         Challenge c = Challenge.findFirst("id = ?", challengeId);
+        Challenge.validatePresenceChallenge(c);
         c.setTitle(title);
         c.setClassName(className);
         c.setDescription(description);
@@ -210,7 +218,56 @@ public class TestChallenge extends Model {
         challengeId);
         t.setTest(test);
         t.saveIt();
-        return validateTestChallenge(c, t);
+        return validateTestChallenge(t);
+    }
+
+     /**
+     * This method to compile test.
+     * @param nameFile name of the file to execute.
+     * @return true if run otherwise false.
+     */
+    public static boolean runCompilationTestJava(final String nameFile) {
+        return Challenge.runProcess(
+            "javac -cp .:/tmp/:target/dependency/junit-4.12.jar:. "
+            + "/tmp/src/test/" + nameFile + ".java");
+    }
+
+    /**
+     * This method to run a JUnit test.
+     * @param nameFile name of the file to execute.
+     * @return true if run otherwise false.
+     */
+    public static boolean runTestJava(final String nameFile) {
+        return Challenge.runProcess(
+            "java -cp .:/tmp:target/dependency/junit-4.12.jar:target/"
+            + "dependency/hamcrest-core-1.3.jar:. org.junit.runner.JUnitCore "
+            + "src.test." + nameFile);
+    }
+
+    /**
+     * this method verifies if the challenge exists.
+     * @param t test challenge to verifies.
+     */
+    public static void validatePresenceTestChallenge(final TestChallenge t) {
+        if (t == null) {
+            throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
+        }
+    }
+
+    /**
+     * This method returns a map <Challenge, TestChallenge>.
+     * @param c a Challenge.
+     * @param t a TestChallenge.
+     * @return Map<Challenge, TestChallenge>.
+     */
+    public static Map<String, String> toTestChallege(
+        final Challenge c, final TestChallenge t) {
+        Map<String, String> ret = new HashMap<String, String>();
+        ret.put(c.toJson(true, "id", "user_id", "title",
+        "class_name", "description", "source", "point", "owner_solution_id"),
+        t.toJson(true, "id", "challenge_id", "test"));
+        return ret;
+
     }
 
     /**

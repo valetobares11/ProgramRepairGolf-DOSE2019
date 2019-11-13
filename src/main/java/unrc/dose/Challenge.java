@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -28,6 +30,12 @@ public class Challenge extends Model {
      * modify a resolved challenge.
      */
     public static final String CHALLENGE_RESOLVED = "The challenge is solved";
+     /**
+     * message that will throw the exception if the challenge
+     * to delete does not exist.
+     */
+    public static final String CHALLENGE_NOT_EXIST =
+    "The challenge is not exist";
 
     /**
      * the class constructor.
@@ -178,10 +186,22 @@ public class Challenge extends Model {
     }
 
     /**
-     * This method allows you to delete a challenge created.
-     * @param c challenge to eliminate.
+     * this method verifies if the challenge exists.
+     * @param c challenge to verifies.
      */
-    public static void deleteChallenge(final Challenge c) {
+    public static void validatePresenceChallenge(final Challenge c) {
+        if (c == null) {
+            throw new IllegalArgumentException(CHALLENGE_NOT_EXIST);
+        }
+    }
+
+    /**
+     * This method allows you to delete a challenge created.
+     * @param id id of tho challenge to eliminate.
+     */
+    public static void deleteChallenge(final int id) {
+        Challenge c = Challenge.findFirst("id = ?", id);
+        validatePresenceChallenge(c);
         c.deleteCascade();
     }
 
@@ -205,12 +225,56 @@ public class Challenge extends Model {
         final String name,
         final String source) {
         try {
-            String nameFile = "/../tmp/" + name + ".java";
+            File folderSrc = new File("/../tmp/src");
+            if (!folderSrc.exists() || !folderSrc.isDirectory()) {
+                runProcess("mkdir /../tmp/src");
+            }
+            File folderMain = new File("/../tmp/src/main");
+            if (!folderMain.exists() || !folderMain.isDirectory()) {
+                runProcess("mkdir /../tmp/src/main");
+            }
+            File folderTest = new File("/../tmp/src/test");
+            if (!folderTest.exists() || !folderTest.isDirectory()) {
+                runProcess("mkdir /../tmp/src/test");
+            }
+            String nameFile = "/../tmp/src/main/" + name + ".java";
             File file = new File(nameFile);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-            bw.write("public class " + name + " {\n");
             bw.write(source);
-            bw.write("}");
+            bw.close();
+            return true;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error the read file");
+        }
+    }
+
+
+    /**
+     * method to generate the java file test of the challenge.
+     * @param name name test file.
+     * @param test test file.
+     * @return true generate correct.
+     */
+    public static boolean generateFileJavaTest(
+        final String name,
+        final String test) {
+        try {
+            File folderSrc = new File("/../tmp/src");
+            if (!folderSrc.exists() || !folderSrc.isDirectory()) {
+                runProcess("mkdir /../tmp/src");
+            }
+            File folderMain = new File("/../tmp/src/main");
+            if (!folderMain.exists() || !folderMain.isDirectory()) {
+                runProcess("mkdir /../tmp/src/main");
+            }
+            File folderTest = new File("/../tmp/src/test");
+            if (!folderTest.exists() || !folderTest.isDirectory()) {
+                runProcess("mkdir /../tmp/src/test");
+            }
+            String nameFile = "/../tmp/src/test/" + name + ".java";
+            File file = new File(nameFile);
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write(test);
             bw.close();
             return true;
         } catch (IOException e) {
@@ -240,7 +304,7 @@ public class Challenge extends Model {
      * @return true if run otherwise false.
      */
     public static boolean runCompilation(final String nameFile) {
-        return runProcess("javac /../tmp/" + nameFile + ".java");
+        return runProcess("javac /../tmp/src/main/" + nameFile + ".java");
     }
 
     /**
@@ -249,7 +313,7 @@ public class Challenge extends Model {
      * @return true if run otherwise false.
      */
     public static boolean runJava(final String nameFile) {
-        return runProcess("java -cp .:/tmp/ " + nameFile);
+        return runProcess("java -cp .:/tmp/ src.main." + nameFile);
     }
 
     /**
@@ -261,6 +325,23 @@ public class Challenge extends Model {
         idChallege).size() != 0) {
             throw new RuntimeException(CHALLENGE_RESOLVED);
         }
+    }
+
+    /**
+     * This method arms the json correctly to return.
+     * @return a challenge.
+     */
+    public Map<String, Object> toJson() {
+        Map<String, Object> ret = new HashMap<String, Object>();
+        ret.put("id", this.getInteger("id"));
+        ret.put("user_id", this.getInteger("user_id"));
+        ret.put("title", this.getString("title"));
+        ret.put("class_name", this.getString("class_name"));
+        ret.put("description", this.getString("description"));
+        ret.put("source", this.getString("source"));
+        ret.put("point", this.getInteger("point"));
+        ret.put("owner_solution_id", this.getString("owner_solution_id"));
+        return ret;
     }
 
     /**

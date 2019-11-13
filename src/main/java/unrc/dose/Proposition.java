@@ -12,7 +12,10 @@ import java.io.PrintWriter;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * == Schema Info.
@@ -158,10 +161,10 @@ public class Proposition extends Model {
         newProposition.saveIt();
         return newProposition;
     }
-    
+
     /**
      * Method for creates new proposition in the database.
-     * @param userId represent the id from user    
+     * @param userId represent the id from user
      * @param challengeId represent the id from challenge
      * @param source represent the code fron the new proposition
      * @param solution represent if one proposition is solution or not
@@ -176,7 +179,7 @@ public class Proposition extends Model {
         final boolean solution,
         final int distance,
         final int cantTest) {
-            
+
         Proposition newProp = new Proposition();
         newProp.setUserId(userId);
         newProp.setChallengeId(challengeId);
@@ -189,6 +192,15 @@ public class Proposition extends Model {
     }
 
     /**
+     * This method search one proposition for id.
+     * @param idProp represent the id from proposition
+     * @return one Proposition with id = idProp
+     */
+    public static Proposition searchByIdProposition(final int idProp) {
+        return (Proposition.findById(idProp));
+    }
+
+    /**
      * Get the solutions for a challenge by a specific user..
      * @param userId reference the id of a user
      * @param challengeId reference the id of a challenge
@@ -198,6 +210,17 @@ public class Proposition extends Model {
             final int userId, final int challengeId) {
         return Proposition.where("user_id = ? and challenge_id = ? "
                 + "and isSolution = ?", userId, challengeId, true);
+    }
+
+    /**
+     * This method return a list of solutions for one user.
+     * @param userId represent the Id from user
+     * @return a list of propositions
+     */
+    public static LazyList<Proposition> getSolutionsFromAUser(
+        final int userId) {
+        return Proposition.where(
+                "user_id = ? and isSolution = ?", userId, true);
     }
 
     /**
@@ -323,47 +346,45 @@ public class Proposition extends Model {
     /**
      * Generate a .java file with the code of a challenge.
      * @param source text with code java
-     * @param className tetx with name of archive
+     * @param className text with name of archive
      */
     public static void generateFileJava(
             final String source, final String className) {
 
         File f;
-        f = new File(className + ".java");
+        String nameFile = "/../tmp/" + className + ".java";
+        f = new File(nameFile);
 
-        try
-        {
+        try {
             FileWriter w = new FileWriter(f);
             BufferedWriter bw = new BufferedWriter(w);
             PrintWriter wr = new PrintWriter(bw);
             wr.write(source);
             wr.close();
             bw.close();
-        }
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             System.out.println("File exception");
             System.out.println(e.getMessage());
-        };
+        }
     }
 
     /**
      * Compile a file .java.
      * @param archivoSourceJava file .java
      * @return 0 if the compilation is successful, 1 opposite case
-     * @throws Exception
+     * @throws Exception if an error
      */
     private static int compilar(
             final String archivoSourceJava) throws Exception {
-        int k = runProcess("javac " +  archivoSourceJava);
+        int k = runProcess("javac /../tmp/" + archivoSourceJava);
         return k;
     }
 
     /**
      * The code to be compiled into the buffer.
-     * @param name param javac Nombre.java
-     * @param ins
-     * @throws Exception
+     * @param name parameter javac Nombre.java
+     * @param ins parameter for buffer
+     * @throws Exception if an error
      */
     private static void printLines(
             final String name, final InputStream ins) throws Exception {
@@ -378,7 +399,7 @@ public class Proposition extends Model {
      * run the compilation process.
      * @param command java Nombre.java
      * @return 0 if the compilation is successful, 1 opposite case
-     * @throws Exception
+     * @throws Exception if an error
      */
     private static int runProcess(final String command) throws Exception {
         Process pro = Runtime.getRuntime().exec(command);
@@ -456,13 +477,13 @@ public class Proposition extends Model {
         }
         return result;
     }
-    
+
     /**
-    * This method passes the parameters of a proposition in a map 
-    * @return the params of proposition
+    * This method passes the parameters of a proposition in a map.
+    * @return the parameters of proposition
     */
-    public Map getMapProposition() {
-        Map m = new HashMap();
+    public Map<String, Object> getMapProposition() {
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("propo_id", this.getId());
         m.put("user_Id", this.getUserId());
         m.put("challenge_id", this.getChallengeId());
@@ -472,6 +493,25 @@ public class Proposition extends Model {
         m.put("cantTestPassed", this.getCantTestPassed());
         return m;
     }
-    
-    
+
+    /**
+     * This method transforms a list of prepositions into a list of maps.
+     * @param list represent a list of propositions
+     * @return a list of maps
+     */
+    public static List<Map<String, Object>> listJson(
+            final LazyList<Proposition> list) {
+        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+        Map<String, Object> currentMap;
+        if (list.isEmpty()) {
+            return result;
+        }
+        for (Proposition prop : list) {
+            currentMap = prop.getMapProposition();
+            result.add(currentMap);
+        }
+        return result;
+    }
+
+
 }
