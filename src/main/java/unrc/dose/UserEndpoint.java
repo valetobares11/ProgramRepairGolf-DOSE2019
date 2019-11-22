@@ -27,7 +27,7 @@ public final class UserEndpoint implements Endpoint {
     /** main name-space of this endpoint. */
     private static final String NAME_SPACE = "/user";
 
-   
+   ArrayList<ParameterDescriptor> list = new ArrayList<ParameterDescriptor>();
 
     
     /** service used to manipulate in memory the users. */
@@ -35,7 +35,7 @@ public final class UserEndpoint implements Endpoint {
 
     @Override
     public void bind(final SparkSwagger restApi) {
-list.add(ParameterDescriptor.newBuilder().withName("username").build());
+        list.add(ParameterDescriptor.newBuilder().withName("username").build());
 
         restApi.endpoint(
             endpointPath(NAME_SPACE)
@@ -65,6 +65,7 @@ list.add(ParameterDescriptor.newBuilder().withName("username").build());
             path("/signUp")
             .withDescription("Will return a boolean that describe if user has been created succesfully or not")
             .withParams(
+                list
                 // new ParameterDescriptor()
             )
                 // .withName("username") 
@@ -76,7 +77,7 @@ list.add(ParameterDescriptor.newBuilder().withName("username").build());
             .withResponseType(String.class),
             (req, res) -> {
                 Map<String,Object> bodyParams = new Gson().fromJson(req.body(),Map.class);
-                System.out.println(bodyParams.get("username"));System.out.println(bodyParams.get("email_address"));
+                
 
                 if (User.userExistsByUsername((String)bodyParams.get("username")) || User.userExistsByEmail((String)bodyParams.get("email_address"))) {
                     return "Nombre de usuario o email ya utilizados";
@@ -92,13 +93,13 @@ list.add(ParameterDescriptor.newBuilder().withName("username").build());
             path("/login")
                 .withDescription("Verify user data for log in the system")
                 .withPathParam()
-                   /* .withName("username")
+                    .withName("username")
                     .withDescription("This is the user trying to log in")
                     .withName("password")
                     .withDescription("This is pass with which will user try log in")
-                    .and()*/
+                    .and()
                 .withResponseType(Boolean.class),
-            (req, res) -> {(String)bodyParams.get("email_address")
+            (req, res) -> {
                     Map<String,Object> bodyParams = new Gson().fromJson(req.body(),Map.class);
 
                     return( User.validateCredentials((String)bodyParams.get("username"),(String)bodyParams.get("password")));
@@ -137,8 +138,7 @@ list.add(ParameterDescriptor.newBuilder().withName("username").build());
             (req, res) -> {
                Map<String,Object> bodyParams = new Gson().fromJson(req.body(),Map.class);
 
-            	return(User.updatePassword((String)bodyParams.get("email_address")),
-                (String)bodyParams.get("oldPassword"), (String)bodyParams.get("newPassword"));
+            	return(User.updatePassword((String)bodyParams.get("email_address"),(String)bodyParams.get("oldPassword"), (String)bodyParams.get("newPassword")));
             }
         )
 		
