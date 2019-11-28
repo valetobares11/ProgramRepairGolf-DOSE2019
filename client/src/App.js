@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import HackersContainer from './components/HackersContainer';
-import Hacker from './components/Hacker';
+import UsersContainer from './components/componentsUser/UsersContainer';
+import User from './components/componentsUser/User';
 import { Route, BrowserRouter, Switch } from 'react-router-dom'
-import Home from './components/Home'
-import About from './components/About'
-import Navbar from './components/Navbar'
+import Home from './components/componentsUser/Home'
+import About from './components/componentsUser/About'
+import Navbar from './components/componentsUser/Navbar'
 
 class App extends Component {
   render() {
@@ -16,8 +16,7 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={Home}/>
             <Route path='/about' component={About} />
-            <Route path='/hackers' component={HackersContainer} />
-            <Route path="/:hacker_id" component={Hacker} ></Route>
+            <Route path='/users' component={UsersContainer} />
           </Switch>
         </div>
       </BrowserRouter>

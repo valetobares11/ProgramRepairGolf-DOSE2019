@@ -1,8 +1,9 @@
 import React from 'react'
 //import { Link } from 'react-router-dom'
-import CreateAccount from './CreateAccount';
+//import CreateAccount from './CreateAccount';
+import Login from './Login';
 
-const Users = ({ users, newAccount, deleteUser }) => {
+const Users = ({ users, newAccount, deleteUser, login}) => {
     // const userList = users.map(user => {
     //   const id = user.username.slice(0, -1).split('/').pop();
     //   return (
@@ -24,7 +25,8 @@ const Users = ({ users, newAccount, deleteUser }) => {
         <div className="user-list">
           { userList }
         </div>
-        <CreateAccount newAccount={newAccount}/>
+       
+        <Login login={login}/>
       </div>
     );
   }

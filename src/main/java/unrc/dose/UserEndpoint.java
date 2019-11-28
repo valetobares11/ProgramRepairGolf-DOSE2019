@@ -101,7 +101,7 @@ public final class UserEndpoint implements Endpoint {
                 .withResponseType(Boolean.class),
             (req, res) -> {
                     Map<String,Object> bodyParams = new Gson().fromJson(req.body(),Map.class);
-
+                    System.out.println( User.validateCredentials((String)bodyParams.get("username"),(String)bodyParams.get("password")) );
                     return( User.validateCredentials((String)bodyParams.get("username"),(String)bodyParams.get("password")));
             }
         )

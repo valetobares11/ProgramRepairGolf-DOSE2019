@@ -34,6 +34,7 @@ public class App
                     }
               })
           .endpoints(() -> Arrays.asList(new BellyEndpoint(),
+                  new UserEndpoint(),
                   new UserStatEndpoint(),
                   new ChallengeEndPoint(),
                   new CompilationChallengeEndPoint(),
